@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Korisnik: {{ user.username }}</h1>
+    <hr>
+    {% if user.last_seen %}<p>Posljednje viđen: {{ user.last_seen }}</p>{% endif %}
+{% endblock %}

@@ -1,0 +1,30 @@
+<html>
+    <head>
+        <title>{{ title }} - Skladiste</title>
+    </head>
+    <body>
+        <div>Skladiste:
+        	<a href="{{ url_for('index') }}">Početna</a>
+        	{% if current_user.is_anonymous %}
+        	<a href="{{ url_for('login') }}">Prijava</a>
+        	{% else %}
+        	<h1>Hi, {{ current_user.username }}!</h1>
+        	<a href="{{ url_for('user', username=current_user.username) }}">Profil</a>
+        	<a href="{{ url_for('logout') }}">Odjava</a>
+        	{% endif %}
+        </div>
+        <hr>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div>
+            {% for message in messages %}
+            <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        {% block content %}
+        {% endblock %} 
+    </body>
+</html>
