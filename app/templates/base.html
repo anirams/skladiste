@@ -8,11 +8,13 @@
         	<a href="{{ url_for('index') }}">Početna</a>
         	{% if current_user.is_anonymous %}
         	<a href="{{ url_for('login') }}">Prijava</a>
+            <a href="{{ url_for('register') }}">Registracija</a>
         	{% else %}
         	<p>Dobrodošli, {{ current_user.username }}!</p>
         	<a href="{{ url_for('stanje_skladista') }}">Stanje skladista</a>
         	<a href="{{ url_for('unos_proizvoda') }}">Unos proizvoda</a>
         	<a href="{{ url_for('dobavljaci') }}">Dobavljači</a>
+            <a href="{{ url_for('evidencija_unosa') }}">Evidencija unosa</a>
         	<a href="{{ url_for('user', username=current_user.username) }}">Profil</a>
         	<a href="{{ url_for('logout') }}">Odjava</a>
         	{% endif %}

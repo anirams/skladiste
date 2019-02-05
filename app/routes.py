@@ -68,14 +68,14 @@ def unos_proizvoda():
 		db.session.add(proizvod)
 		db.session.commit()
 		flash('Dodali ste proizvod!')
-
-		dobavljac = Dobavljac.query.filter_by(oib=form.oib.data)
-		evidencija = Evidencija(proizvod_id=proizvod.id, dobavljac_id=dobavljac.id)	
+		proizvod = Proizvod.query.filter_by(name=form.name.data).first()
+		dobavljac = Dobavljac.query.filter_by(oib=form.oib.data).first()
+		evidencija = Evidencija(proizvod_id=proizvod.id, dobavljac_id=dobavljac.id, user_id=current_user.id, zemlja_podrijetla=form.zemlja_podrijetla.data)
 		db.session.add(evidencija)
 		db.session.commit()
 		
 		return redirect(url_for('unos_proizvoda'))
-	return render_template('unos_proizvoda.html', title='Dodaj proivod', form=form)
+	return render_template('unos_proizvoda.html', title='Dodaj proizvod', form=form)
 
 @app.route('/stanje_skladista')
 @login_required

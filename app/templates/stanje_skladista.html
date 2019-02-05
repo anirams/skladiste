@@ -1,7 +1,16 @@
 {% extends "base.html" %}
 
 {% block content %}
+<table class="table table-striped">
+	<tr>
+        <th>Proizvod</th> 
+        <th>Kolicina</th>
+    </tr>
     {% for proizvod in proizvodi %}
-        <p>{{ proizvod.name }}</p><p>{{ proizvod.kolicina }}</p>
+    <tr>
+    	<td>{{ proizvod.name }}</td>
+    	<td>{{ proizvod.kolicina }}</td>
+    </tr>
     {% endfor %}
+</table> 
 {% endblock %}

@@ -30,6 +30,7 @@ class RegistrationForm(FlaskForm):
 class UnosProizvodaForm(FlaskForm):
 	name = StringField('Naziv proizvoda', validators=[DataRequired()])
 	kolicina = IntegerField('Kolicina', validators=[DataRequired()])
+	zemlja_podrijetla = StringField('Zemlja podrijetla', validators=[DataRequired()])
 	oib = IntegerField('OIB', validators=[DataRequired()])
 	submit = SubmitField()
 

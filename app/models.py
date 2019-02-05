@@ -9,6 +9,7 @@ class User(UserMixin, db.Model):
 	email = db.Column(db.String(120), index=True, unique=True)
 	password_hash = db.Column(db.String(128))
 	last_seen = db.Column(db.DateTime, default=datetime.utcnow)
+	evidencija = db.relationship('Evidencija', backref='user', lazy='dynamic')
 
 	def __repr__(self):
 		return '<User {}>'.format(self.username)  
@@ -27,6 +28,8 @@ class Proizvod(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	name = db.Column(db.String(64))
 	kolicina = db.Column(db.Integer)
+	zemlja_podrijetla = db.Column(db.String(64))
+	datum_unosa = db.Column(db.DateTime, default=datetime.utcnow)
 	evidencija = db.relationship('Evidencija', backref='proizvod', lazy='dynamic')
 
 class Dobavljac(db.Model):
@@ -43,3 +46,4 @@ class Evidencija(db.Model):
 	proizvod_id = db.Column(db.Integer, db.ForeignKey('proizvod.id'))
 	dobavljac_id = db.Column(db.Integer, db.ForeignKey('dobavljac.id'))
 	datum_unosa = db.Column(db.DateTime, default=datetime.utcnow)
+	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))

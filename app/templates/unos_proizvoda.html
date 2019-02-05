@@ -19,6 +19,14 @@
             {% endfor %}
         </p>
         <p>
+            {{ form.zemlja_podrijetla.label }}<br>
+            {{ form.zemlja_podrijetla(size=32) }}
+            {% for error in form.zemlja_podrijetla.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+
+        <p>
             {{ form.oib.label }}<br>
             {{ form.oib(size=32) }}
             {% for error in form.oib.errors %}
