@@ -21,4 +21,9 @@ class User(UserMixin, db.Model):
 
 @login.user_loader
 def load_user(id):
-    return User.query.get(int(id))
+	return User.query.get(int(id))
+
+class Proizvod(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	name = db.Column(db.String(64), index=True, unique=True)
+	kolicina = db.Column(db.Integer)

@@ -1,1 +1,2 @@
 FLASK_APP=skladiste.py
+FLASK_DEBUG=1

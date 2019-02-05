@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
+from wtforms import StringField, IntegerField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
-from app.models import User
+from app.models import User, Proizvod
 
 class LoginForm(FlaskForm):
 	username = StringField('Korisnicko ime', validators=[DataRequired()])
@@ -26,3 +26,8 @@ class RegistrationForm(FlaskForm):
 		user = User.query.filter_by(email=email.data).first()
 		if user is not None:
 			raise ValidationError('Korisnik sa ovom email adresom je vec registriran!')
+
+class UnosProizvodaForm(FlaskForm):
+	name = StringField('Naziv proizvoda', validators=[DataRequired()])
+	kolicina = IntegerField('Kolicina', validators=[DataRequired()])
+	submit = SubmitField()
