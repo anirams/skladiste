@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+<table class="table table-striped">
+	<tr>
+        <th>Proizvod</th> 
+        <th>Kolicina</th>
+        <th>Naziv tvrtke</th>
+        <th>OIB</th>
+        <th>Datum unosa</th>
+    </tr>
+    {% for e in evidencija %}
+    <tr>
+    	<td>{{ e.proizvod.name }}</td>
+    	<td>{{ e.proizvod.kolicina }}</td>
+    	<td>{{ e.dobavljac.name }}</td>
+    	<td>{{ e.dobavljac.oib }}</td>
+    	<td>{{ e.datum }}</td>
+    </tr>
+    {% endfor %}
+</table> 
+{% endblock %}

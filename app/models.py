@@ -25,5 +25,21 @@ def load_user(id):
 
 class Proizvod(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
-	name = db.Column(db.String(64), index=True, unique=True)
+	name = db.Column(db.String(64))
 	kolicina = db.Column(db.Integer)
+	evidencija = db.relationship('Evidencija', backref='proizvod', lazy='dynamic')
+
+class Dobavljac(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	name = db.Column(db.String(64), unique=True)
+	oib = db.Column(db.Integer, unique=True)
+	grad = db.Column(db.String(64))
+	p_broj = db.Column(db.Integer)
+	drzava = db.Column(db.String(64))
+	evidencija = db.relationship('Evidencija', backref='dobavljac', lazy='dynamic')
+
+class Evidencija(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	proizvod_id = db.Column(db.Integer, db.ForeignKey('proizvod.id'))
+	dobavljac_id = db.Column(db.Integer, db.ForeignKey('dobavljac.id'))
+	datum_unosa = db.Column(db.DateTime, default=datetime.utcnow)

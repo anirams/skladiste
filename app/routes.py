@@ -1,8 +1,8 @@
 from flask import render_template, flash, redirect, url_for, request
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, UnosProizvodaForm
+from app.forms import LoginForm, RegistrationForm, UnosDobavljacaForm, UnosProizvodaForm
 from flask_login import current_user, login_user, logout_user, login_required
-from app.models import User, Proizvod
+from app.models import User, Proizvod, Dobavljac, Evidencija
 from werkzeug.urls import url_parse
 from datetime import datetime
 
@@ -68,6 +68,12 @@ def unos_proizvoda():
 		db.session.add(proizvod)
 		db.session.commit()
 		flash('Dodali ste proizvod!')
+
+		dobavljac = Dobavljac.query.filter_by(oib=form.oib.data)
+		evidencija = Evidencija(proizvod_id=proizvod.id, dobavljac_id=dobavljac.id)	
+		db.session.add(evidencija)
+		db.session.commit()
+		
 		return redirect(url_for('unos_proizvoda'))
 	return render_template('unos_proizvoda.html', title='Dodaj proivod', form=form)
 
@@ -76,3 +82,24 @@ def unos_proizvoda():
 def stanje_skladista():
 	proizvodi = Proizvod.query.all()
 	return render_template('stanje_skladista.html', title='Stanje skladista', proizvodi=proizvodi)
+
+@app.route('/dobavljaci', methods=['GET', 'POST'])
+@login_required
+def dobavljaci():
+	form = UnosDobavljacaForm()
+	if form.validate_on_submit():
+		dobavljac = Dobavljac(name=form.name.data, oib=form.oib.data, grad=form.grad.data, 
+			p_broj=form.p_broj.data, drzava=form.drzava.data)
+		db.session.add(dobavljac)
+		db.session.commit()
+		flash('Uspješno ste unijeli dobavljača!')
+		return redirect(url_for('dobavljaci'))
+	else:
+		dobavljaci = Dobavljac.query.all()
+	return render_template('dobavljaci.html', title='Dodaj tvrtku dobavljača', form=form, dobavljaci=dobavljaci)
+
+@app.route('/evidencija_unosa')
+@login_required
+def evidencija_unosa():
+	evidencija = Evidencija.query.all()
+	return render_template('evidencija_unosa.html', title='Evidencija unosa', evidencija=evidencija)
