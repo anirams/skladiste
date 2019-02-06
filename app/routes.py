@@ -6,6 +6,9 @@ from app.models import User, Proizvod, Dobavljac, Evidencija
 from werkzeug.urls import url_parse
 from datetime import datetime
 
+
+
+
 @app.route('/')
 @app.route('/index')
 def index():
@@ -128,3 +131,15 @@ def dobavljaci():
 def evidencija_unosa():
 	evidencija = Evidencija.query.order_by(Evidencija.datum_unosa.desc()).all()
 	return render_template('evidencija_unosa.html', title='Evidencija unosa', evidencija=evidencija)
+
+@app.route('/search', methods=['GET', 'POST'])
+@login_required
+def search():
+    form = SearchForm()
+    if form.validate_on_submit():
+        search = form.search.data
+        proizvod = Proizvod.query.filter(Proizvod.name.like("%" + search + "%")).all()
+        return render_template("search.html", form=form, proizvodi=proizvodi)
+    proizvodi = Proizvod.query.all()
+    return render_template("search.html", form=form, proizvodi=proizvodi)
+
