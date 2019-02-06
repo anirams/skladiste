@@ -25,6 +25,7 @@ def load_user(id):
 	return User.query.get(int(id))
 
 class Proizvod(db.Model):
+	 __searchable__ = ['name']
 	id = db.Column(db.Integer, primary_key=True)
 	name = db.Column(db.String(64))
 	kolicina = db.Column(db.Integer)
@@ -45,6 +46,7 @@ class Evidencija(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	proizvod_id = db.Column(db.Integer, db.ForeignKey('proizvod.id'))
 	dobavljac_id = db.Column(db.Integer, db.ForeignKey('dobavljac.id'))
+	promijenjena_kolicina = db.Column(db.Integer)
 	datum_unosa = db.Column(db.DateTime, default=datetime.utcnow)
 	vrsta_unosa = db.Column(db.String(64))
 	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))

@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, url_for, request
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, UnosDobavljacaForm, UnosProizvodaForm
+from app.forms import LoginForm, RegistrationForm, UlazRobeForm, IzlazRobeForm, UnosDobavljacaForm, UnosProizvodaForm
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Proizvod, Dobavljac, Evidencija
 from werkzeug.urls import url_parse
@@ -82,7 +82,25 @@ def unos_proizvoda():
 def proizvod(name):
 	proizvod = Proizvod.query.filter_by(name=name).first_or_404()
 	evidencije = Evidencija.query.filter_by(proizvod_id=proizvod.id).order_by(Evidencija.datum_unosa.desc()).all()
-	return render_template('proizvod.html', title=name, proizvod=proizvod, evidencije=evidencije)
+	form_ulaz = UlazRobeForm()
+	form_izlaz = IzlazRobeForm()
+	if form_ulaz.submit1.data and form_ulaz.validate():
+			dobavljac = Dobavljac.query.filter_by(oib=form_ulaz.oib.data).first_or_404()
+			proizvod.kolicina += form_ulaz.promijenjena_kolicina.data
+			evidencija = Evidencija(proizvod_id=proizvod.id, dobavljac_id=dobavljac.id, promijenjena_kolicina=form_ulaz.promijenjena_kolicina.data, vrsta_unosa='zaprimanje', user_id=current_user.id)
+			db.session.add(evidencija)
+			db.session.commit()
+			flash('Dodali ste kolicinu na stanje!')
+			return redirect(url_for('proizvod', name=proizvod.name))
+	if form_izlaz.submit2.data and form_izlaz.validate():
+			dobavljac = Dobavljac.query.filter_by(oib=form_izlaz.oib.data).first_or_404()
+			proizvod.kolicina -= form_izlaz.promijenjena_kolicina.data
+			evidencija = Evidencija(proizvod_id=proizvod.id, dobavljac_id=dobavljac.id, promijenjena_kolicina=form_izlaz.promijenjena_kolicina.data, vrsta_unosa='izdavanje', user_id=current_user.id)
+			db.session.add(evidencija)
+			db.session.commit()
+			flash('Oduzeli ste kolicinu sa stanja!')
+			return redirect(url_for('proizvod', name=proizvod.name))
+	return render_template('proizvod.html', title=proizvod.name, proizvod=proizvod, evidencije=evidencije, form_ulaz=form_ulaz, form_izlaz=form_izlaz)
 
 @app.route('/stanje_skladista')
 @login_required

@@ -15,6 +15,53 @@
         
     </table>
     <hr>
+
+    <div class="row">
+        <div class="col-md-6">
+            <h1>Unos robe:</h1>
+            <form action="" method="post" novalidate="">
+                {{ form_ulaz.hidden_tag() }}
+                <p>
+                    {{ form_ulaz.promijenjena_kolicina.label }}<br>
+                    {{ form_ulaz.promijenjena_kolicina(size=32) }}
+                    {% for error in form_ulaz.promijenjena_kolicina.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </p>
+                <p>
+                    {{ form_ulaz.oib.label }}<br>
+                    {{ form_ulaz.oib(size=32) }}
+                    {% for error in form_ulaz.oib.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </p>
+                <p>{{ form_ulaz.submit1() }}</p>
+            </form>
+        </div>
+        <div class="col-md-6">
+            <h1>Izlaz robe:</h1>
+            <form action="" method="post" novalidate="">
+                {{ form_izlaz.hidden_tag() }}
+                <p>
+                    {{ form_izlaz.promijenjena_kolicina.label }}<br>
+                    {{ form_izlaz.promijenjena_kolicina(size=32) }}
+                    {% for error in form_izlaz.promijenjena_kolicina.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </p>
+                <p>
+                    {{ form_izlaz.oib.label }}<br>
+                    {{ form_izlaz.oib(size=32) }}
+                    {% for error in form_izlaz.oib.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </p>
+                <p>{{ form_izlaz.submit2() }}</p>
+            </form>
+        </div>
+    </div>
+
+    <hr>
     <h1>Povijest evidencije:</h1>
     <table class="table table-striped">
     <tr>
@@ -29,7 +76,7 @@
     {% for evidencija in evidencije %}
     <tr>
         <td>{{ evidencija.proizvod.name }}</td>
-        <td>{{ evidencija.proizvod.kolicina }}</td>
+        <td>{{ evidencija.promijenjena_kolicina }}</td>
         <td>{{ evidencija.dobavljac.name }}</td>
         <td>{{ evidencija.dobavljac.oib }}</td>
         <td>{{ evidencija.datum_unosa.strftime('%B %d %Y - %H:%M:%S') }}</td>
