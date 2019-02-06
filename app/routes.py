@@ -112,6 +112,7 @@ def stanje_skladista():
 @login_required
 def dobavljaci():
 	form = UnosDobavljacaForm()
+	#dob = Dobavljac.query.all()
 	if form.validate_on_submit():
 		dobavljac = Dobavljac(name=form.name.data, oib=form.oib.data, grad=form.grad.data, 
 			p_broj=form.p_broj.data, drzava=form.drzava.data)
