@@ -25,6 +25,7 @@ def load_user(id):
 	return User.query.get(int(id))
 
 class Proizvod(db.Model):
+	 __searchable__ = ['name']
 	id = db.Column(db.Integer, primary_key=True)
 	name = db.Column(db.String(64))
 	kolicina = db.Column(db.Integer)
