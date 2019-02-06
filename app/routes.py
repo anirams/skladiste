@@ -73,7 +73,7 @@ def unos_proizvoda():
 		evidencija = Evidencija(proizvod_id=proizvod.id, dobavljac_id=dobavljac.id, user_id=current_user.id, vrsta_unosa='unos')
 		db.session.add(evidencija)
 		db.session.commit()
-		
+		dobavljac = Dobavljac.query.all()
 		return redirect(url_for('unos_proizvoda'))
 	return render_template('unos_proizvoda.html', title='Dodaj proizvod', form=form)
 
