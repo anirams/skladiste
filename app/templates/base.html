@@ -11,6 +11,10 @@
 
 	<!-- Local CSS -->
 	<link href="../static/style.css" type="text/css" rel="stylesheet">
+
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+
 </head>
 <body>
 
@@ -25,19 +29,19 @@
 		<ul class="list-unstyled components">
 			<p>Dobrodošli, {{ current_user.username }}!</p>
 			<li class="active">
-				<a href="{{ url_for('index') }}">Pocetna</a>
+				<a href="{{ url_for('index') }}"><i class="fas fa-home mr-2"></i>Pocetna</a>
 			</li>
 			<li>
-				<a href="{{ url_for('stanje_skladista') }}">Stanje Skladista</a>
+				<a href="{{ url_for('stanje_skladista') }}"><i class="fas fa-warehouse mr-2"></i>Stanje Skladista</a>
 			</li>
 			<li>
-				<a href="{{ url_for('unos_proizvoda') }}">Unos Proizvoda</a>
+				<a href="{{ url_for('unos_proizvoda') }}"><i class="fas fa-lemon mr-2"></i>Unos Proizvoda</a>
 			</li>
 			<li>
-				<a href="{{ url_for('dobavljaci') }}">Dobavljaci</a>
+				<a href="{{ url_for('dobavljaci') }}"><i class="fas fa-handshake mr-2"></i>Dobavljaci</a>
 			</li>
 			<li>
-				<a href="{{ url_for('evidencija_unosa') }}">Evidencija Unosa</a>
+				<a href="{{ url_for('evidencija_unosa') }}"><i class="fas fa-book-open mr-2"></i>Evidencija Unosa</a>
 			</li>
 			<li>
 				<a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Pages</a>
