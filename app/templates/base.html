@@ -1,41 +1,128 @@
 <html>
-    <head>
-        <title>{{ title }} - Skladiste</title>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-    </head>
-    <body>
-        <div>Skladiste:
-        	<a href="{{ url_for('index') }}">Početna</a>
-        	{% if current_user.is_anonymous %}
-        	<a href="{{ url_for('login') }}">Prijava</a>
-            <a href="{{ url_for('register') }}">Registracija</a>
-        	{% else %}
-        	<p>Dobrodošli, {{ current_user.username }}!</p>
-        	<a href="{{ url_for('stanje_skladista') }}">Stanje skladista</a>
-        	<a href="{{ url_for('unos_proizvoda') }}">Unos proizvoda</a>
-        	<a href="{{ url_for('dobavljaci') }}">Dobavljači</a>
-            <a href="{{ url_for('evidencija_unosa') }}">Evidencija unosa</a>
-        	<a href="{{ url_for('user', username=current_user.username) }}">Profil</a>
-        	<a href="{{ url_for('logout') }}">Odjava</a>
-        	{% endif %}
-        </div>
-        <hr>
-        <div class="container">
-	        {% with messages = get_flashed_messages() %}
-	        {% if messages %}
-	        <div>
-	            {% for message in messages %}
-	            <p>{{ message }}</p>
-	            {% endfor %}
-	        </div>
-	        {% endif %}
-	        {% endwith %}
+<head>
+	<title>{{ title }} - Skladiste</title>
 
-	        {% block content %}
-	        {% endblock %}
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrisha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+	<!-- Local CSS -->
+	<link href="../static/style.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+
+	<div class="wrapper">
+
+	<!-- Sidebar -->
+	<nav id="sidebar">
+		<div class="sidebar-header ">
+			<h3 class="alen">SKLADISTE</h3>
+		</div>
+
+		<ul class="list-unstyled components">
+			<p>Dobrodošli, {{ current_user.username }}!</p>
+			<li class="active">
+				<a href="{{ url_for('index') }}">Pocetna</a>
+			</li>
+			<li>
+				<a href="{{ url_for('stanje_skladista') }}">Stanje Skladista</a>
+			</li>
+			<li>
+				<a href="{{ url_for('unos_proizvoda') }}">Unos Proizvoda</a>
+			</li>
+			<li>
+				<a href="{{ url_for('dobavljaci') }}">Dobavljaci</a>
+			</li>
+			<li>
+				<a href="{{ url_for('evidencija_unosa') }}">Evidencija Unosa</a>
+			</li>
+			<li>
+				<a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Pages</a>
+				<ul class="collapse list-unstyled" id="pageSubmenu">
+					<li>
+						<a class="link-dropdown" href="#">Page 1</a>
+					</li>
+					<li>
+						<a class="link-dropdown" href="#">Page 2</a>
+					</li>
+					<li>
+						<a class="link-dropdown" href="#">Page 3</a>
+					</li>
+				</ul>
+			</li> 
+		</ul>
+		<ul class="list-unstyled CTAs">
+                <li>
+                    <a href="{{ url_for('user', username=current_user.username) }}" class="tipka">PROFIL</a>
+                </li>
+                <li>
+                    <a href="{{ url_for('logout') }}" class="tipka">Odjava</a>
+                </li>
+            </ul>
+	</nav>
+
+	<!-- Page Content -->
+	<div id="content">
+		<nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+
+            <button type="button" id="sidebarCollapse" class="btn btn-info">
+                <i class="fas fa-align-left"></i>
+                <span>Toggle Sidebar</span>
+            </button>
+
         </div>
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
-		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
-    </body>
+    </nav>
+		
+	</div>
+		{% block content %}
+		{% endblock %}
+	</div> 
+	
+	<!--
+	<div>Skladiste:
+	 <a href="{{ url_for('index') }}">Početna</a>
+	 {% if current_user.is_anonymous %}
+	 <a href="{{ url_for('login') }}">Prijava</a>
+		<a href="{{ url_for('register') }}">Registracija</a>
+	 {% else %}
+	 <p>Dobrodošli, {{ current_user.username }}!</p>
+	 <a href="{{ url_for('stanje_skladista') }}">Stanje skladista</a>
+	 <a href="{{ url_for('unos_proizvoda') }}">Unos proizvoda</a>
+	 <a href="{{ url_for('dobavljaci') }}">Dobavljači</a>
+		<a href="{{ url_for('evidencija_unosa') }}">Evidencija unosa</a>
+	 <a href="{{ url_for('user', username=current_user.username) }}">Profil</a>
+	 <a href="{{ url_for('logout') }}">Odjava</a>
+	 {% endif %}
+	</div>
+	<hr>
+	<div class="container">
+		{% with messages = get_flashed_messages() %}
+		{% if messages %}
+		<div>
+			{% for message in messages %}
+			<p>{{ message }}</p>
+			{% endfor %}
+		</div>
+			{% endif %}
+			{% endwith %}
+
+			
+	</div>-->
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+
+	<!-- SAKRIJ MENU -->
+	<script type="text/javascript">
+        $(document).ready(function () {
+            $('#sidebarCollapse').on('click', function () {
+                $('#sidebar').toggleClass('active');
+            });
+        });
+    </script>
+</body>
 </html>
