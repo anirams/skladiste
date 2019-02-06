@@ -64,13 +64,13 @@ def before_request():
 def unos_proizvoda():
 	form = UnosProizvodaForm()
 	if form.validate_on_submit():
-		proizvod = Proizvod(name=form.name.data, kolicina=form.kolicina.data)
+		proizvod = Proizvod(name=form.name.data, zemlja_podrijetla=form.zemlja_podrijetla.data, kolicina=form.kolicina.data)
 		db.session.add(proizvod)
 		db.session.commit()
 		flash('Dodali ste proizvod!')
 		proizvod = Proizvod.query.filter_by(name=form.name.data).first()
 		dobavljac = Dobavljac.query.filter_by(oib=form.oib.data).first()
-		evidencija = Evidencija(proizvod_id=proizvod.id, dobavljac_id=dobavljac.id, user_id=current_user.id, zemlja_podrijetla=form.zemlja_podrijetla.data)
+		evidencija = Evidencija(proizvod_id=proizvod.id, dobavljac_id=dobavljac.id, user_id=current_user.id)
 		db.session.add(evidencija)
 		db.session.commit()
 		
