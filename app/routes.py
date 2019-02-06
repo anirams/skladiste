@@ -70,12 +70,19 @@ def unos_proizvoda():
 		flash('Dodali ste proizvod!')
 		proizvod = Proizvod.query.filter_by(name=form.name.data).first()
 		dobavljac = Dobavljac.query.filter_by(oib=form.oib.data).first()
-		evidencija = Evidencija(proizvod_id=proizvod.id, dobavljac_id=dobavljac.id, user_id=current_user.id)
+		evidencija = Evidencija(proizvod_id=proizvod.id, dobavljac_id=dobavljac.id, user_id=current_user.id, vrsta_unosa='unos')
 		db.session.add(evidencija)
 		db.session.commit()
 		
 		return redirect(url_for('unos_proizvoda'))
 	return render_template('unos_proizvoda.html', title='Dodaj proizvod', form=form)
+
+@app.route('/proizvod/<name>', methods=['GET', 'POST'])
+@login_required
+def proizvod(name):
+	proizvod = Proizvod.query.filter_by(name=name).first_or_404()
+	evidencije = Evidencija.query.filter_by(proizvod_id=proizvod.id).order_by(Evidencija.datum_unosa.desc()).all()
+	return render_template('proizvod.html', title=name, proizvod=proizvod, evidencije=evidencije)
 
 @app.route('/stanje_skladista')
 @login_required
@@ -101,5 +108,5 @@ def dobavljaci():
 @app.route('/evidencija_unosa')
 @login_required
 def evidencija_unosa():
-	evidencija = Evidencija.query.all()
+	evidencija = Evidencija.query.order_by(Evidencija.datum_unosa.desc()).all()
 	return render_template('evidencija_unosa.html', title='Evidencija unosa', evidencija=evidencija)

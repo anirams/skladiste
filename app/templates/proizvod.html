@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <table>
+        <tr>
+            <th>NAZIV PROIZVODA</th>
+            <th>ZEMLJA PODRIJETLA</th>
+            <th>KOLICINA</th>
+        </tr>
+        <tr>
+            <td>{{ proizvod.name }}</td>
+            <td>{{ proizvod.zemlja_podrijetla }}</td>
+            <td>{{ proizvod.kolicina }}</td>
+        </tr>
+        
+    </table>
+    <hr>
+    <h1>Povijest evidencije:</h1>
+    <table class="table table-striped">
+    <tr>
+        <th>Proizvod</th> 
+        <th>Kolicina</th>
+        <th>Naziv tvrtke</th>
+        <th>OIB</th>
+        <th>Datum unosa</th>
+        <th>Vrsta unosa</th>
+        <th>Korisnik</th>
+    </tr>
+    {% for evidencija in evidencije %}
+    <tr>
+        <td>{{ evidencija.proizvod.name }}</td>
+        <td>{{ evidencija.proizvod.kolicina }}</td>
+        <td>{{ evidencija.dobavljac.name }}</td>
+        <td>{{ evidencija.dobavljac.oib }}</td>
+        <td>{{ evidencija.datum_unosa.strftime('%B %d %Y - %H:%M:%S') }}</td>
+        <td>{{ evidencija.vrsta_unosa }}</td>
+        <td>{{ evidencija.user.username }}</td>
+    </tr>
+    {% endfor %}
+</table> 
+{% endblock %}

@@ -41,3 +41,9 @@ class UnosDobavljacaForm(FlaskForm):
 	p_broj = IntegerField('Poštanski broj', validators=[DataRequired()])
 	drzava = StringField('Država', validators=[DataRequired()])
 	submit = SubmitField()
+
+class UnosIznosRobeForm(FlaskForm):
+	kolicina = IntegerField('Kolicina', validators=[DataRequired()])
+	oib = IntegerField('OIB', validators=[DataRequired()])
+	submit_dodaj = SubmitField('Ulaz')
+	submit_oduzmi =SubmitField('Izlaz')
