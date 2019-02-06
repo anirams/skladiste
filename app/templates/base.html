@@ -23,11 +23,11 @@
 	<!-- Sidebar -->
 	<nav id="sidebar">
 		<div class="sidebar-header ">
-			<h3 class="alen">SKLADISTE</h3>
+			<h3 class="alen">SKLADIŠTE<i class="fas fa-truck ml-3"></i></h3>
 		</div>
 
 		<ul class="list-unstyled components">
-			<p>Dobrodošli, {{ current_user.username }}!</p>
+			<h4>Dobrodošli, {{ current_user.username }}!</h4>
 			<li class="active">
 				<a href="{{ url_for('index') }}"><i class="fas fa-home mr-2"></i>Pocetna</a>
 			</li>
@@ -73,20 +73,33 @@
 	</nav>
 
 	<!-- Page Content -->
-	<div id="content">
-		<nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
+		<div id="content">
+			<nav class="navbar navbar-expand-lg navbar-light bg-light">
+	        <div class="container-fluid">
 
-            <button type="button" id="sidebarCollapse" class="btn btn-info">
-                <i class="fas fa-align-left"></i>
-                <span>Toggle Sidebar</span>
-            </button>
 
-        </div>
-    </nav>
-		{% block content %}
-		{% endblock %}
-	</div>
+	            <button type="button" id="sidebarCollapse" class="btn btn-info">
+	                <i class="fas fa-align-left"></i>
+	                <span>Toggle Sidebar</span>
+	            </button> <br>
+			<div class="container">
+				        {% with messages = get_flashed_messages() %}
+				        {% if messages %}
+				        <div>
+			     	        {% for message in messages %}
+				            <p>{{ message }}</p>
+				            {% endfor %}
+				        </div>
+				            {% endif %}
+				            {% endwith %}			            
+			</div>
+	    </div>
+	</nav>
+			    
+			{% block content %}
+			{% endblock %}
+		</div>
+
 		
 	</div> 
 	
@@ -106,20 +119,8 @@
 	 <a href="{{ url_for('logout') }}">Odjava</a>
 	 {% endif %}
 	</div>
-	<hr>
-	<div class="container">
-		{% with messages = get_flashed_messages() %}
-		{% if messages %}
-		<div>
-			{% for message in messages %}
-			<p>{{ message }}</p>
-			{% endfor %}
-		</div>
-			{% endif %}
-			{% endwith %}
-
-			
-	</div>-->
+	<hr>-->
+	
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
