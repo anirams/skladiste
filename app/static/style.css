@@ -13,6 +13,10 @@ p {
     color: #999;
 }
 
+h4 {
+    padding: 15px;
+}
+
 .wrapper {
     display: flex;
     width: 100%;
@@ -93,11 +97,11 @@ ul.CTAs a {
 /* BODY */
 
 .tipka{
-    background-color: #405159;
+    background-color: #477ea5;
+    color: white;
 }
 
 .tijelo {
-    width: 100%;
     padding: 5px 60px; 
     margin-top: 1vh;
 }

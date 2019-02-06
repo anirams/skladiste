@@ -6,11 +6,12 @@ from app.models import User, Proizvod, Dobavljac, Evidencija
 from werkzeug.urls import url_parse
 from datetime import datetime
 
-@app.route('/')
+
 @app.route('/index')
 def index():
 	return render_template('index.html', title='Home')
 
+@app.route('/', methods=['GET', 'POST'])
 @app.route('/login', methods=['GET', 'POST'])
 def login():
 	if current_user.is_authenticated:
@@ -31,7 +32,7 @@ def login():
 @app.route('/logout')
 def logout():
 	logout_user()
-	return redirect(url_for('index'))
+	return redirect(url_for('login'))
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():

@@ -23,11 +23,11 @@
 	<!-- Sidebar -->
 	<nav id="sidebar">
 		<div class="sidebar-header ">
-			<h3 class="alen">SKLADISTE</h3>
+			<h3 class="alen">SKLADIŠTE<i class="fas fa-truck ml-3"></i></h3>
 		</div>
 
 		<ul class="list-unstyled components">
-			<p>Dobrodošli, {{ current_user.username }}!</p>
+			<h4>Dobrodošli, {{ current_user.username }}!</h4>
 			<li class="active">
 				<a href="{{ url_for('index') }}"><i class="fas fa-home mr-2"></i>Pocetna</a>
 			</li>
@@ -73,7 +73,7 @@
 		<nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
 
-            <button type="button" id="sidebarCollapse" class="btn btn-info">
+            <button type="button" id="sidebarCollapse" class="btn tipka">
                 <i class="fas fa-align-left"></i>
                 <span>Toggle Sidebar</span>
             </button>
