@@ -1,0 +1,21 @@
+*{
+	color: #bec9cd;
+}
+
+.bg {
+	background: url('https://d2v9y0dukr6mq2.cloudfront.net/video/thumbnail/HeJh0cCLMjdjqymvo/videoblocks-blue-smoke-from-smoke-bomb-on-gray-background-in-slow-motion_hqgd7hrywg_thumbnail-full04.png') no-repeat; width: 100%; height: 100vh;
+	background-size: cover;
+	background-color: #17a2b8;
+}
+
+.form-container {
+	border: 0px solid white; padding: 50px 60px; margin-top: 20vh;
+	-webkit-box-shadow: -1px 4px 26px 11px rgba(0,0,0,0.75);
+	-moz-box-shadow: -1px 4px 26px 11px rgba(0,0,0,0.75);
+	box-shadow: -1px 4px 26px 11px rgba(0,0,0,0.75);	
+}
+
+.tipka {
+	background-color: #17a2b8;
+	color: #bec9cd;
+}
