@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, IntegerField, PasswordField, BooleanField, SubmitField
+from wtforms import StringField, IntegerField, PasswordField, BooleanField, SubmitField, HiddenField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 from app.models import User, Proizvod
 
@@ -42,8 +42,12 @@ class UnosDobavljacaForm(FlaskForm):
 	drzava = StringField('Država', validators=[DataRequired()])
 	submit = SubmitField()
 
-class UnosIznosRobeForm(FlaskForm):
-	kolicina = IntegerField('Kolicina', validators=[DataRequired()])
+class UlazRobeForm(FlaskForm):
+	promijenjena_kolicina = IntegerField('Kolicina', validators=[DataRequired()])
 	oib = IntegerField('OIB', validators=[DataRequired()])
-	submit_dodaj = SubmitField('Ulaz')
-	submit_oduzmi =SubmitField('Izlaz')
+	submit1 = SubmitField()
+	
+class IzlazRobeForm(FlaskForm):
+	promijenjena_kolicina = IntegerField('Kolicina', validators=[DataRequired()])
+	oib = IntegerField('OIB', validators=[DataRequired()])
+	submit2 = SubmitField()
