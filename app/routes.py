@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, url_for, request
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, UlazRobeForm, IzlazRobeForm, UnosDobavljacaForm, UnosProizvodaForm
+from app.forms import LoginForm, RegistrationForm, UlazRobeForm, IzlazRobeForm, UnosDobavljacaForm, UnosProizvodaForm, SearchForm
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Proizvod, Dobavljac, Evidencija
 from werkzeug.urls import url_parse
@@ -135,11 +135,12 @@ def evidencija_unosa():
 @app.route('/search', methods=['GET', 'POST'])
 @login_required
 def search():
-    form = SearchForm()
-    if form.validate_on_submit():
-        search = form.search.data
-        proizvod = Proizvod.query.filter(Proizvod.name.like("%" + search + "%")).all()
-        return render_template("search.html", form=form, proizvodi=proizvodi)
-    proizvodi = Proizvod.query.all()
-    return render_template("search.html", form=form, proizvodi=proizvodi)
+	proizvodi = Proizvod.query.all()
+	form = SearchForm()
+	if form.validate_on_submit():
+		search = form.search.data
+		proizvodi = Proizvod.query.filter(Proizvod.name.like("%" + search + "%")).all()
+		return render_template("search.html", form=form, proizvodi=proizvodi)
+	
+	return render_template("search.html", form=form, proizvodi=proizvodi)
 
