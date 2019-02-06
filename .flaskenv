@@ -1,2 +1,3 @@
 FLASK_APP=skladiste.py
 FLASK_DEBUG=1
+ELASTICSEARCH_URL=http://localhost:9200
