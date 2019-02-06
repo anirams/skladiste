@@ -18,7 +18,7 @@
 </head>
 <body>
 
-	<div class="wrapper">
+	<div class="container-fluid">
 
 	<!-- Sidebar -->
 	<nav id="sidebar">
@@ -69,17 +69,18 @@
 	</nav>
 
 	<!-- Page Content -->
-	<div id="content">
+	<div id="container-fluid">
+		
 		<nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
+        <div class="container-fluid plavo">
 
             <button type="button" id="sidebarCollapse" class="btn tipka">
                 <i class="fas fa-align-left"></i>
                 <span>Toggle Sidebar</span>
             </button>
-
+		 
         </div>
-    </nav>
+   </nav>
     	<div class="container-fluid tijelo">
     		{% block content %}
 			{% endblock %}
