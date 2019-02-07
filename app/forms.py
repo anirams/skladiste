@@ -49,7 +49,18 @@ class UlazRobeForm(FlaskForm):
 	promijenjena_kolicina = IntegerField('Kolicina', validators=[DataRequired()])
 	oib = IntegerField('OIB', validators=[DataRequired()])
 	submit1 = SubmitField()
-	
+	def validate(self):
+		rv = FlaskForm.validate(self)
+		if not rv:
+			return False
+		tvrtka = Tvrtka.query.filter_by(
+			oib=self.oib.data).first()
+		if tvrtka is None:
+			self.oib.errors.append('Tvrtka ne postoji')
+			return False
+		else:
+			return True
+			
 class IzlazRobeForm(FlaskForm):
 	promijenjena_kolicina = IntegerField('Kolicina', validators=[DataRequired()])
 	oib = IntegerField('OIB', validators=[DataRequired()])
