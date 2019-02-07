@@ -27,10 +27,21 @@
 
                 </div>
                 {{ form.submit(type="submit", class="btn tipka btn-block") }}
+                <div class="container">
+                        {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                        <div>
+                            {% for message in messages %}
+                            <p class="netocno">{{ message }}</p>
+                            {% endfor %}
+                        </div>
+                            {% endif %}
+                            {% endwith %}                       
+                </div>
                 <div class="pt-3">
-                    <small class="">
+                    <p>
                         Novi korisnik? <a class="ml-2" href="{{ url_for('register') }}">Klikni za registraciju</a>
-                    </small>
+                    </p>
                 </div>      
             </form>
             
