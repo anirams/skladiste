@@ -75,12 +75,12 @@
             <th>Datum unosa</th>
             <th>Korisnik</th>
         </tr>
-        {% for evidencija in evidencija_unosa %}
+        {% for evidencija in evidencijaUnos %}
         <tr>
             <td>{{ evidencija.proizvod.name }}</td>
             <td>{{ evidencija.promijenjena_kolicina }}</td>
-            <td>{{ evidencija.dobavljac.name }}</td>
-            <td>{{ evidencija.dobavljac.oib }}</td>
+            <td>{{ evidencija.tvrtka.name }}</td>
+            <td>{{ evidencija.tvrtka.oib }}</td>
             <td>{{ evidencija.datum_unosa.strftime('%B %d %Y - %H:%M:%S') }}</td>
             <td>{{ evidencija.user.username }}</td>
         </tr>
@@ -98,12 +98,12 @@
             <th>Datum unosa</th>
             <th>Korisnik</th>
         </tr>
-        {% for evidencija in evidencija_izdavanja %}
+        {% for evidencija in evidencijaIzlaz %}
         <tr>
             <td>{{ evidencija.proizvod.name }}</td>
             <td>{{ evidencija.promijenjena_kolicina }}</td>
-            <td>{{ evidencija.kupac.name }}</td>
-            <td>{{ evidencija.kupac.oib }}</td>
+            <td>{{ evidencija.tvrtka.name }}</td>
+            <td>{{ evidencija.tvrtka.oib }}</td>
             <td>{{ evidencija.datum_unosa.strftime('%B %d %Y - %H:%M:%S') }}</td>
             <td>{{ evidencija.user.username }}</td>
         </tr>
