@@ -10,7 +10,8 @@ class User(UserMixin, db.Model):
 	email = db.Column(db.String(120), index=True, unique=True)
 	password_hash = db.Column(db.String(128))
 	last_seen = db.Column(db.DateTime, default=datetime.utcnow)
-	evidencija = db.relationship('Evidencija', backref='user', lazy='dynamic')
+	evidencija_unosa = db.relationship('EvidencijaUnosa', backref='user', lazy='dynamic')
+	evidencija_izdavanja = db.relationship('EvidencijaIzdavanja', backref='user', lazy='dynamic')
 
 	def __repr__(self):
 		return '<User {}>'.format(self.username)  
@@ -32,7 +33,8 @@ class Proizvod(db.Model):
 	kolicina = db.Column(db.Integer)
 	zemlja_podrijetla = db.Column(db.String(64))
 	datum_unosa = db.Column(db.DateTime, default=datetime.utcnow)
-	evidencija = db.relationship('Evidencija', backref='proizvod', lazy='dynamic')
+	evidencija_unosa = db.relationship('EvidencijaUnosa', backref='proizvod', lazy='dynamic')
+	evidencija_izdavanja = db.relationship('EvidencijaIzdavanja', backref='proizvod', lazy='dynamic')
 
 class Dobavljac(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
@@ -41,15 +43,29 @@ class Dobavljac(db.Model):
 	grad = db.Column(db.String(64))
 	p_broj = db.Column(db.Integer)
 	drzava = db.Column(db.String(64))
-	evidencija = db.relationship('Evidencija', backref='dobavljac', lazy='dynamic')
+	evidencija = db.relationship('EvidencijaUnosa', backref='dobavljac', lazy='dynamic')
 
-class Evidencija(db.Model):
+class EvidencijaUnosa(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	proizvod_id = db.Column(db.Integer, db.ForeignKey('proizvod.id'))
 	dobavljac_id = db.Column(db.Integer, db.ForeignKey('dobavljac.id'))
 	promijenjena_kolicina = db.Column(db.Integer)
 	datum_unosa = db.Column(db.DateTime, default=datetime.utcnow)
-	vrsta_unosa = db.Column(db.String(64))
 	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
+class Kupac(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	name = db.Column(db.String(64), unique=True)
+	oib = db.Column(db.Integer, unique=True)
+	grad = db.Column(db.String(64))
+	p_broj = db.Column(db.Integer)
+	drzava = db.Column(db.String(64))
+	evidencija = db.relationship('EvidencijaIzdavanja', backref='kupac', lazy='dynamic')
 
+class EvidencijaIzdavanja(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	proizvod_id = db.Column(db.Integer, db.ForeignKey('proizvod.id'))
+	kupac_id = db.Column(db.Integer, db.ForeignKey('kupac.id'))
+	promijenjena_kolicina = db.Column(db.Integer)
+	datum_unosa = db.Column(db.DateTime, default=datetime.utcnow)
+	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
