@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Korisnik: {{ user.username }}</h1>
+    <h1>Korisnik: {{ user.username }}</h1><br>
     <hr>
-    {% if user.last_seen %}<p>Posljednje viđen: {{ user.last_seen }}</p>{% endif %}
+    {% if user.last_seen %}<p>Posljednje viđen: {{ user.last_seen }}</p>{% endif %}<br>
+   <p><a href="{{ url_for('edit_password') }}">Edit your password</a></p>
 {% endblock %}

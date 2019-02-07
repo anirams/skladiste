@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, url_for, request
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, UlazRobeForm, IzlazRobeForm, UnosTvrtkeForm, UnosProizvodaForm, SearchForm
+from app.forms import LoginForm, RegistrationForm, UlazRobeForm, IzlazRobeForm, UnosProizvodaForm, SearchForm, EditPasswordForm
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Proizvod, Tvrtka, Evidencija
 from werkzeug.urls import url_parse
@@ -151,3 +151,14 @@ def search():
 	
 	return render_template("search.html", form=form, proizvodi=proizvodi)
 
+
+@app.route('/edit_password', methods=['GET', 'POST'])
+@login_required
+def edit_password():
+	form = EditPasswordForm()
+	if form.validate_on_submit():
+		current_user.set_password(form.password.data)
+		db.session.commit()
+		flash('Vaše promjene su spremljene')
+		return redirect(url_for('edit_password'))
+	return render_template('edit_password.html', title='Edit Profile', form=form)
