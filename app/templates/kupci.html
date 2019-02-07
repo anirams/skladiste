@@ -1,7 +1,5 @@
 {% extends "base.html" %}
 
-{% block dobavljaci %}active{% endblock %}
-
 {% block content %}
 <div class="row">
     <div class="col-md-7">
@@ -14,13 +12,13 @@
             <th>POŠTANSKI BROJ</th>
             <th>DRŽAVA</th>
         </tr>
-    {% for dobavljac in dobavljaci %}
+    {% for kupac in kupci %}
         <tr>
-            <td>{{ dobavljac.name }}</td>
-            <td>{{ dobavljac.oib }}</td> 
-            <td>{{ dobavljac.grad }}</td>
-            <td>{{ dobavljac.p_broj }}</td>
-            <td>{{ dobavljac.drzava }}</td>
+            <td>{{ kupac.name }}</td>
+            <td>{{ kupac.oib }}</td> 
+            <td>{{ kupac.grad }}</td>
+            <td>{{ kupac.p_broj }}</td>
+            <td>{{ kupac.drzava }}</td>
         </tr>     
     {% endfor %}
     </table>

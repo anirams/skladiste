@@ -106,6 +106,18 @@ ul.CTAs a {
     margin-top: 1vh;
 }
 
+.plava-pozadina {
+    background-color: #477ea5;
+    padding: 21px 10px;
+}
+.plavo {
+    display: flex;
+    
+    width: 100vw;
+}
+
+
+
 
 
 @media (max-width: 768px) {

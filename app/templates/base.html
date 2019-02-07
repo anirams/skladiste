@@ -26,38 +26,36 @@
 			<h3 class="alen">SKLADIŠTE<i class="fas fa-truck ml-3"></i></h3>
 		</div>
 
-		<ul class="list-unstyled components">
+		<ul class="list-unstyled components" id="navigation">
 			<h4>Dobrodošli, {{ current_user.username }}!</h4>
-			<li class="active">
+
+			<li class="{% block index %}{% endblock %}">
 				<a href="{{ url_for('index') }}"><i class="fas fa-home mr-2"></i>Pocetna</a>
 			</li>
-			<li>
+			<li class="{% block stanje_skladista %}{% endblock %}">
 				<a href="{{ url_for('stanje_skladista') }}"><i class="fas fa-warehouse mr-2"></i>Stanje Skladista</a>
 			</li>
-			<li>
+			<li class="{% block unos_proizvoda %}{% endblock %}">
 				<a href="{{ url_for('unos_proizvoda') }}"><i class="fas fa-lemon mr-2"></i>Unos Proizvoda</a>
 			</li>
-			<li>
+			<li class="{% block dobavljaci %}{% endblock %}">
 				<a href="{{ url_for('dobavljaci') }}"><i class="fas fa-handshake mr-2"></i>Dobavljaci</a>
 			</li>
 			<li>
-				<a href="{{ url_for('evidencija_unosa') }}"><i class="fas fa-book-open mr-2"></i>Evidencija Unosa</a>
+				<a href="{{ url_for('kupci') }}"><i class="fas fa-handshake mr-2"></i>Kupci</a>
 			</li>
-            <li>
+            <li class="{% block pretraga %}{% endblock %}">
                 <a href="{{ url_for('search') }}"><i class="fas fa-book-open mr-2"></i>Pretraga</a>
             </li>
-            
+
 			<li>
-				<a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Pages</a>
+				<a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Evidencije</a>
 				<ul class="collapse list-unstyled" id="pageSubmenu">
 					<li>
-						<a class="link-dropdown" href="#">Page 1</a>
+						<a class="link-dropdown" href="{{ url_for('evidencija_unosa') }}">Evidencija unosa</a>
 					</li>
 					<li>
-						<a class="link-dropdown" href="#">Page 2</a>
-					</li>
-					<li>
-						<a class="link-dropdown" href="#">Page 3</a>
+						<a class="link-dropdown" href="{{ url_for('evidencija_izdavanja' )}}">Evidencija izdavanja</a>
 					</li>
 				</ul>
 			</li> 
@@ -73,11 +71,9 @@
 	</nav>
 
 	<!-- Page Content -->
-		<div id="content">
-			<nav class="navbar navbar-expand-lg navbar-light bg-light">
-	        <div class="container-fluid">
 
-
+		<div>
+	        <div class="container-fluid plava-pozadina">
 	            <button type="button" id="sidebarCollapse" class="btn btn-info">
 	                <i class="fas fa-align-left"></i>
 	                <span>Toggle Sidebar</span>
@@ -93,15 +89,16 @@
 				            {% endif %}
 				            {% endwith %}			            
 			</div>
-	    </div>
-	</nav>
-			    
+	    	</div>
+			<div class="plavo">
 			{% block content %}
 			{% endblock %}
+			</div>
 		</div>
 
 		
-	</div> 
+	
+	
 	
 	<!--
 	<div>Skladiste:
