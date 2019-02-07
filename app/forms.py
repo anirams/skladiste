@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField, PasswordField, BooleanField, SubmitField, HiddenField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
-from app.models import User, Proizvod, Dobavljac, Kupac, EvidencijaUnosa, EvidencijaIzdavanja
+from app.models import User, Proizvod, Tvrtka, Evidencija
 from flask import request
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import current_user
@@ -37,15 +37,7 @@ class UnosProizvodaForm(FlaskForm):
 	oib = IntegerField('OIB', validators=[DataRequired()])
 	submit = SubmitField()
 
-class UnosDobavljacaForm(FlaskForm):
-	name = StringField('Naziv tvrtke', validators=[DataRequired()])
-	oib = IntegerField('OIB', validators=[DataRequired()])
-	grad = StringField('Grad', validators=[DataRequired()])
-	p_broj = IntegerField('Poštanski broj', validators=[DataRequired()])
-	drzava = StringField('Država', validators=[DataRequired()])
-	submit = SubmitField()
-
-class UnosKupcaForm(FlaskForm):
+class UnosTvrtkeForm(FlaskForm):
 	name = StringField('Naziv tvrtke', validators=[DataRequired()])
 	oib = IntegerField('OIB', validators=[DataRequired()])
 	grad = StringField('Grad', validators=[DataRequired()])
@@ -66,10 +58,10 @@ class IzlazRobeForm(FlaskForm):
 		rv = FlaskForm.validate(self)
 		if not rv:
 			return False
-		kupac = Kupac.query.filter_by(
+		tvrtka = Tvrtka.query.filter_by(
 			oib=self.oib.data).first()
-		if kupac is None:
-			self.oib.errors.append('Kupac ne postoji')
+		if tvrtka is None:
+			self.oib.errors.append('Tvrtka ne postoji')
 			return False
 		else:
 			return True
