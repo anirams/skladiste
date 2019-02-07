@@ -1,24 +1,24 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <table>
-        <tr>
-            <th>NAZIV PROIZVODA</th>
-            <th>ZEMLJA PODRIJETLA</th>
-            <th>KOLICINA</th>
-        </tr>
-        <tr>
-            <td>{{ proizvod.name }}</td>
-            <td>{{ proizvod.zemlja_podrijetla }}</td>
-            <td>{{ proizvod.kolicina }}</td>
-        </tr>
-        
-    </table>
-    <hr>
-
+<div class="container pt-2">
+    <div class="row">
+        <div class="col-md-4">
+            <h5>NAZIV PROIZVODA</h5>
+            <p>{{ proizvod.name }}</p>
+        </div>
+        <div class="col-md-4">
+            <h5>ZEMLJA PODRIJETLA</h5>
+            <p>{{ proizvod.zemlja_podrijetla }}</p>
+        </div>
+        <div class="col-md-4">
+            <h5>KOLICINA</h5>
+            <p>{{ proizvod.kolicina }}</p>
+        </div>
+    </div>
     <div class="row">
         <div class="col-md-6">
-            <h1>Unos robe:</h1>
+            <h5>Unos robe:</h5>
             <form action="" method="post" novalidate="">
                 {{ form_ulaz.hidden_tag() }}
                 <p>
@@ -39,7 +39,7 @@
             </form>
         </div>
         <div class="col-md-6">
-            <h1>Izlaz robe:</h1>
+            <h5>Izlaz robe:</h5>
             <form action="" method="post" novalidate="">
                 {{ form_izlaz.hidden_tag() }}
                 <p>
@@ -62,7 +62,7 @@
     </div>
 
     <hr>
-    <h1>Povijest evidencije:</h1>
+    <h5>Povijest evidencije:</h5>
     <div class="row">
         <div class="col-md-6">
             <h2>Evidencija unosa</h2>
@@ -111,4 +111,5 @@
         </table> 
         </div>
     </div>
+</div>
 {% endblock %}

@@ -78,17 +78,7 @@
 	                <i class="fas fa-align-left"></i>
 	                <span>Toggle Sidebar</span>
 	            </button> <br>
-			<div class="container">
-				        {% with messages = get_flashed_messages() %}
-				        {% if messages %}
-				        <div>
-			     	        {% for message in messages %}
-				            <p>{{ message }}</p>
-				            {% endfor %}
-				        </div>
-				            {% endif %}
-				            {% endwith %}			            
-			</div>
+			
 	    	</div>
 			<div class="plavo">
 			{% block content %}
