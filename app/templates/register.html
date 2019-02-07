@@ -36,10 +36,21 @@
                 </div>
 
                 {{ form.submit(type="submit", class="btn tipka btn-block") }}
+                <div class="container">
+                        {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                        <div>
+                            {% for message in messages %}
+                            <p class="tocno">{{ message }}</p>
+                            {% endfor %}
+                        </div>
+                            {% endif %}
+                            {% endwith %}                       
+                </div>
                 <div class="pt-3">
-                    <small class="">
+                    <p>
                         Vec Imas Korisnički račun? <a class="ml-2" href="{{ url_for('login') }}">Klikni za login</a>
-                    </small>
+                    </p>
                 </div>      
             </form>
 {% endblock content2 %}

@@ -19,3 +19,17 @@
 	background-color: #17a2b8;
 	color: #bec9cd;
 }
+
+.netocno {
+	padding-top: 10px;
+	color: red;
+	font-weight: bold;
+	font-size: 17px
+}
+
+.tocno {
+	padding-top: 10px;
+	color: #007bff;
+	font-weight: bold;
+	font-size: 17px
+}
