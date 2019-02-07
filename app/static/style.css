@@ -102,17 +102,26 @@ ul.CTAs a {
 }
 
 .tijelo {
-    padding: 5px 60px; 
-    margin-top: 1vh;
+    display: inline-block;
+    width: 100%;
+}
+
+.plavo{
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+
 }
 
 .plava-pozadina {
     background-color: #477ea5;
-    padding: 21px 10px;
+    display: inline-block;
+    width: 100%;
+    height: 81.5px;
 }
-.plavo {
-    display: flex;
-    width: 100vw;
+
+.index{
+    padding-top: 30vh;
 }
 
 
