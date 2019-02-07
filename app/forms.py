@@ -43,6 +43,14 @@ class UnosDobavljacaForm(FlaskForm):
 	drzava = StringField('Država', validators=[DataRequired()])
 	submit = SubmitField()
 
+class UnosKupcaForm(FlaskForm):
+	name = StringField('Naziv tvrtke', validators=[DataRequired()])
+	oib = IntegerField('OIB', validators=[DataRequired()])
+	grad = StringField('Grad', validators=[DataRequired()])
+	p_broj = IntegerField('Poštanski broj', validators=[DataRequired()])
+	drzava = StringField('Država', validators=[DataRequired()])
+	submit = SubmitField()
+
 class UlazRobeForm(FlaskForm):
 	promijenjena_kolicina = IntegerField('Kolicina', validators=[DataRequired()])
 	oib = IntegerField('OIB', validators=[DataRequired()])
