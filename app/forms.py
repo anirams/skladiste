@@ -69,6 +69,8 @@ class IzlazRobeForm(FlaskForm):
 		if kupac is None:
 			self.oib.errors.append('Kupac ne postoji')
 			return False
+		else:
+			return True
 
 class SearchForm(FlaskForm):
 	search = StringField(('Search'), validators=[DataRequired()])
