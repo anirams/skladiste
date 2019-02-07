@@ -60,7 +60,7 @@ class UlazRobeForm(FlaskForm):
 			return False
 		else:
 			return True
-			
+
 class IzlazRobeForm(FlaskForm):
 	promijenjena_kolicina = IntegerField('Kolicina', validators=[DataRequired()])
 	oib = IntegerField('OIB', validators=[DataRequired()])
@@ -88,7 +88,7 @@ class EditPasswordForm(FlaskForm):
 		'Ponovite lozinku', validators=[DataRequired(), EqualTo('password')])
 	
 	def validate(self):
-		user1 = User.query.filter_by(username=current_user.username).first()
+		user1 = User.query.get(current_user.id)
 		rv = FlaskForm.validate(self)
 		if not rv:
 			return False
