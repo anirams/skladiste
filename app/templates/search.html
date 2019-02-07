@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block pretraga %}active{% endblock %}
+
+{% block content %}
+<form action="" method="post" novalidate="">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.search.label }}<br>
+            {{ form.search(size=32) }}
+            {% for error in form.search.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+
+        {{ form.submit(type="submit", class="btn tipka btn-block") }}
+    </form>
+<table class="table table-striped">
+    <tr>
+        <th>Proizvod</th> 
+        <th>Kolicina</th>
+    </tr>
+    {% for proizvod in proizvodi %}
+    <tr>
+        <td><a href="proizvod/{{proizvod.name}}">{{ proizvod.name }}</a></td>
+        <td>{{ proizvod.kolicina }}</td>
+    </tr>
+    {% endfor %}
+</table> 
+{% endblock %}
