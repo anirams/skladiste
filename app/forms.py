@@ -3,6 +3,8 @@ from wtforms import StringField, IntegerField, PasswordField, BooleanField, Subm
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 from app.models import User, Proizvod, Dobavljac, Kupac, EvidencijaUnosa, EvidencijaIzdavanja
 from flask import request
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import current_user
 
 class LoginForm(FlaskForm):
 	username = StringField('Korisnicko ime', validators=[DataRequired()])
@@ -76,4 +78,20 @@ class SearchForm(FlaskForm):
 	search = StringField(('Search'), validators=[DataRequired()])
 	submit = SubmitField()
 
+class EditPasswordForm(FlaskForm):
+	old_password = PasswordField('Stara Lozinka', validators=[DataRequired()])
+	password = PasswordField('Lozinka', validators=[DataRequired()])
+	password2 = PasswordField(
+		'Ponovite lozinku', validators=[DataRequired(), EqualTo('password')])
 	
+	def validate(self):
+		user1 = User.query.filter_by(username=current_user.username).first()
+		rv = FlaskForm.validate(self)
+		if not rv:
+			return False
+		if not check_password_hash(user1.password_hash, self.old_password.data):
+			self.old_password.errors.append('Krivi password')
+			return False
+		else:
+			return True
+	submit = SubmitField()
