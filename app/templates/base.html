@@ -19,6 +19,17 @@
 <body>
 
 	<div class="wrapper">
+		
+	<!-- Highlighting Active Menu Items -->
+	{% set navigation_bar = [
+    ('index', 'index', 'Pocetna'),
+    ('stanje_skladista', 'stanje_skladista', 'Stanje skladista'),
+    ('unos_proizvoda', 'unos_proizvoda', 'Unos proizvoda'),
+    ('dobavljaci', 'dobavljaci', 'Dobavljaci'),
+    ('evidencija_unosa', 'evidencija_unosa', 'Evidencija unosa'),
+    ('search', 'search', 'Search')
+	] -%}
+	{% set active_page = active_page|default('index') -%}
 
 	<!-- Sidebar -->
 	<nav id="sidebar">
@@ -26,28 +37,29 @@
 			<h3 class="alen">SKLADIŠTE<i class="fas fa-truck ml-3"></i></h3>
 		</div>
 
-		<ul class="list-unstyled components">
+		<ul class="list-unstyled components" id="navigation">
 			<h4>Dobrodošli, {{ current_user.username }}!</h4>
-			<li class="active">
+
+			<li class="{% block index %}{% endblock %}">
 				<a href="{{ url_for('index') }}"><i class="fas fa-home mr-2"></i>Pocetna</a>
 			</li>
-			<li>
+			<li class="{% block stanje_skladista %}{% endblock %}">
 				<a href="{{ url_for('stanje_skladista') }}"><i class="fas fa-warehouse mr-2"></i>Stanje Skladista</a>
 			</li>
-			<li>
+			<li class="{% block unos_proizvoda %}{% endblock %}">
 				<a href="{{ url_for('unos_proizvoda') }}"><i class="fas fa-lemon mr-2"></i>Unos Proizvoda</a>
 			</li>
-			<li>
+			<li class="{% block dobavljaci %}{% endblock %}">
 				<a href="{{ url_for('dobavljaci') }}"><i class="fas fa-handshake mr-2"></i>Dobavljaci</a>
 			</li>
-			<li>
+			<li class="{% block evidencija_unosa %}{% endblock %}">
 				<a href="{{ url_for('evidencija_unosa') }}"><i class="fas fa-book-open mr-2"></i>Evidencija Unosa</a>
 			</li>
-            <li>
+            <li class="{% block pretraga %}{% endblock %}">
                 <a href="{{ url_for('search') }}"><i class="fas fa-book-open mr-2"></i>Pretraga</a>
             </li>
             
-			<li>
+			<li class="{% block nav_home %}{% endblock %}">
 				<a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Pages</a>
 				<ul class="collapse list-unstyled" id="pageSubmenu">
 					<li>
@@ -94,11 +106,12 @@
 				            {% endif %}
 				            {% endwith %}			            
 			</div>
-	    </div>
-	</nav>
-			    
+	    	</div>
+			</nav>
+			<div class="container plavo">
 			{% block content %}
 			{% endblock %}
+			</div>
 		</div>
 
 		
