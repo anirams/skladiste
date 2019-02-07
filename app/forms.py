@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField, PasswordField, BooleanField, SubmitField, HiddenField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
-from app.models import User, Proizvod
+from app.models import User, Proizvod, Kupac
 from flask import request
 
 class LoginForm(FlaskForm):
@@ -60,6 +60,15 @@ class IzlazRobeForm(FlaskForm):
 	promijenjena_kolicina = IntegerField('Kolicina', validators=[DataRequired()])
 	oib = IntegerField('OIB', validators=[DataRequired()])
 	submit2 = SubmitField()
+	def validate(self):
+		rv = FlaskForm.validate(self)
+		if not rv:
+			return False
+		kupac = Kupac.query.filter_by(
+			oib=self.oib.data).first()
+		if kupac is None:
+			self.oib.errors.append('Kupac ne postoji')
+			return False
 
 class SearchForm(FlaskForm):
 	search = StringField(('Search'), validators=[DataRequired()])
