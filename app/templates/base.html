@@ -42,14 +42,14 @@
 				<a href="{{ url_for('dobavljaci') }}"><i class="fas fa-handshake mr-2"></i>Dobavljaci</a>
 			</li>
 			<li>
-				<a href="{{ url_for('kupci') }}"><i class="fas fa-handshake mr-2"></i>Kupci</a>
+				<a href="{{ url_for('kupci') }}"><i class="fas fa-euro-sign mr-3"></i>Kupci</a>
 			</li>
             <li class="{% block pretraga %}{% endblock %}">
-                <a href="{{ url_for('search') }}"><i class="fas fa-book-open mr-2"></i>Pretraga</a>
+                <a href="{{ url_for('search') }}"><i class="fas fa-search mr-2"></i>Pretraga</a>
             </li>
 
 			<li>
-				<a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Evidencije</a>
+				<a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fas fa-book-open mr-2"></i>Evidencije</a>
 				<ul class="collapse list-unstyled" id="pageSubmenu">
 					<li>
 						<a class="link-dropdown" href="{{ url_for('evidencija_unosa') }}">Evidencija unosa</a>
