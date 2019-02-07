@@ -56,10 +56,10 @@ class IzlazRobeForm(FlaskForm):
 		rv = FlaskForm.validate(self)
 		if not rv:
 			return False
-		kupac = Kupac.query.filter_by(
+		tvrtka = Tvrtka.query.filter_by(
 			oib=self.oib.data).first()
-		if kupac is None:
-			self.oib.errors.append('Kupac ne postoji')
+		if tvrtka is None:
+			self.oib.errors.append('Tvrtka ne postoji')
 			return False
 		else:
 			return True
