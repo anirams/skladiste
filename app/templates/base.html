@@ -41,24 +41,21 @@
 			<li class="{% block dobavljaci %}{% endblock %}">
 				<a href="{{ url_for('dobavljaci') }}"><i class="fas fa-handshake mr-2"></i>Dobavljaci</a>
 			</li>
-			<li class="{% block evidencija_unosa %}{% endblock %}">
-				<a href="{{ url_for('evidencija_unosa') }}"><i class="fas fa-book-open mr-2"></i>Evidencija Unosa</a>
+			<li>
+				<a href="{{ url_for('kupci') }}"><i class="fas fa-handshake mr-2"></i>Kupci</a>
 			</li>
             <li class="{% block pretraga %}{% endblock %}">
                 <a href="{{ url_for('search') }}"><i class="fas fa-book-open mr-2"></i>Pretraga</a>
             </li>
-            
-			<li class="{% block nav_home %}{% endblock %}">
-				<a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Pages</a>
+
+			<li>
+				<a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Evidencije</a>
 				<ul class="collapse list-unstyled" id="pageSubmenu">
 					<li>
-						<a class="link-dropdown" href="#">Page 1</a>
+						<a class="link-dropdown" href="{{ url_for('evidencija_unosa') }}">Evidencija unosa</a>
 					</li>
 					<li>
-						<a class="link-dropdown" href="#">Page 2</a>
-					</li>
-					<li>
-						<a class="link-dropdown" href="#">Page 3</a>
+						<a class="link-dropdown" href="{{ url_for('evidencija_izdavanja' )}}">Evidencija izdavanja</a>
 					</li>
 				</ul>
 			</li> 

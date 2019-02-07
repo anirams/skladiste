@@ -1,8 +1,8 @@
 from flask import render_template, flash, redirect, url_for, request
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, UlazRobeForm, IzlazRobeForm, UnosDobavljacaForm, UnosProizvodaForm, SearchForm
+from app.forms import LoginForm, RegistrationForm, UlazRobeForm, IzlazRobeForm, UnosDobavljacaForm, UnosKupcaForm, UnosProizvodaForm, SearchForm
 from flask_login import current_user, login_user, logout_user, login_required
-from app.models import User, Proizvod, Dobavljac, Evidencija
+from app.models import User, Proizvod, Dobavljac, Kupac, EvidencijaUnosa, EvidencijaIzdavanja
 from werkzeug.urls import url_parse
 from datetime import datetime
 
@@ -72,7 +72,7 @@ def unos_proizvoda():
 		flash('Dodali ste proizvod!')
 		proizvod = Proizvod.query.filter_by(name=form.name.data).first()
 		dobavljac = Dobavljac.query.filter_by(oib=form.oib.data).first()
-		evidencija = Evidencija(proizvod_id=proizvod.id, dobavljac_id=dobavljac.id, user_id=current_user.id, vrsta_unosa='unos')
+		evidencija = EvidencijaUnosa(proizvod_id=proizvod.id, promijenjena_kolicina=proizvod.kolicina, dobavljac_id=dobavljac.id, user_id=current_user.id)
 		db.session.add(evidencija)
 		db.session.commit()
 		dobavljac = Dobavljac.query.all()
@@ -83,26 +83,27 @@ def unos_proizvoda():
 @login_required
 def proizvod(name):
 	proizvod = Proizvod.query.filter_by(name=name).first_or_404()
-	evidencije = Evidencija.query.filter_by(proizvod_id=proizvod.id).order_by(Evidencija.datum_unosa.desc()).all()
+	evidencija_unosa = EvidencijaUnosa.query.filter_by(proizvod_id=proizvod.id).order_by(EvidencijaUnosa.datum_unosa.desc()).all()
+	evidencija_izdavanja = EvidencijaIzdavanja.query.filter_by(proizvod_id=proizvod.id).order_by(EvidencijaIzdavanja.datum_unosa.desc()).all()
 	form_ulaz = UlazRobeForm()
 	form_izlaz = IzlazRobeForm()
 	if form_ulaz.submit1.data and form_ulaz.validate():
 			dobavljac = Dobavljac.query.filter_by(oib=form_ulaz.oib.data).first_or_404()
 			proizvod.kolicina += form_ulaz.promijenjena_kolicina.data
-			evidencija = Evidencija(proizvod_id=proizvod.id, dobavljac_id=dobavljac.id, promijenjena_kolicina=form_ulaz.promijenjena_kolicina.data, vrsta_unosa='zaprimanje', user_id=current_user.id)
+			evidencija = EvidencijaUnosa(proizvod_id=proizvod.id, dobavljac_id=dobavljac.id, promijenjena_kolicina=form_ulaz.promijenjena_kolicina.data, user_id=current_user.id)
 			db.session.add(evidencija)
 			db.session.commit()
 			flash('Dodali ste kolicinu na stanje!')
 			return redirect(url_for('proizvod', name=proizvod.name))
 	if form_izlaz.submit2.data and form_izlaz.validate():
-			dobavljac = Dobavljac.query.filter_by(oib=form_izlaz.oib.data).first_or_404()
+			kupac = Kupac.query.filter_by(oib=form_izlaz.oib.data).first_or_404()
 			proizvod.kolicina -= form_izlaz.promijenjena_kolicina.data
-			evidencija = Evidencija(proizvod_id=proizvod.id, dobavljac_id=dobavljac.id, promijenjena_kolicina=form_izlaz.promijenjena_kolicina.data, vrsta_unosa='izdavanje', user_id=current_user.id)
+			evidencija = EvidencijaIzdavanja(proizvod_id=proizvod.id, kupac_id=kupac.id, promijenjena_kolicina=form_izlaz.promijenjena_kolicina.data, user_id=current_user.id)
 			db.session.add(evidencija)
 			db.session.commit()
 			flash('Oduzeli ste kolicinu sa stanja!')
 			return redirect(url_for('proizvod', name=proizvod.name))
-	return render_template('proizvod.html', title=proizvod.name, proizvod=proizvod, evidencije=evidencije, form_ulaz=form_ulaz, form_izlaz=form_izlaz)
+	return render_template('proizvod.html', title=proizvod.name, proizvod=proizvod, evidencija_unosa=evidencija_unosa, evidencija_izdavanja=evidencija_izdavanja, form_ulaz=form_ulaz, form_izlaz=form_izlaz)
 
 @app.route('/stanje_skladista')
 @login_required
@@ -126,11 +127,33 @@ def dobavljaci():
 		dobavljaci = Dobavljac.query.all()
 	return render_template('dobavljaci.html', title='Dodaj tvrtku dobavljača', form=form, dobavljaci=dobavljaci)
 
+@app.route('/kupci', methods=['GET', 'POST'])
+@login_required
+def kupci():
+	form = UnosKupcaForm()
+	#dob = Dobavljac.query.all()
+	if form.validate_on_submit():
+		kupac = Kupac(name=form.name.data, oib=form.oib.data, grad=form.grad.data, 
+			p_broj=form.p_broj.data, drzava=form.drzava.data)
+		db.session.add(kupac)
+		db.session.commit()
+		flash('Uspješno ste unijeli kupca!')
+		return redirect(url_for('kupci'))
+	else:
+		kupci = Kupac.query.all()
+	return render_template('kupci.html', title='Dodaj tvrtku kupca', form=form, kupci=kupci)
+
 @app.route('/evidencija_unosa')
 @login_required
 def evidencija_unosa():
-	evidencija = Evidencija.query.order_by(Evidencija.datum_unosa.desc()).all()
+	evidencija = EvidencijaUnosa.query.order_by(EvidencijaUnosa.datum_unosa.desc()).all()
 	return render_template('evidencija_unosa.html', title='Evidencija unosa', evidencija=evidencija)
+
+@app.route('/evidencija_izdavanja')
+@login_required
+def evidencija_izdavanja():
+	evidencija = EvidencijaIzdavanja.query.order_by(EvidencijaIzdavanja.datum_unosa.desc()).all()
+	return render_template('evidencija_izdavanja.html', title='Evidencija izdavanja', evidencija=evidencija)
 
 @app.route('/search', methods=['GET', 'POST'])
 @login_required
