@@ -26,27 +26,28 @@
 			<h3 class="alen">SKLADIŠTE<i class="fas fa-truck ml-3"></i></h3>
 		</div>
 
-		<ul class="list-unstyled components">
+		<ul class="list-unstyled components" id="navigation">
 			<h4>Dobrodošli, {{ current_user.username }}!</h4>
-			<li class="active">
+
+			<li class="{% block index %}{% endblock %}">
 				<a href="{{ url_for('index') }}"><i class="fas fa-home mr-2"></i>Pocetna</a>
 			</li>
-			<li>
+			<li class="{% block stanje_skladista %}{% endblock %}">
 				<a href="{{ url_for('stanje_skladista') }}"><i class="fas fa-warehouse mr-2"></i>Stanje Skladista</a>
 			</li>
-			<li>
+			<li class="{% block unos_proizvoda %}{% endblock %}">
 				<a href="{{ url_for('unos_proizvoda') }}"><i class="fas fa-lemon mr-2"></i>Unos Proizvoda</a>
 			</li>
-			<li>
+			<li class="{% block dobavljaci %}{% endblock %}">
 				<a href="{{ url_for('dobavljaci') }}"><i class="fas fa-handshake mr-2"></i>Dobavljaci</a>
 			</li>
 			<li>
 				<a href="{{ url_for('kupci') }}"><i class="fas fa-handshake mr-2"></i>Kupci</a>
 			</li>
-            <li>
+            <li class="{% block pretraga %}{% endblock %}">
                 <a href="{{ url_for('search') }}"><i class="fas fa-book-open mr-2"></i>Pretraga</a>
             </li>
-            
+
 			<li>
 				<a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Evidencije</a>
 				<ul class="collapse list-unstyled" id="pageSubmenu">
@@ -71,7 +72,7 @@
 
 	<!-- Page Content -->
 
-		<div id="content">
+		<div id="container">
 			<nav class="navbar navbar-expand-lg navbar-light bg-light">
 	        <div class="container-fluid">
 
@@ -91,11 +92,12 @@
 				            {% endif %}
 				            {% endwith %}			            
 			</div>
-	    </div>
-	</nav>
-			    
+	    	</div>
+			</nav>
+			<div class="container">
 			{% block content %}
 			{% endblock %}
+			</div>
 		</div>
 
 		
