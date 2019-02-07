@@ -2,6 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField, PasswordField, BooleanField, SubmitField, HiddenField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 from app.models import User, Proizvod
+from flask import request
 
 class LoginForm(FlaskForm):
 	username = StringField('Korisnicko ime', validators=[DataRequired()])
@@ -51,3 +52,9 @@ class IzlazRobeForm(FlaskForm):
 	promijenjena_kolicina = IntegerField('Kolicina', validators=[DataRequired()])
 	oib = IntegerField('OIB', validators=[DataRequired()])
 	submit2 = SubmitField()
+
+class SearchForm(FlaskForm):
+	search = StringField(('Search'), validators=[DataRequired()])
+	submit = SubmitField()
+
+	

@@ -43,6 +43,10 @@
 			<li>
 				<a href="{{ url_for('evidencija_unosa') }}"><i class="fas fa-book-open mr-2"></i>Evidencija Unosa</a>
 			</li>
+            <li>
+                <a href="{{ url_for('search') }}"><i class="fas fa-book-open mr-2"></i>Pretraga</a>
+            </li>
+            
 			<li>
 				<a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Pages</a>
 				<ul class="collapse list-unstyled" id="pageSubmenu">
@@ -69,24 +73,34 @@
 	</nav>
 
 	<!-- Page Content -->
-	<div id="container">
-		
-		<nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid plavo">
 
-            <button type="button" id="sidebarCollapse" class="btn tipka">
-                <i class="fas fa-align-left"></i>
-                <span>Toggle Sidebar</span>
-            </button>
-		 
-        </div>
-   </nav>
-    	<div class="container-fluid tijelo">
-    		{% block content %}
+		<div id="content">
+			<nav class="navbar navbar-expand-lg navbar-light bg-light">
+	        <div class="container-fluid">
+
+
+	            <button type="button" id="sidebarCollapse" class="btn btn-info">
+	                <i class="fas fa-align-left"></i>
+	                <span>Toggle Sidebar</span>
+	            </button> <br>
+			<div class="container">
+				        {% with messages = get_flashed_messages() %}
+				        {% if messages %}
+				        <div>
+			     	        {% for message in messages %}
+				            <p>{{ message }}</p>
+				            {% endfor %}
+				        </div>
+				            {% endif %}
+				            {% endwith %}			            
+			</div>
+	    </div>
+	</nav>
+			    
+			{% block content %}
 			{% endblock %}
-    	</div>
-		
-	</div>
+		</div>
+
 		
 	
 	
@@ -107,20 +121,8 @@
 	 <a href="{{ url_for('logout') }}">Odjava</a>
 	 {% endif %}
 	</div>
-	<hr>
-	<div class="container">
-		{% with messages = get_flashed_messages() %}
-		{% if messages %}
-		<div>
-			{% for message in messages %}
-			<p>{{ message }}</p>
-			{% endfor %}
-		</div>
-			{% endif %}
-			{% endwith %}
-
-			
-	</div>-->
+	<hr>-->
+	
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>

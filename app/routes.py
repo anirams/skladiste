@@ -1,10 +1,11 @@
 from flask import render_template, flash, redirect, url_for, request
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, UlazRobeForm, IzlazRobeForm, UnosDobavljacaForm, UnosProizvodaForm
+from app.forms import LoginForm, RegistrationForm, UlazRobeForm, IzlazRobeForm, UnosDobavljacaForm, UnosProizvodaForm, SearchForm
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Proizvod, Dobavljac, Evidencija
 from werkzeug.urls import url_parse
 from datetime import datetime
+
 
 
 @app.route('/index')
@@ -74,7 +75,7 @@ def unos_proizvoda():
 		evidencija = Evidencija(proizvod_id=proizvod.id, dobavljac_id=dobavljac.id, user_id=current_user.id, vrsta_unosa='unos')
 		db.session.add(evidencija)
 		db.session.commit()
-		
+		dobavljac = Dobavljac.query.all()
 		return redirect(url_for('unos_proizvoda'))
 	return render_template('unos_proizvoda.html', title='Dodaj proizvod', form=form)
 
@@ -113,6 +114,7 @@ def stanje_skladista():
 @login_required
 def dobavljaci():
 	form = UnosDobavljacaForm()
+	#dob = Dobavljac.query.all()
 	if form.validate_on_submit():
 		dobavljac = Dobavljac(name=form.name.data, oib=form.oib.data, grad=form.grad.data, 
 			p_broj=form.p_broj.data, drzava=form.drzava.data)
@@ -129,3 +131,16 @@ def dobavljaci():
 def evidencija_unosa():
 	evidencija = Evidencija.query.order_by(Evidencija.datum_unosa.desc()).all()
 	return render_template('evidencija_unosa.html', title='Evidencija unosa', evidencija=evidencija)
+
+@app.route('/search', methods=['GET', 'POST'])
+@login_required
+def search():
+	proizvodi = Proizvod.query.all()
+	form = SearchForm()
+	if form.validate_on_submit():
+		search = form.search.data
+		proizvodi = Proizvod.query.filter(Proizvod.name.like("%" + search + "%")).all()
+		return render_template("search.html", form=form, proizvodi=proizvodi)
+	
+	return render_template("search.html", form=form, proizvodi=proizvodi)
+
