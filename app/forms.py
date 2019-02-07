@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField, PasswordField, BooleanField, SubmitField, HiddenField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
-from app.models import User, Proizvod, Dobavljac, Kupac, EvidencijaUnosa, EvidencijaIzdavanja
+from app.models import User, Proizvod, Tvrtka, Evidencija
 from flask import request
 
 class LoginForm(FlaskForm):
@@ -35,15 +35,7 @@ class UnosProizvodaForm(FlaskForm):
 	oib = IntegerField('OIB', validators=[DataRequired()])
 	submit = SubmitField()
 
-class UnosDobavljacaForm(FlaskForm):
-	name = StringField('Naziv tvrtke', validators=[DataRequired()])
-	oib = IntegerField('OIB', validators=[DataRequired()])
-	grad = StringField('Grad', validators=[DataRequired()])
-	p_broj = IntegerField('Poštanski broj', validators=[DataRequired()])
-	drzava = StringField('Država', validators=[DataRequired()])
-	submit = SubmitField()
-
-class UnosKupcaForm(FlaskForm):
+class UnosTvrtkeForm(FlaskForm):
 	name = StringField('Naziv tvrtke', validators=[DataRequired()])
 	oib = IntegerField('OIB', validators=[DataRequired()])
 	grad = StringField('Grad', validators=[DataRequired()])
