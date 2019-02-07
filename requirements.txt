@@ -1,6 +1,5 @@
 alembic==1.0.7
 Click==7.0
-elasticsearch==6.3.1
 Flask==1.0.2
 Flask-Login==0.4.1
 Flask-Migrate==2.3.1
