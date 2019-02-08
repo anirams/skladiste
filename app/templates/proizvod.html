@@ -1,24 +1,24 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <table>
-        <tr>
-            <th>NAZIV PROIZVODA</th>
-            <th>ZEMLJA PODRIJETLA</th>
-            <th>KOLICINA</th>
-        </tr>
-        <tr>
-            <td>{{ proizvod.name }}</td>
-            <td>{{ proizvod.zemlja_podrijetla }}</td>
-            <td>{{ proizvod.kolicina }}</td>
-        </tr>
-        
-    </table>
-    <hr>
-
+<div class="container pt-2">
+    <div class="row">
+        <div class="col-md-4">
+            <h5>NAZIV PROIZVODA</h5>
+            <p>{{ proizvod.name }}</p>
+        </div>
+        <div class="col-md-4">
+            <h5>ZEMLJA PODRIJETLA</h5>
+            <p>{{ proizvod.zemlja_podrijetla }}</p>
+        </div>
+        <div class="col-md-4">
+            <h5>KOLICINA</h5>
+            <p>{{ proizvod.kolicina }}</p>
+        </div>
+    </div>
     <div class="row">
         <div class="col-md-6">
-            <h1>Unos robe:</h1>
+            <h5>Unos robe:</h5>
             <form action="" method="post" novalidate="">
                 {{ form_ulaz.hidden_tag() }}
                 <p>
@@ -39,12 +39,13 @@
             </form>
         </div>
         <div class="col-md-6">
-            <h1>Izlaz robe:</h1>
+            <h5>Izlaz robe:</h5>
             <form action="" method="post" novalidate="">
-                {{ form_izlaz.hidden_tag() }}
+                {{ form_izlaz.csrf_token }}
                 <p>
                     {{ form_izlaz.promijenjena_kolicina.label }}<br>
                     {{ form_izlaz.promijenjena_kolicina(size=32) }}
+                    {{ form_izlaz.proizvod_id(value=proizvod.id) }}
                     {% for error in form_izlaz.promijenjena_kolicina.errors %}
                     <span style="color: red;">[{{ error }}]</span>
                     {% endfor %}
@@ -62,9 +63,9 @@
     </div>
 
     <hr>
-    <h1>Povijest evidencije:</h1>
+    <h5>Povijest evidencije:</h5>
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-xl-6">
             <h2>Evidencija unosa</h2>
         <table class="table table-striped">
         <tr>
@@ -75,19 +76,19 @@
             <th>Datum unosa</th>
             <th>Korisnik</th>
         </tr>
-        {% for evidencija in evidencija_unosa %}
+        {% for evidencija in evidencijaUlaz %}
         <tr>
             <td>{{ evidencija.proizvod.name }}</td>
             <td>{{ evidencija.promijenjena_kolicina }}</td>
-            <td>{{ evidencija.dobavljac.name }}</td>
-            <td>{{ evidencija.dobavljac.oib }}</td>
+            <td>{{ evidencija.tvrtka.name }}</td>
+            <td>{{ evidencija.tvrtka.oib }}</td>
             <td>{{ evidencija.datum_unosa.strftime('%B %d %Y - %H:%M:%S') }}</td>
             <td>{{ evidencija.user.username }}</td>
         </tr>
         {% endfor %}
         </table> 
         </div>
-        <div class="col-md-6">
+        <div class="col-xl-6">
             <h2>Evidencija izdavanja</h2>
         <table class="table table-striped">
         <tr>
@@ -98,12 +99,12 @@
             <th>Datum unosa</th>
             <th>Korisnik</th>
         </tr>
-        {% for evidencija in evidencija_izdavanja %}
+        {% for evidencija in evidencijaIzlaz %}
         <tr>
             <td>{{ evidencija.proizvod.name }}</td>
             <td>{{ evidencija.promijenjena_kolicina }}</td>
-            <td>{{ evidencija.kupac.name }}</td>
-            <td>{{ evidencija.kupac.oib }}</td>
+            <td>{{ evidencija.tvrtka.name }}</td>
+            <td>{{ evidencija.tvrtka.oib }}</td>
             <td>{{ evidencija.datum_unosa.strftime('%B %d %Y - %H:%M:%S') }}</td>
             <td>{{ evidencija.user.username }}</td>
         </tr>
@@ -111,4 +112,5 @@
         </table> 
         </div>
     </div>
+</div>
 {% endblock %}

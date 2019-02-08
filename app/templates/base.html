@@ -39,17 +39,14 @@
 				<a href="{{ url_for('unos_proizvoda') }}"><i class="fas fa-lemon mr-2"></i>Unos Proizvoda</a>
 			</li>
 			<li class="{% block dobavljaci %}{% endblock %}">
-				<a href="{{ url_for('dobavljaci') }}"><i class="fas fa-handshake mr-2"></i>Dobavljaci</a>
+				<a href="{{ url_for('tvrtke') }}"><i class="fas fa-handshake mr-2"></i>Tvrtke</a>
 			</li>
-			<li>
-				<a href="{{ url_for('kupci') }}"><i class="fas fa-handshake mr-2"></i>Kupci</a>
-			</li>
-            <li class="{% block pretraga %}{% endblock %}">
-                <a href="{{ url_for('search') }}"><i class="fas fa-book-open mr-2"></i>Pretraga</a>
+			<li class="{% block pretraga %}{% endblock %}">
+                <a href="{{ url_for('search') }}"><i class="fas fa-search mr-2"></i>Pretraga</a>
             </li>
 
 			<li>
-				<a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Evidencije</a>
+				<a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fas fa-book-open mr-2"></i>Evidencije</a>
 				<ul class="collapse list-unstyled" id="pageSubmenu">
 					<li>
 						<a class="link-dropdown" href="{{ url_for('evidencija_unosa') }}">Evidencija unosa</a>
@@ -72,29 +69,15 @@
 
 	<!-- Page Content -->
 
-		<div id="container">
-			<nav class="navbar navbar-expand-lg navbar-light bg-light">
-	        <div class="container-fluid">
-
-
+		<div class="tijelo">
+	        <div class="plava-pozadina">
 	            <button type="button" id="sidebarCollapse" class="btn btn-info">
 	                <i class="fas fa-align-left"></i>
 	                <span>Toggle Sidebar</span>
 	            </button> <br>
-			<div class="container">
-				        {% with messages = get_flashed_messages() %}
-				        {% if messages %}
-				        <div>
-			     	        {% for message in messages %}
-				            <p>{{ message }}</p>
-				            {% endfor %}
-				        </div>
-				            {% endif %}
-				            {% endwith %}			            
-			</div>
+			
 	    	</div>
-			</nav>
-			<div class="container">
+			<div class="plavo">
 			{% block content %}
 			{% endblock %}
 			</div>
@@ -104,23 +87,6 @@
 	
 	
 	
-	<!--
-	<div>Skladiste:
-	 <a href="{{ url_for('index') }}">Početna</a>
-	 {% if current_user.is_anonymous %}
-	 <a href="{{ url_for('login') }}">Prijava</a>
-		<a href="{{ url_for('register') }}">Registracija</a>
-	 {% else %}
-	 <p>Dobrodošli, {{ current_user.username }}!</p>
-	 <a href="{{ url_for('stanje_skladista') }}">Stanje skladista</a>
-	 <a href="{{ url_for('unos_proizvoda') }}">Unos proizvoda</a>
-	 <a href="{{ url_for('dobavljaci') }}">Dobavljači</a>
-		<a href="{{ url_for('evidencija_unosa') }}">Evidencija unosa</a>
-	 <a href="{{ url_for('user', username=current_user.username) }}">Profil</a>
-	 <a href="{{ url_for('logout') }}">Odjava</a>
-	 {% endif %}
-	</div>
-	<hr>-->
 	
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>

@@ -14,13 +14,13 @@
             <th>POŠTANSKI BROJ</th>
             <th>DRŽAVA</th>
         </tr>
-    {% for dobavljac in dobavljaci %}
+    {% for tvrtka in tvrtke %}
         <tr>
-            <td>{{ dobavljac.name }}</td>
-            <td>{{ dobavljac.oib }}</td> 
-            <td>{{ dobavljac.grad }}</td>
-            <td>{{ dobavljac.p_broj }}</td>
-            <td>{{ dobavljac.drzava }}</td>
+            <td>{{ tvrtka.name }}</td>
+            <td>{{ tvrtka.oib }}</td> 
+            <td>{{ tvrtka.grad }}</td>
+            <td>{{ tvrtka.p_broj }}</td>
+            <td>{{ tvrtka.drzava }}</td>
         </tr>     
     {% endfor %}
     </table>
