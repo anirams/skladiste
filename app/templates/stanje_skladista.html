@@ -27,4 +27,10 @@
     </tr>
     {% endfor %}
 </table> 
+    {% if prev_url %}
+        <a href="{{ prev_url }}">Noviji artikli</a>
+    {% endif %}
+    {% if next_url %}
+        <a href="{{ next_url }}">Stariji artikli</a>
+    {% endif %}
 {% endblock %}

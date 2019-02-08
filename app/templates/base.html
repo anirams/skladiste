@@ -64,6 +64,11 @@
                 <li>
                     <a href="{{ url_for('logout') }}" class="tipka">ODJAVI SE</a>
                 </li>
+                {%  if current_user.username == "admin"%}
+                    <li>
+                        <a href="{{ url_for('register') }}" class="tipka">Registriraj novog korisnika</a>
+                    </li>
+                {% endif %}
             </ul>
 	</nav>
 
