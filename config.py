@@ -6,6 +6,6 @@ class Config(object):
 	SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
         'sqlite:///' + os.path.join(basedir, 'app.db')
 	SQLALCHEMY_TRACK_MODIFICATIONS = False
-	ELASTICSEARCH_URL = os.environ.get('ELASTICSEARCH_URL')
-
-
+	WKHTMLTOPDF_USE_CELERY = True
+	WKHTMLTOPDF_BIN_PATH = r'C:\Program Files\wkhtmltopdf\bin'
+	PDF_DIR_PATH =  os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static', 'pdf')

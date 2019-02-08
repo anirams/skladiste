@@ -1,10 +1,12 @@
 from flask import render_template, flash, redirect, url_for, request
-from app import app, db
+from app import app, db, wkhtmltopdf 
+import pdfkit
 from app.forms import LoginForm, RegistrationForm, UlazRobeForm, IzlazRobeForm, UnosDobavljacaForm, UnosKupcaForm, UnosProizvodaForm, SearchForm
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Proizvod, Dobavljac, Kupac, EvidencijaUnosa, EvidencijaIzdavanja
 from werkzeug.urls import url_parse
 from datetime import datetime
+from wkhtmltopdf import render_template_to_pdf
 
 
 
@@ -167,3 +169,15 @@ def search():
 	
 	return render_template("search.html", form=form, proizvodi=proizvodi)
 
+@app.route('/evidencija/<id>')
+@login_required
+def evidencija(id):
+	evidencija = EvidencijaIzdavanja.query.filter_by(id=id).first_or_404()
+	return render_template('evidencija.html', id=id, evidencija=evidencija)
+
+@app.route('/evidencija_pdf/<id>')
+@login_required
+def evidencija_pdf(id):
+	evidencija = EvidencijaIzdavanja.query.filter_by(id=id).first_or_404()
+	#return render_template('evidencija.html', id=id, evidencija=evidencija)
+	return render_template_to_pdf('login.html', download=True, save=False)
