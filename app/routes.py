@@ -5,7 +5,7 @@ from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Proizvod, Tvrtka, Evidencija
 from werkzeug.urls import url_parse
 from datetime import datetime
-import pdfkit
+
 
 @app.route('/index')
 def index():
