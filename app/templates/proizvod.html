@@ -77,14 +77,16 @@
             <th>Korisnik</th>
         </tr>
         {% for evidencija in evidencijaUlaz %}
+        
         <tr>
-            <td>{{ evidencija.proizvod.name }}</td>
+            <td><a href="{{ url_for('evidencija', id=evidencija.id) }}">{{ evidencija.proizvod.name }}</a></td>
             <td>{{ evidencija.promijenjena_kolicina }}</td>
             <td>{{ evidencija.tvrtka.name }}</td>
             <td>{{ evidencija.tvrtka.oib }}</td>
             <td>{{ evidencija.datum_unosa.strftime('%B %d %Y - %H:%M:%S') }}</td>
             <td>{{ evidencija.user.username }}</td>
         </tr>
+
         {% endfor %}
         </table> 
         </div>
@@ -98,10 +100,11 @@
             <th>OIB</th>
             <th>Datum unosa</th>
             <th>Korisnik</th>
+            <th></th>
         </tr>
         {% for evidencija in evidencijaIzlaz %}
         <tr>
-            <td>{{ evidencija.proizvod.name }}</td>
+            <td><a href="{{ url_for('evidencija', id=evidencija.id) }}">{{ evidencija.proizvod.name }}</a></td>
             <td>{{ evidencija.promijenjena_kolicina }}</td>
             <td>{{ evidencija.tvrtka.name }}</td>
             <td>{{ evidencija.tvrtka.oib }}</td>

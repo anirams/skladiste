@@ -6,8 +6,6 @@ from app.models import User, Proizvod, Tvrtka, Evidencija
 from werkzeug.urls import url_parse
 from datetime import datetime
 
-
-
 @app.route('/index')
 def index():
 	return render_template('index.html', title='Home')
@@ -171,7 +169,7 @@ def search():
 @app.route('/evidencija/<id>')
 @login_required
 def evidencija(id):
-	evidencija = EvidencijaIzdavanja.query.filter_by(id=id).first_or_404()
+	evidencija = Evidencija.query.filter_by(id=id).first_or_404()
 	return render_template('evidencija.html', id=id, evidencija=evidencija)
 
 @app.route('/edit_password', methods=['GET', 'POST'])
