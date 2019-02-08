@@ -30,6 +30,10 @@ class RegistrationForm(FlaskForm):
 		if user is not None:
 			raise ValidationError('Korisnik sa ovom email adresom je vec registriran!')
 
+	def validate_admin(self, email):
+		if current_user.username is not "admin":
+			raise ValidationError('Niste admin!')
+
 class UnosProizvodaForm(FlaskForm):
 	name = StringField('Naziv proizvoda', validators=[DataRequired()])
 	kolicina = IntegerField('Kolicina', validators=[DataRequired()])
