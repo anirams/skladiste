@@ -105,11 +105,16 @@ def proizvod(name):
 			return redirect(url_for('proizvod', name=proizvod.name))
 	return render_template('proizvod.html', title=proizvod.name, proizvod=proizvod, evidencijaUlaz=evidencijaUlaz, evidencijaIzlaz=evidencijaIzlaz, form_ulaz=form_ulaz, form_izlaz=form_izlaz)
 
-@app.route('/stanje_skladista')
+@app.route('/stanje_skladista', methods=['GET', 'POST'])
 @login_required
 def stanje_skladista():
 	proizvodi = Proizvod.query.all()
-	return render_template('stanje_skladista.html', title='Stanje skladista', proizvodi=proizvodi)
+	form = SearchForm()
+	if form.validate_on_submit():
+		search = form.search.data
+		proizvodi = Proizvod.query.filter(Proizvod.name.like("%" + search + "%")).all()
+		return render_template("stanje_skladista.html", form=form, proizvodi=proizvodi)
+	return render_template('stanje_skladista.html', title='Stanje skladista', proizvodi=proizvodi, form=form)
 
 @app.route('/tvrtke', methods=['GET', 'POST'])
 @login_required
