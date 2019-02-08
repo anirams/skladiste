@@ -36,6 +36,20 @@ class UnosProizvodaForm(FlaskForm):
 	zemlja_podrijetla = StringField('Zemlja podrijetla', validators=[DataRequired()])
 	oib = IntegerField('OIB', validators=[DataRequired()])
 	submit = SubmitField()
+	def validate(self):
+		rv = FlaskForm.validate(self)
+		if not rv:
+			return False
+		proizvod = Proizvod.query.filter_by(name=self.name.data).first()
+		if proizvod is not None:
+			self.name.errors.append('Proizvod pod tim imenom već postoji')
+			return False
+		tvrtka = Tvrtka.query.filter_by(oib=self.oib.data).first()
+		if tvrtka is None:
+			self.oib.errors.append('Tvrtka ne postoji')
+			return False
+		else:
+			return True
 
 class UnosTvrtkeForm(FlaskForm):
 	name = StringField('Naziv tvrtke', validators=[DataRequired()])
@@ -44,6 +58,16 @@ class UnosTvrtkeForm(FlaskForm):
 	p_broj = IntegerField('Poštanski broj', validators=[DataRequired()])
 	drzava = StringField('Država', validators=[DataRequired()])
 	submit = SubmitField()
+	def validate(self):
+		rv = FlaskForm.validate(self)
+		if not rv:
+			return False
+		tvrtka = Tvrtka.query.filter_by(oib=self.oib.data).first()
+		if tvrtka is not None:
+			self.oib.errors.append('Tvrtka pod tim oib-om već postoji')
+			return False
+		else:
+			return True
 
 class UlazRobeForm(FlaskForm):
 	promijenjena_kolicina = IntegerField('Kolicina', validators=[DataRequired()])

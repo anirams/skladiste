@@ -128,8 +128,8 @@ def tvrtke():
 		db.session.commit()
 		flash('Uspješno ste unijeli tvrtku!')
 		return redirect(url_for('tvrtke'))
-	else:
-		tvrtke = Tvrtka.query.all()
+	
+	tvrtke = Tvrtka.query.all()
 	return render_template('tvrtke.html', title='Dodaj tvrtku', form=form, tvrtke=tvrtke)
 
 @app.route('/evidencija_unosa')

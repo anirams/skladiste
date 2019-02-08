@@ -35,7 +35,7 @@ class Proizvod(db.Model):
 
 class Tvrtka(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
-	name = db.Column(db.String(64), unique=True)
+	name = db.Column(db.String(64))
 	oib = db.Column(db.Integer, unique=True)
 	grad = db.Column(db.String(64))
 	p_broj = db.Column(db.Integer)
