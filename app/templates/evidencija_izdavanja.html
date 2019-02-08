@@ -16,7 +16,7 @@
     {% for e in evidencija %}
     <tr>
     	<td><a href="/proizvod/{{e.proizvod.name}}">{{ e.proizvod.name }}</a></td>
-    	<td>{{ e.proizvod.kolicina }}</td>
+    	<td>{{ e.promijenjena_kolicina }}</td>
     	<td>{{ e.tvrtka.name }}</td>
     	<td>{{ e.tvrtka.oib }}</td>
     	<td>{{ e.datum_unosa.strftime('%B %d %Y - %H:%M:%S') }}</td>
