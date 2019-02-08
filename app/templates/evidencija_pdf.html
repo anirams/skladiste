@@ -1,0 +1,8 @@
+{% extends 'base.html'%}
+
+{% block content %}
+    <h1>{{ evidencija.kupac.name }}</h1>
+    <hr>
+    <p>{{ evidencija.proizvod.name }}</p>
+    <a href="{{ url_for('evidencija_pdf', id=id) }}">PDF</a>
+{% endblock %}

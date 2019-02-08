@@ -11,6 +11,7 @@
         <th>OIB</th>
         <th>Datum unosa</th>
         <th>Korisnik</th>
+        <th></th>
     </tr>
     {% for e in evidencija %}
     <tr>
@@ -20,6 +21,7 @@
     	<td>{{ e.tvrtka.oib }}</td>
     	<td>{{ e.datum_unosa.strftime('%B %d %Y - %H:%M:%S') }}</td>
         <td>{{ e.user.username }}</td>
+        <td><a href="evidencija/{{e.id}}">PDF</a></td>
     </tr>
     {% endfor %}
 </table> 

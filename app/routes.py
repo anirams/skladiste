@@ -155,6 +155,11 @@ def search():
 	
 	return render_template("search.html", form=form, proizvodi=proizvodi)
 
+@app.route('/evidencija/<id>')
+@login_required
+def evidencija(id):
+	evidencija = EvidencijaIzdavanja.query.filter_by(id=id).first_or_404()
+	return render_template('evidencija.html', id=id, evidencija=evidencija)
 
 @app.route('/edit_password', methods=['GET', 'POST'])
 @login_required
@@ -166,3 +171,4 @@ def edit_password():
 		flash('Vaše promjene su spremljene')
 		return redirect(url_for('edit_password'))
 	return render_template('edit_password.html', title='Edit Profile', form=form)
+
