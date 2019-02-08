@@ -121,6 +121,7 @@ def stanje_skladista():
 @login_required
 def tvrtke():
 	form = UnosTvrtkeForm()
+	tvrtke = Tvrtka.query.all()
 	#dob = Dobavljac.query.all()
 	if form.validate_on_submit():
 		tvrtka = Tvrtka(name=form.name.data, oib=form.oib.data, grad=form.grad.data, 
@@ -129,8 +130,6 @@ def tvrtke():
 		db.session.commit()
 		flash('Uspješno ste unijeli tvrtku!')
 		return redirect(url_for('tvrtke'))
-	
-	tvrtke = Tvrtka.query.all()
 	return render_template('tvrtke.html', title='Dodaj tvrtku', form=form, tvrtke=tvrtke)
 
 @app.route('/evidencija_unosa')
