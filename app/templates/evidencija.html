@@ -1,8 +1,41 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>{{ evidencija.kupac.name }}</h1>
+<div id="contentToPdf" style="margin-top: 30px;">
+
+    <h1> SKLADISTE </h1>
+    <p>DATUM: {{ evidencija.datum_unosa }}</p>
+    <p>VRSTA: {{ evidencija.vrsta_unosa }}</p>
     <hr>
-    <p>{{ evidencija.proizvod.name }}</p>
-    <a href="{{ url_for('evidencija_pdf', id=id) }}">PDF</a>
+    <h1>PROIZVOD:</h1>
+	<p>{{ evidencija.proizvod.name }}: <span>{{ evidencija.promijenjena_kolicina }}</span></p>
+    <hr>
+    <h1>TVRTKA:</h1>
+    <p>OIB: {{ evidencija.tvrtka.oib }}</p>
+    <p>MJESTO: {{ evidencija.tvrtka.grad }}</p>
+    <p>POSTANSKI BROJ: {{ evidencija.tvrtka.p_broj }}</p>
+    <p>DRZAVA: {{ evidencija.tvrtka.drzava }}</p>  
+    
+</div>
+<div id="editor"></div>
+<button id="cmd">PDF</button>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js" integrity="sha384-NaWTHo/8YCBYJ59830LTz/P4aQZK1sS0SneOgAvhsIl3zBu8r9RevNg5lHCHAuQ/" crossorigin="anonymous"></script>
+<script type="text/javascript">
+	var doc = new jsPDF();
+	var specialElementHandlers = {
+	    '#editor': function (element, renderer) {
+	        return true;
+	    }
+	};
+
+	$('#cmd').click(function () {
+	    doc.fromHTML($('#contentToPdf').html(), 15, 15, {
+	        'width': 170,
+	            'elementHandlers': specialElementHandlers
+	    });
+	    doc.save('sample-file.pdf');
+	});
+</script>
 {% endblock %}
