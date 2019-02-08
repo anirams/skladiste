@@ -5,9 +5,7 @@ from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Proizvod, Tvrtka, Evidencija
 from werkzeug.urls import url_parse
 from datetime import datetime
-from wkhtmltopdf import render_template_to_pdf
-
-
+import pdfkit
 
 @app.route('/index')
 def index():
@@ -159,8 +157,13 @@ def search():
 @app.route('/evidencija/<id>')
 @login_required
 def evidencija(id):
-	evidencija = EvidencijaIzdavanja.query.filter_by(id=id).first_or_404()
+	evidencija = Evidencija.query.filter_by(id=id).first_or_404()
 	return render_template('evidencija.html', id=id, evidencija=evidencija)
+
+@app.route('/evidencija_pdf/<id>')
+@login_required
+def evidencija_pdf(id):
+	return pdfkit.from_url('/evidencija/<id>', 'out.pdf')
 
 @app.route('/edit_password', methods=['GET', 'POST'])
 @login_required
