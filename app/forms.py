@@ -64,13 +64,19 @@ class UlazRobeForm(FlaskForm):
 class IzlazRobeForm(FlaskForm):
 	promijenjena_kolicina = IntegerField('Kolicina', validators=[DataRequired()])
 	oib = IntegerField('OIB', validators=[DataRequired()])
+	proizvod_id = HiddenField()
 	submit2 = SubmitField()
 	def validate(self):
 		rv = FlaskForm.validate(self)
 		if not rv:
 			return False
-		tvrtka = Tvrtka.query.filter_by(
-			oib=self.oib.data).first()
+
+		proizvod = Proizvod.query.get(self.proizvod_id.data)
+		if proizvod.kolicina < self.promijenjena_kolicina.data:
+			self.promijenjena_kolicina.errors.append('Nema dovoljno artikla na stanju')
+			return False
+
+		tvrtka = Tvrtka.query.filter_by(oib=self.oib.data).first()
 		if tvrtka is None:
 			self.oib.errors.append('Tvrtka ne postoji')
 			return False
