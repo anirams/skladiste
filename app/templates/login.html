@@ -26,11 +26,14 @@
                     {{ form.remember_me.label }}
 
                 </div>
-                {{ form.submit(type="submit", class="btn tipka btn-block") }}
+                {{ form.submit(type="submit", class="btn tipka btn-block") }}<br>
+                
                 {% with messages = get_flashed_messages() %}
+                {% if messages %}
                         {% for message in messages %}
-                            <span style="color:red;">{{ message }}</span>
+                            <div class="alert alert-danger" role="alert">{{ message }}</div>
                         {% endfor %}
+                {% endif %}
                 {% endwith %}
                 <div class="container">
                                               

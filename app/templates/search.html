@@ -3,6 +3,7 @@
 {% block pretraga %}active{% endblock %}
 
 {% block content %}
+<div class="stanje-s">
 <form action="" method="post" novalidate="">
         {{ form.hidden_tag() }}
         <p>
@@ -13,11 +14,9 @@
             {% endfor %}
             {% with messages = get_flashed_messages() %}
             {% if messages %}
-            <div>
-                {% for message in messages %}
-                <span style="color: red;">{{ message }}</p>
-                {% endfor %}
-            </div>
+            {% for message in messages %}
+            <div class="alert alert-danger" role="alert">{{ message }}</div>
+            {% endfor %}
             {% endif %}
             {% endwith %} 
         </p>
@@ -36,4 +35,5 @@
     </tr>
     {% endfor %}
 </table> 
+</div>
 {% endblock %}

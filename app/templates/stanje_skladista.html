@@ -18,10 +18,12 @@
             <span style="color: red;">[{{ error }}]</span>
         {% endfor %}
         {% with messages = get_flashed_messages() %}
-                        {% for message in messages %}
-                            <span style="color:red;">{{ message }}</span>
-                        {% endfor %}
-                {% endwith %}
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-danger" role="alert">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
     </form>
 <table class="table table-striped">
 	<tr>
