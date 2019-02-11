@@ -37,10 +37,10 @@ class RegistrationForm(FlaskForm):
 			raise ValidationError('Niste admin!')
 
 class UnosProizvodaForm(FlaskForm):
-	name = StringField('Naziv proizvoda', validators=[DataRequired()])
-	kolicina = IntegerField('Kolicina', validators=[DataRequired()])
-	zemlja_podrijetla = StringField('Zemlja podrijetla', validators=[DataRequired()])
-	oib = IntegerField('OIB', validators=[DataRequired()])
+	name = StringField('Naziv proizvoda', validators=[DataRequired('Unesi Naziv Proizvoda')])
+	kolicina = IntegerField('Kolicina', validators=[DataRequired('Unesi Količinu (broj)')])
+	zemlja_podrijetla = StringField('Zemlja podrijetla', validators=[DataRequired('Unesi Zemlju Podrijetla')])
+	oib = IntegerField('OIB', validators=[DataRequired('Unesi OIB Tvrtke (broj)')])
 	submit = SubmitField('Stvori proizvod')
 	def validate(self):
 		rv = FlaskForm.validate(self)
@@ -58,12 +58,12 @@ class UnosProizvodaForm(FlaskForm):
 			return True
 
 class UnosTvrtkeForm(FlaskForm):
-	name = StringField('Naziv tvrtke', validators=[DataRequired()])
-	oib = IntegerField('OIB', validators=[DataRequired()])
-	grad = StringField('Grad', validators=[DataRequired()])
-	p_broj = IntegerField('Poštanski broj', validators=[DataRequired()])
-	drzava = StringField('Država', validators=[DataRequired()])
-	submit = SubmitField()
+	name = StringField('Naziv tvrtke', validators=[DataRequired('Unesi ime tvrtke')])
+	oib = IntegerField('OIB', validators=[DataRequired('Unesi OIB tvrtke')])
+	grad = StringField('Grad', validators=[DataRequired('Unesi grad')])
+	p_broj = IntegerField('Poštanski broj', validators=[DataRequired('Unesi poštanski broj')])
+	drzava = StringField('Država', validators=[DataRequired('Unesi državu')])
+	submit = SubmitField('Stvori Tvrtku')
 	def validate(self):
 		rv = FlaskForm.validate(self)
 		if not rv:

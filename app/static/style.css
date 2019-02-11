@@ -10,7 +10,7 @@ p {
     font-size: 1.1em;
     font-weight: 300;
     line-height: 1.7em;
-    color: #999;
+    color: black;
 }
 
 h4 {
@@ -148,6 +148,14 @@ ul.CTAs a {
     padding-right: 5vh;
     background-image: url('http://tadalafilforsale.net/data/media/42/56362100.jpg');
     height: 100vh;
+}
+
+.form-container {
+    border: 0px solid white;
+    padding: 15px;
+    -webkit-box-shadow: -1px 4px 26px 11px rgba(0,0,0,0.75);
+    -moz-box-shadow: -1px 4px 26px 11px rgba(0,0,0,0.75);
+    box-shadow: -1px 4px 26px 11px rgba(0,0,0,0.75);       
 }
 
 
