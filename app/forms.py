@@ -7,10 +7,12 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import current_user
 
 class LoginForm(FlaskForm):
-	username = StringField('Korisnicko ime', validators=[DataRequired()])
-	password = PasswordField('Lozinka', validators=[DataRequired()])
+	username = StringField('Korisnicko ime', validators=[DataRequired('Ovo polje je nužno')])
+	password = PasswordField('Lozinka', validators=[DataRequired('Ovo polje je nužno')])
 	remember_me = BooleanField('Zapamti me')
 	submit = SubmitField('Prijavi se')
+
+
 
 class RegistrationForm(FlaskForm):
 	username = StringField('Korisnicko ime', validators=[DataRequired()])
@@ -39,7 +41,7 @@ class UnosProizvodaForm(FlaskForm):
 	kolicina = IntegerField('Kolicina', validators=[DataRequired()])
 	zemlja_podrijetla = StringField('Zemlja podrijetla', validators=[DataRequired()])
 	oib = IntegerField('OIB', validators=[DataRequired()])
-	submit = SubmitField()
+	submit = SubmitField('Stvori proizvod')
 	def validate(self):
 		rv = FlaskForm.validate(self)
 		if not rv:
@@ -112,8 +114,9 @@ class IzlazRobeForm(FlaskForm):
 			return True
 
 class SearchForm(FlaskForm):
-	search = StringField(('Search'), validators=[DataRequired()])
-	submit = SubmitField()
+	search = StringField(('Pronađi Proizvod'), validators=[DataRequired('Unesi ime proizvoda')])
+	submit = SubmitField('Pronađi')
+
 
 class EditPasswordForm(FlaskForm):
 	old_password = PasswordField('Stara Lozinka', validators=[DataRequired()])

@@ -27,6 +27,11 @@
 
                 </div>
                 {{ form.submit(type="submit", class="btn tipka btn-block") }}
+                {% with messages = get_flashed_messages() %}
+                        {% for message in messages %}
+                            <span style="color:red;">{{ message }}</span>
+                        {% endfor %}
+                {% endwith %}
                 <div class="container">
                                               
                 </div>
