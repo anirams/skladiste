@@ -3,6 +3,7 @@
 {% block pretraga %}active{% endblock %}
 
 {% block content %}
+<div class="stanje-s">
 <form action="" method="post" novalidate="">
         {{ form.hidden_tag() }}
         <p>
@@ -34,4 +35,5 @@
     </tr>
     {% endfor %}
 </table> 
+</div>
 {% endblock %}
