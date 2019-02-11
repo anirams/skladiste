@@ -122,12 +122,34 @@ ul.CTAs a {
 
 }
 
+/* INDEX */
 .index{
     padding-top: 30vh;
+    background-image: url('http://tadalafilforsale.net/data/media/42/56362100.jpg');
+    height: 100vh;
 }
 
+/* STANJE SKLADISTA / PRETRAGA*/
+.tipka-stanje{
+    width: 50%;
+}
+.stanje-s{
+    padding-top: 10vh;
+    padding-left: 5vh;
+    padding-right: 5vh;
+    background-image: url('http://tadalafilforsale.net/data/media/42/56362100.jpg');
+    height: 100vh;
+}
 
+/* UNOS PROIZVODA */
+.unos-p {
+    margin-top: 10vh;
+}
 
+/* REGISTRACIJA */
+.registracija {
+    margin-top: 10vh;
+}
 
 
 @media (max-width: 768px) {

@@ -162,8 +162,9 @@ def search():
 	if form.validate_on_submit():
 		search = form.search.data
 		proizvodi = Proizvod.query.filter(Proizvod.name.like("%" + search + "%")).all()
+		if not proizvodi:
+			flash('Nema proizvoda pod tim imenom')
 		return render_template("search.html", form=form, proizvodi=proizvodi)
-	
 	return render_template("search.html", form=form, proizvodi=proizvodi)
 
 @app.route('/evidencija/<id>')
