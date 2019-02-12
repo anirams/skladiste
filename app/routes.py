@@ -201,6 +201,3 @@ def edit_password():
 		flash('Vaše promjene su spremljene')
 		return redirect(url_for('edit_password'))
 	return render_template('edit_password.html', title='Edit Profile', form=form)
-
-@app.route('/export/<id>')
-@login_required
