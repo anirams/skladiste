@@ -8,7 +8,7 @@
         {{ form.hidden_tag() }}
         <p>
             {{ form.search.label }}<br>
-            {{ form.search(size=32) }}
+            {{ form.search(size=32) }}<br>
             {% for error in form.search.errors %}
             <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
