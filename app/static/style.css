@@ -47,11 +47,16 @@ ul ul a {
     transition: all 0.3s;
 }
 
+#sidebarCollapse {
+    margin-top: 20px;
+    margin-left: 15px;
+}
+
 #sidebar.active {
     margin-left: -250px;
 }
 #sidebar .sidebar-header {
-    padding: 20px;
+    padding: 7.5px 20px;
     background: #477ea5;
     color: #f0fdfe;
 }
@@ -119,7 +124,6 @@ ul.CTAs a {
     display: inline-block;
     width: 100%;
     height: 81.5px;
-
 }
 
 /* INDEX */
