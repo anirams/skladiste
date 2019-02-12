@@ -1,41 +1,137 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div id="contentToPdf" style="margin-top: 30px;">
 
-    <h1> SKLADISTE </h1>
-    <p>DATUM: {{ evidencija.datum_unosa }}</p>
-    <p>VRSTA: {{ evidencija.vrsta_unosa }}</p>
-    <hr>
-    <h1>PROIZVOD:</h1>
-	<p>{{ evidencija.proizvod.name }}: <span>{{ evidencija.promijenjena_kolicina }}</span></p>
-    <hr>
-    <h1>TVRTKA:</h1>
-    <p>OIB: {{ evidencija.tvrtka.oib }}</p>
-    <p>MJESTO: {{ evidencija.tvrtka.grad }}</p>
-    <p>POSTANSKI BROJ: {{ evidencija.tvrtka.p_broj }}</p>
-    <p>DRZAVA: {{ evidencija.tvrtka.drzava }}</p>  
-    
+<!--
+<style>
+	@media (min-width: 768px) { .container { max-width: 700px; } }	
+</style>
+-->
+
+
+<div id="contentToPdf" style="margin-top: 30px;">
+<div id="HTMLtoPDF" style="margin-top: 30px;">
+	
+<div class="container">
+	
+	<div class="card">		
+
+		<div class="card-header">
+			<span class="float-left">Dok. broj: <strong>"neki broj"</strong></span>
+			<span class="float-center"><strong>Datum dok.: </strong>{{ evidencija.datum_unosa }}</span>
+			<span class="float-right"> <strong>Status:</strong> U obradi</span>
+		</div>
+
+		<div class="card-body">
+
+			<div class="row mb-4">
+				<div class="col-sm-6">
+					<h6 class="mb-3">Tvrtka:</h6>
+					<div>
+					<div>Ime: <strong>{{ evidencija.tvrtka.name }}</strong></div>
+					</div>
+					<div>OIB: {{ evidencija.tvrtka.oib }}</div>
+					<div>Grad: {{ evidencija.tvrtka.grad }}</div>
+					<div>Poštanski broj: {{ evidencija.tvrtka.p_broj }}</div>
+					<div>Država: {{ evidencija.tvrtka.drzava }}</div>
+				</div>
+
+				<div class="col-sm-6">
+					<h6 class="mb-3">Skladište:</h6>
+					<div>
+					<div>Ime: <strong>Marina Rijeka</strong></div>
+					</div>
+					<div>OIB: 0000000000</div>
+					<div>Grad: Rijeka</div>
+					<div>Poštanski broj: 51000</div>
+					<div>Država: Hrvatska</div>
+				</div>
+			</div>
+
+			<div class="table-responsive-sm">
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th class="center">#</th>
+							<th>Proizvod</th>
+							<th>Opis</th>
+							<th class="right">Količina</th>
+							<th class="center">Vrsta eviden.</th>
+							<th class="right">Novo stanje</th>
+						</tr>
+					</thead>
+
+					<tbody>						
+
+						<tr>
+							<td class="center">1</td>
+							<td class="left">{{ evidencija.proizvod.name }}</td>
+							<td class="left">zasad nemamo opis proizvoda</td>
+
+							<td class="right">{{ evidencija.promijenjena_kolicina }}</td>
+							<td class="center">{{ evidencija.vrsta_unosa }}</td>
+							<td class="right">{{ evidencija.proizvod.kolicina }}</td>
+						</tr>
+
+						<tr>
+							<td class="center">1</td>
+							<td class="left">{{ evidencija.proizvod.name }}</td>
+							<td class="left">zasad nemamo opis proizvoda</td>
+
+							<td class="right">{{ evidencija.promijenjena_kolicina }}</td>
+							<td class="center">{{ evidencija.vrsta_unosa }}</td>
+							<td class="right">{{ evidencija.proizvod.kolicina }}</td>
+						</tr>
+
+						<tr>
+							<td class="center">1</td>
+							<td class="left">{{ evidencija.proizvod.name }}</td>
+							<td class="left">zasad nemamo opis proizvoda</td>
+
+							<td class="right">{{ evidencija.promijenjena_kolicina }}</td>
+							<td class="center">{{ evidencija.vrsta_unosa }}</td>
+							<td class="right">{{ evidencija.proizvod.kolicina }}</td>
+						</tr>
+
+					</tbody>
+				</table>
+			</div>
+
+			<div class="row">
+				<div class="col-lg-4 col-sm-5">
+
+				</div>				
+			</div>
+		</div>
+	</div>
 </div>
+</div>
+
+
+
+
 <div id="editor"></div>
 <button id="cmd" class="btn btn-default">PDF</button>
+
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js" integrity="sha384-NaWTHo/8YCBYJ59830LTz/P4aQZK1sS0SneOgAvhsIl3zBu8r9RevNg5lHCHAuQ/" crossorigin="anonymous"></script>
 <script type="text/javascript">
 	var doc = new jsPDF();
 	var specialElementHandlers = {
-	    '#editor': function (element, renderer) {
-	        return true;
-	    }
+		'#editor': function (element, renderer) {
+			return true;
+		}
 	};
 
 	$('#cmd').click(function () {
-	    doc.fromHTML($('#contentToPdf').html(), 15, 15, {
-	        'width': 170,
-	            'elementHandlers': specialElementHandlers
-	    });
-	    doc.save('sample-file.pdf');
+		doc.fromHTML($('#contentToPdf').html(), 15, 15, {
+			'width': 170,
+				'elementHandlers': specialElementHandlers
+		});
+		doc.save('sample-file.pdf');
 	});
 </script>
+
+
 {% endblock %}

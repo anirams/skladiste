@@ -3,17 +3,27 @@
 {% block stanje_skladista %}active{% endblock %}
 
 {% block content %}
+<div class="stanje-s">
 <form action="" method="post" novalidate="">
         {{ form.hidden_tag() }}
         <p>
             {{ form.search.label }}<br>
             {{ form.search(size=32) }}
-            {% for error in form.search.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
+            
         </p>
 
-        {{ form.submit(type="submit", class="btn tipka btn-block") }}
+        {{ form.submit(type="submit", class="btn tipka") }}
+        <br>
+        {% for error in form.search.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-danger" role="alert">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
     </form>
 <table class="table table-striped">
 	<tr>
@@ -27,4 +37,11 @@
     </tr>
     {% endfor %}
 </table> 
+    {% if prev_url %}
+        <a href="{{ prev_url }}">Noviji artikli</a>
+    {% endif %}
+    {% if next_url %}
+        <a href="{{ next_url }}">Stariji artikli</a>
+    {% endif %}
+</div>
 {% endblock %}

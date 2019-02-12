@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block dobavljaci %}active{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-7">
+    <h1>Popis tvrtki</h1>
+    <table class="table table-striped">
+        <tr>
+            <th>Naziv tvrtke</th>
+            <th>OIB</th> 
+            <th>GRAD</th>
+            <th>POŠTANSKI BROJ</th>
+            <th>DRŽAVA</th>
+        </tr>
+    {% for dobavljac in dobavljaci %}
+        <tr>
+            <td>{{ dobavljac.name }}</td>
+            <td>{{ dobavljac.oib }}</td> 
+            <td>{{ dobavljac.grad }}</td>
+            <td>{{ dobavljac.p_broj }}</td>
+            <td>{{ dobavljac.drzava }}</td>
+        </tr>     
+    {% endfor %}
+    </table>
+    </div>
+    
+    <div class="col-md-5">
+    <h1>Dodaj novu tvrtku</h1>
+    <form action="" method="post" novalidate="">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.name.label }}<br>
+            {{ form.name(size=32) }}
+            {% for error in form.name.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.oib.label }}<br>
+            {{ form.oib(size=32) }}
+            {% for error in form.oib.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.grad.label }}<br>
+            {{ form.grad(size=32) }}
+            {% for error in form.grad.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.p_broj.label }}<br>
+            {{ form.p_broj(size=32) }}
+            {% for error in form.p_broj.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.drzava.label }}<br>
+            {{ form.drzava(size=32) }}
+            {% for error in form.drzava.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+    </div>
+</div>
+{% endblock %}

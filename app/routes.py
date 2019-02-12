@@ -35,7 +35,9 @@ def logout():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-	if current_user.is_authenticated:
+	if not current_user.is_authenticated:
+		return redirect(url_for('login'))
+	if current_user.username != "admin":
 		return redirect(url_for('index'))
 	form = RegistrationForm()
 	if form.validate_on_submit():
@@ -70,7 +72,7 @@ def unos_proizvoda():
 		flash('Dodali ste proizvod!')
 		proizvod = Proizvod.query.filter_by(name=form.name.data).first()
 		tvrtka = Tvrtka.query.filter_by(oib=form.oib.data).first()
-		evidencija = Evidencija(proizvod_id=proizvod.id, promijenjena_kolicina=form.kolicina.data, tvrtka_id=tvrtka.id, user_id=current_user.id, vrsta_unosa='unos')
+		evidencija = Evidencija(proizvod_id=proizvod.id, promijenjena_kolicina=proizvod.kolicina, tvrtka_id=tvrtka.id, user_id=current_user.id, vrsta_unosa='unos')
 		db.session.add(evidencija)
 		db.session.commit()
 		tvrtka = Tvrtka.query.all()
@@ -106,13 +108,24 @@ def proizvod(name):
 @app.route('/stanje_skladista', methods=['GET', 'POST'])
 @login_required
 def stanje_skladista():
-	proizvodi = Proizvod.query.all()
+	
+	page = request.args.get('page', 1, type=int)
+	proizvodi = Proizvod.query.order_by(Proizvod.datum_unosa.desc()).paginate(page, app.config['POSTS_PER_PAGE'], False)
+	next_url = url_for('stanje_skladista', page=proizvodi.next_num) \
+		if proizvodi.has_next else None
+	prev_url = url_for('stanje_skladista', page=proizvodi.prev_num) \
+		if proizvodi.has_prev else None
 	form = SearchForm()
 	if form.validate_on_submit():
-		search = form.search.data
-		proizvodi = Proizvod.query.filter(Proizvod.name.like("%" + search + "%")).all()
-		return render_template("stanje_skladista.html", form=form, proizvodi=proizvodi)
-	return render_template('stanje_skladista.html', title='Stanje skladista', proizvodi=proizvodi, form=form)
+		page2 = request.args.get('page2', 1, type=int)
+		proizvodi2 = Proizvod.query.filter(Proizvod.name.like("%" + form.search.data + "%")).paginate(page2, app.config['POSTS_PER_PAGE'], False)
+		next_url2 = url_for('stanje_skladista', page=proizvodi2.next_num) \
+			if proizvodi2.has_next else None
+		prev_url2 = url_for('stanje_skladista', page=proizvodi2.prev_num) \
+			if proizvodi2.has_prev else None
+		return render_template("stanje_skladista.html", title='sssasas', form=form, proizvodi=proizvodi2.items, next_url=next_url2, prev_url=prev_url2)
+	else:
+		return render_template('stanje_skladista.html', title='Stanje skladista', proizvodi=proizvodi.items, form=form, next_url=next_url, prev_url=prev_url)
 
 @app.route('/tvrtke', methods=['GET', 'POST'])
 @login_required
@@ -126,7 +139,8 @@ def tvrtke():
 		db.session.add(tvrtka)
 		db.session.commit()
 		flash('Uspješno ste unijeli tvrtku!')
-		return redirect(url_for('tvrtke'))
+		tvrtke = Tvrtka.query.all()
+		return render_template('tvrtke.html', title='Dodaj tvrtku', form=form, tvrtke=tvrtke)
 	return render_template('tvrtke.html', title='Dodaj tvrtku', form=form, tvrtke=tvrtke)
 
 @app.route('/evidencija_unosa')
@@ -149,8 +163,9 @@ def search():
 	if form.validate_on_submit():
 		search = form.search.data
 		proizvodi = Proizvod.query.filter(Proizvod.name.like("%" + search + "%")).all()
+		if not proizvodi:
+			flash('Nema proizvoda pod tim imenom')
 		return render_template("search.html", form=form, proizvodi=proizvodi)
-	
 	return render_template("search.html", form=form, proizvodi=proizvodi)
 
 @app.route('/evidencija/<id>')
