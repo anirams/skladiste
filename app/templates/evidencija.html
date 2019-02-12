@@ -10,7 +10,6 @@
 
 
 <div id="contentToPdf" style="margin-top: 30px;">
-<div id="HTMLtoPDF" style="margin-top: 30px;">
 	
 <div class="container">
 	
@@ -73,26 +72,6 @@
 							<td class="right">{{ evidencija.proizvod.kolicina }}</td>
 						</tr>
 
-						<tr>
-							<td class="center">1</td>
-							<td class="left">{{ evidencija.proizvod.name }}</td>
-							<td class="left">zasad nemamo opis proizvoda</td>
-
-							<td class="right">{{ evidencija.promijenjena_kolicina }}</td>
-							<td class="center">{{ evidencija.vrsta_unosa }}</td>
-							<td class="right">{{ evidencija.proizvod.kolicina }}</td>
-						</tr>
-
-						<tr>
-							<td class="center">1</td>
-							<td class="left">{{ evidencija.proizvod.name }}</td>
-							<td class="left">zasad nemamo opis proizvoda</td>
-
-							<td class="right">{{ evidencija.promijenjena_kolicina }}</td>
-							<td class="center">{{ evidencija.vrsta_unosa }}</td>
-							<td class="right">{{ evidencija.proizvod.kolicina }}</td>
-						</tr>
-
 					</tbody>
 				</table>
 			</div>
@@ -105,33 +84,12 @@
 		</div>
 	</div>
 </div>
-</div>
-
-
 
 
 <div id="editor"></div>
-<button id="cmd" class="btn btn-default">PDF</button>
 
+<td><a href="../evidencija_pdf/{{id}}">PDF</a></td>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js" integrity="sha384-NaWTHo/8YCBYJ59830LTz/P4aQZK1sS0SneOgAvhsIl3zBu8r9RevNg5lHCHAuQ/" crossorigin="anonymous"></script>
-<script type="text/javascript">
-	var doc = new jsPDF();
-	var specialElementHandlers = {
-		'#editor': function (element, renderer) {
-			return true;
-		}
-	};
-
-	$('#cmd').click(function () {
-		doc.fromHTML($('#contentToPdf').html(), 15, 15, {
-			'width': 170,
-				'elementHandlers': specialElementHandlers
-		});
-		doc.save('sample-file.pdf');
-	});
-</script>
 
 
 {% endblock %}
