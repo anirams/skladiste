@@ -15,11 +15,11 @@ class LoginForm(FlaskForm):
 
 
 class RegistrationForm(FlaskForm):
-	username = StringField('Korisnicko ime', validators=[DataRequired()])
-	email = StringField('Email', validators=[DataRequired(), Email()])
-	password = PasswordField('Lozinka', validators=[DataRequired()])
+	username = StringField('Korisnicko ime', validators=[DataRequired('Ovo polje je nužno')])
+	email = StringField('Email', validators=[DataRequired(), Email('Unesite valjanu email adresu')])
+	password = PasswordField('Lozinka', validators=[DataRequired('Ovo polje je nužno')])
 	password2 = PasswordField(
-		'Ponovite lozinku', validators=[DataRequired(), EqualTo('password')])
+		'Ponovite lozinku', validators=[DataRequired('Ovo polje je nužno'), EqualTo('password', message='Lozinke moraju biti jednake')])
 	submit = SubmitField('Registriraj se')
 
 	def validate_username(self, username):

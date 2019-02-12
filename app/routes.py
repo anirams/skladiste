@@ -5,6 +5,8 @@ from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Proizvod, Tvrtka, Evidencija
 from werkzeug.urls import url_parse
 from datetime import datetime
+import pdfkit
+config = pdfkit.configuration(wkhtmltopdf="C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe")
 
 @app.route('/index')
 def index():
@@ -14,17 +16,19 @@ def index():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
 	if current_user.is_authenticated:
+		#flash(f'Korisnik { form.username.data } je ulogiran!', 'success')
 		return redirect(url_for('index'))
 	form = LoginForm()
 	if form.validate_on_submit():
 		user = User.query.filter_by(username=form.username.data).first()
 		if user is None or not user.check_password(form.password.data):
-			flash('Netočno korisničko ime ili lozinka!')
+			flash(f'Netočno korisničko ime ili lozinka!', 'danger')
 			return redirect(url_for('login'))
 		login_user(user, remember=form.remember_me.data)
 		next_page = request.args.get('next')
 		if not next_page or url_parse(next_page).netloc != '':
 			next_page = url_for('index')
+			flash(f'Korisnik { form.username.data } je ulogiran!', 'success')
 		return redirect(next_page)
 	return render_template('login.html', title='Prijavi se', form=form)
 
@@ -45,7 +49,7 @@ def register():
 		user.set_password(form.password.data)
 		db.session.add(user)
 		db.session.commit()
-		flash('Sada ste registrirani korisnik!')
+		flash(f'Registrirali ste korisnika {form.username.data}!', 'success')
 		return redirect(url_for('login'))
 	return render_template('register.html', title='Registriraj se', form=form)
 
@@ -147,6 +151,8 @@ def tvrtke():
 @login_required
 def evidencija_unosa():
 	evidencija = Evidencija.query.filter_by(vrsta_unosa='unos').order_by(Evidencija.datum_unosa.desc()).all()
+	html = render_template('evidencija_unosa.html', title='Evidencija unosa', evidencija=evidencija)
+	
 	return render_template('evidencija_unosa.html', title='Evidencija unosa', evidencija=evidencija)
 
 @app.route('/evidencija_izdavanja')
@@ -172,7 +178,18 @@ def search():
 @login_required
 def evidencija(id):
 	evidencija = Evidencija.query.filter_by(id=id).first_or_404()
+	#render_template_to_pdf('evidencija.html', id=id, download=True, save=False, param='hello')
 	return render_template('evidencija.html', id=id, evidencija=evidencija)
+
+@app.route('/evidencija_pdf/<id>')
+@login_required
+def evidencija_pdf(id):
+	evidencija = Evidencija.query.filter_by(id=id).first_or_404()
+	#render_template_to_pdf('evidencija.html', id=id, download=True, save=False, param='hello')
+	html = render_template('evidencija_pdf.html', id=id, evidencija=evidencija)
+	pdfkit.from_string(html, 'evidencija '+id +'.pdf', configuration=config)
+	return render_template('evidencija.html', id=id, evidencija=evidencija)
+
 
 @app.route('/edit_password', methods=['GET', 'POST'])
 @login_required
