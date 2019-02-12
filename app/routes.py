@@ -1,5 +1,5 @@
 from flask import render_template, flash, redirect, url_for, request
-from app import app, db
+from app import app, db, excel
 from app.forms import LoginForm, RegistrationForm, UlazRobeForm, IzlazRobeForm, UnosProizvodaForm, SearchForm, EditPasswordForm, UnosTvrtkeForm
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Proizvod, Tvrtka, Evidencija
@@ -202,5 +202,17 @@ def edit_password():
 		return redirect(url_for('edit_password'))
 	return render_template('edit_password.html', title='Edit Profile', form=form)
 
-@app.route('/export/<id>')
+@app.route('/export')
 @login_required
+def export():
+	evidencije = Evidencija.query.all()
+	column_names = ['id',
+		'proizvod_id',
+		'tvrtka_id',
+		'promijenjena_kolicina',
+		'datum_unosa',
+		'vrsta_unosa',
+		'user_id'
+		]
+
+	return excel.make_response_from_query_sets(evidencije, column_names, 'xls')
