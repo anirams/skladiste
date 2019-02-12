@@ -9,7 +9,6 @@
         <p>
             {{ form.search.label }}<br>
             {{ form.search(size=32) }}
-            
         </p>
         {% for error in form.search.errors %}
             <span style="color: red;">[{{ error }}]</span>
@@ -21,7 +20,6 @@
             {% endfor %}
         {% endif %}
         {% endwith %}
-        <br>
         {{ form.submit(type="submit", class="btn tipka") }}
         
     </form>
