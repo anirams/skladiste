@@ -7,7 +7,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import current_user
 
 class LoginForm(FlaskForm):
-	username = StringField('Korisnicko ime', validators=[DataRequired()])
+	username = StringField('Korisnicko ime', validators=[DataRequired('Ovo polje je nužno')])
 	password = PasswordField('Lozinka', validators=[DataRequired()])
 	remember_me = BooleanField('Zapamti me')
 	submit = SubmitField('Prijavi se')

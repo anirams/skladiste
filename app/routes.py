@@ -5,6 +5,8 @@ from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Proizvod, Tvrtka, Evidencija
 from werkzeug.urls import url_parse
 from datetime import datetime
+import pdfkit
+config = pdfkit.configuration(wkhtmltopdf="C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe")
 
 @app.route('/index')
 def index():
@@ -146,6 +148,8 @@ def tvrtke():
 @login_required
 def evidencija_unosa():
 	evidencija = Evidencija.query.filter_by(vrsta_unosa='unos').order_by(Evidencija.datum_unosa.desc()).all()
+	html = render_template('evidencija_unosa.html', title='Evidencija unosa', evidencija=evidencija)
+	
 	return render_template('evidencija_unosa.html', title='Evidencija unosa', evidencija=evidencija)
 
 @app.route('/evidencija_izdavanja')
@@ -170,7 +174,18 @@ def search():
 @login_required
 def evidencija(id):
 	evidencija = Evidencija.query.filter_by(id=id).first_or_404()
+	#render_template_to_pdf('evidencija.html', id=id, download=True, save=False, param='hello')
 	return render_template('evidencija.html', id=id, evidencija=evidencija)
+
+@app.route('/evidencija_pdf/<id>')
+@login_required
+def evidencija_pdf(id):
+	evidencija = Evidencija.query.filter_by(id=id).first_or_404()
+	#render_template_to_pdf('evidencija.html', id=id, download=True, save=False, param='hello')
+	html = render_template('evidencija_pdf.html', id=id, evidencija=evidencija)
+	pdfkit.from_string(html, 'evidencija '+id +'.pdf', configuration=config)
+	return render_template('evidencija.html', id=id, evidencija=evidencija)
+
 
 @app.route('/edit_password', methods=['GET', 'POST'])
 @login_required
