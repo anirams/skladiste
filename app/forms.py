@@ -8,16 +8,18 @@ from flask_login import current_user
 
 class LoginForm(FlaskForm):
 	username = StringField('Korisnicko ime', validators=[DataRequired('Ovo polje je nužno')])
-	password = PasswordField('Lozinka', validators=[DataRequired()])
+	password = PasswordField('Lozinka', validators=[DataRequired('Ovo polje je nužno')])
 	remember_me = BooleanField('Zapamti me')
 	submit = SubmitField('Prijavi se')
 
+
+
 class RegistrationForm(FlaskForm):
-	username = StringField('Korisnicko ime', validators=[DataRequired()])
-	email = StringField('Email', validators=[DataRequired(), Email()])
-	password = PasswordField('Lozinka', validators=[DataRequired()])
+	username = StringField('Korisnicko ime', validators=[DataRequired('Ovo polje je nužno')])
+	email = StringField('Email', validators=[DataRequired(), Email('Unesite valjanu email adresu')])
+	password = PasswordField('Lozinka', validators=[DataRequired('Ovo polje je nužno')])
 	password2 = PasswordField(
-		'Ponovite lozinku', validators=[DataRequired(), EqualTo('password')])
+		'Ponovite lozinku', validators=[DataRequired('Ovo polje je nužno'), EqualTo('password', message='Lozinke moraju biti jednake')])
 	submit = SubmitField('Registriraj se')
 
 	def validate_username(self, username):
@@ -35,11 +37,11 @@ class RegistrationForm(FlaskForm):
 			raise ValidationError('Niste admin!')
 
 class UnosProizvodaForm(FlaskForm):
-	name = StringField('Naziv proizvoda', validators=[DataRequired()])
-	kolicina = IntegerField('Kolicina', validators=[DataRequired()])
-	zemlja_podrijetla = StringField('Zemlja podrijetla', validators=[DataRequired()])
-	oib = IntegerField('OIB', validators=[DataRequired()])
-	submit = SubmitField()
+	name = StringField('Naziv proizvoda', validators=[DataRequired('Unesi Naziv Proizvoda')])
+	kolicina = IntegerField('Kolicina', validators=[DataRequired('Unesi Količinu (broj)')])
+	zemlja_podrijetla = StringField('Zemlja podrijetla', validators=[DataRequired('Unesi Zemlju Podrijetla')])
+	oib = IntegerField('OIB', validators=[DataRequired('Unesi OIB Tvrtke (broj)')])
+	submit = SubmitField('Stvori proizvod')
 	def validate(self):
 		rv = FlaskForm.validate(self)
 		if not rv:
@@ -56,12 +58,12 @@ class UnosProizvodaForm(FlaskForm):
 			return True
 
 class UnosTvrtkeForm(FlaskForm):
-	name = StringField('Naziv tvrtke', validators=[DataRequired()])
-	oib = IntegerField('OIB', validators=[DataRequired()])
-	grad = StringField('Grad', validators=[DataRequired()])
-	p_broj = IntegerField('Poštanski broj', validators=[DataRequired()])
-	drzava = StringField('Država', validators=[DataRequired()])
-	submit = SubmitField()
+	name = StringField('Naziv tvrtke', validators=[DataRequired('Unesi ime tvrtke')])
+	oib = IntegerField('OIB', validators=[DataRequired('Unesi OIB tvrtke')])
+	grad = StringField('Grad', validators=[DataRequired('Unesi grad')])
+	p_broj = IntegerField('Poštanski broj', validators=[DataRequired('Unesi poštanski broj')])
+	drzava = StringField('Država', validators=[DataRequired('Unesi državu')])
+	submit = SubmitField('Stvori Tvrtku')
 	def validate(self):
 		rv = FlaskForm.validate(self)
 		if not rv:
@@ -112,8 +114,9 @@ class IzlazRobeForm(FlaskForm):
 			return True
 
 class SearchForm(FlaskForm):
-	search = StringField(('Search'), validators=[DataRequired()])
-	submit = SubmitField()
+	search = StringField(('Pronađi Proizvod'), validators=[DataRequired('Unesi ime proizvoda')])
+	submit = SubmitField('Pronađi')
+
 
 class EditPasswordForm(FlaskForm):
 	old_password = PasswordField('Stara Lozinka', validators=[DataRequired()])

@@ -16,17 +16,19 @@ def index():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
 	if current_user.is_authenticated:
+		#flash(f'Korisnik { form.username.data } je ulogiran!', 'success')
 		return redirect(url_for('index'))
 	form = LoginForm()
 	if form.validate_on_submit():
 		user = User.query.filter_by(username=form.username.data).first()
 		if user is None or not user.check_password(form.password.data):
-			flash('Netočno korisničko ime ili lozinka!')
+			flash(f'Netočno korisničko ime ili lozinka!', 'danger')
 			return redirect(url_for('login'))
 		login_user(user, remember=form.remember_me.data)
 		next_page = request.args.get('next')
 		if not next_page or url_parse(next_page).netloc != '':
 			next_page = url_for('index')
+			flash(f'Korisnik { form.username.data } je ulogiran!', 'success')
 		return redirect(next_page)
 	return render_template('login.html', title='Prijavi se', form=form)
 
@@ -47,7 +49,7 @@ def register():
 		user.set_password(form.password.data)
 		db.session.add(user)
 		db.session.commit()
-		flash('Sada ste registrirani korisnik!')
+		flash(f'Registrirali ste korisnika {form.username.data}!', 'success')
 		return redirect(url_for('login'))
 	return render_template('register.html', title='Registriraj se', form=form)
 
@@ -141,7 +143,8 @@ def tvrtke():
 		db.session.add(tvrtka)
 		db.session.commit()
 		flash('Uspješno ste unijeli tvrtku!')
-		return redirect(url_for('tvrtke'))
+		tvrtke = Tvrtka.query.all()
+		return render_template('tvrtke.html', title='Dodaj tvrtku', form=form, tvrtke=tvrtke)
 	return render_template('tvrtke.html', title='Dodaj tvrtku', form=form, tvrtke=tvrtke)
 
 @app.route('/evidencija_unosa')
@@ -166,8 +169,9 @@ def search():
 	if form.validate_on_submit():
 		search = form.search.data
 		proizvodi = Proizvod.query.filter(Proizvod.name.like("%" + search + "%")).all()
+		if not proizvodi:
+			flash('Nema proizvoda pod tim imenom')
 		return render_template("search.html", form=form, proizvodi=proizvodi)
-	
 	return render_template("search.html", form=form, proizvodi=proizvodi)
 
 @app.route('/evidencija/<id>')

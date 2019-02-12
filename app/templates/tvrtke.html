@@ -3,9 +3,18 @@
 {% block dobavljaci %}active{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-7">
+
+<div class="unos-p">
+    
+
     <h1>Popis tvrtki</h1>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success" role="alert">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
     <table class="table table-striped">
         <tr>
             <th>Naziv tvrtke</th>
@@ -23,50 +32,81 @@
             <td>{{ tvrtka.drzava }}</td>
         </tr>     
     {% endfor %}
+
     </table>
-    </div>
+            <!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+  Dodaj novu tvrtku
+</button>
     
-    <div class="col-md-5">
-    <h1>Dodaj novu tvrtku</h1>
-    <form action="" method="post" novalidate="">
+</div>
+
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      
+      <div class="modal-body">
+        <h5>Dodaj Novu Tvrtku</h5>
+        <form action="" method="post" novalidate="">
         {{ form.hidden_tag() }}
         <p>
             {{ form.name.label }}<br>
-            {{ form.name(size=32) }}
+            {{ form.name(size=32) }}<br>
             {% for error in form.name.errors %}
             <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
         </p>
         <p>
             {{ form.oib.label }}<br>
-            {{ form.oib(size=32) }}
+            {{ form.oib(size=32) }}<br>
             {% for error in form.oib.errors %}
             <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
         </p>
         <p>
             {{ form.grad.label }}<br>
-            {{ form.grad(size=32) }}
+            {{ form.grad(size=32) }}<br>
             {% for error in form.grad.errors %}
             <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
         </p>
         <p>
             {{ form.p_broj.label }}<br>
-            {{ form.p_broj(size=32) }}
+            {{ form.p_broj(size=32) }}<br>
             {% for error in form.p_broj.errors %}
             <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
         </p>
         <p>
             {{ form.drzava.label }}<br>
-            {{ form.drzava(size=32) }}
+            {{ form.drzava(size=32) }}<br>
             {% for error in form.drzava.errors %}
             <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
         </p>
-        <p>{{ form.submit() }}</p>
+        
+        <div class="modal-footer">
+        {{ form.submit(type="submit", class="btn btn-primary") }}
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
     </form>
+    
     </div>
+      </div>
+     
+      
+    </div>
+  </div>
 </div>
 {% endblock %}

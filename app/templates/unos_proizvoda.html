@@ -3,12 +3,18 @@
 {% block unos_proizvoda %}active{% endblock %}
 
 {% block content %}
-    <h1>Stvori novi proizvod</h1>
-    <form action="" method="post" novalidate="">
+<div class="unos-p">
+    <div class="row">
+        <div class="col"></div>
+        <div class="col-6">
+
+            <form class="form-container" action="" method="post" novalidate="">
         {{ form.hidden_tag() }}
+        <h1>Stvori novi proizvod</h1>
         <p>
             {{ form.name.label }}<br>
             {{ form.name(size=32) }}
+            <br>
             {% for error in form.name.errors %}
             <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
@@ -16,6 +22,7 @@
         <p>
             {{ form.kolicina.label }}<br>
             {{ form.kolicina(size=32) }}
+            <br>
             {% for error in form.kolicina.errors %}
             <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
@@ -23,6 +30,7 @@
         <p>
             {{ form.zemlja_podrijetla.label }}<br>
             {{ form.zemlja_podrijetla(size=32) }}
+            <br>
             {% for error in form.zemlja_podrijetla.errors %}
             <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
@@ -31,10 +39,16 @@
         <p>
             {{ form.oib.label }}<br>
             {{ form.oib(size=32) }}
+            <br>
             {% for error in form.oib.errors %}
             <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
         </p>
-        <p>{{ form.submit() }}</p>
+        <p>{{ form.submit(type="submit", class="btn tipka") }}</p>
     </form>
+        </div>
+        <div class="col"></div>
+    </div>
+    
+</div>
 {% endblock %}

@@ -10,14 +10,15 @@
 
 
 <div id="contentToPdf" style="margin-top: 30px;">
+<div id="HTMLtoPDF" style="margin-top: 30px;">
 	
 <div class="container">
 	
 	<div class="card">		
 
 		<div class="card-header">
-			Faktura broj:
-			<strong>"ubaciti broj fakture"</strong> 
+			<span class="float-left">Dok. broj: <strong>"neki broj"</strong></span>
+			<span class="float-center"><strong>Datum dok.: </strong>{{ evidencija.datum_unosa }}</span>
 			<span class="float-right"> <strong>Status:</strong> U obradi</span>
 		</div>
 
@@ -25,25 +26,25 @@
 
 			<div class="row mb-4">
 				<div class="col-sm-6">
-					<h6 class="mb-3">From:</h6>
+					<h6 class="mb-3">Tvrtka:</h6>
 					<div>
-					<strong>Webz Poland</strong>
+					<div>Ime: <strong>{{ evidencija.tvrtka.name }}</strong></div>
 					</div>
-					<div>Madalinskiego 8</div>
-					<div>71-101 Szczecin, Poland</div>
-					<div>Email: info@webz.com.pl</div>
-					<div>Phone: +48 444 666 3333</div>
+					<div>OIB: {{ evidencija.tvrtka.oib }}</div>
+					<div>Grad: {{ evidencija.tvrtka.grad }}</div>
+					<div>Poštanski broj: {{ evidencija.tvrtka.p_broj }}</div>
+					<div>Država: {{ evidencija.tvrtka.drzava }}</div>
 				</div>
 
 				<div class="col-sm-6">
-					<h6 class="mb-3">To:</h6>
+					<h6 class="mb-3">Skladište:</h6>
 					<div>
-					<strong>Bob Mart</strong>
+					<div>Ime: <strong>Marina Rijeka</strong></div>
 					</div>
-					<div>Attn: Daniel Marek</div>
-					<div>43-190 Mikolow, Poland</div>
-					<div>Email: marek@daniel.com</div>
-					<div>Phone: +48 123 456 789</div>
+					<div>OIB: 0000000000</div>
+					<div>Grad: Rijeka</div>
+					<div>Poštanski broj: 51000</div>
+					<div>Država: Hrvatska</div>
 				</div>
 			</div>
 
@@ -52,191 +53,64 @@
 					<thead>
 						<tr>
 							<th class="center">#</th>
-							<th>Item</th>
-							<th>Description</th>
-							<th class="right">Unit Cost</th>
-							<th class="center">Qty</th>
-							<th class="right">Total</th>
+							<th>Proizvod</th>
+							<th>Opis</th>
+							<th class="right">Količina</th>
+							<th class="center">Vrsta eviden.</th>
+							<th class="right">Novo stanje</th>
 						</tr>
 					</thead>
 
-					<tbody>
+					<tbody>						
+
 						<tr>
 							<td class="center">1</td>
-							<td class="left strong">Origin License</td>
-							<td class="left">Extended License</td>
+							<td class="left">{{ evidencija.proizvod.name }}</td>
+							<td class="left">zasad nemamo opis proizvoda</td>
 
-							<td class="right">$999,00</td>
-							<td class="center">1</td>
-							<td class="right">$999,00</td>
+							<td class="right">{{ evidencija.promijenjena_kolicina }}</td>
+							<td class="center">{{ evidencija.vrsta_unosa }}</td>
+							<td class="right">{{ evidencija.proizvod.kolicina }}</td>
 						</tr>
 
 						<tr>
-							<td class="center">2</td>
-							<td class="left">Custom Services</td>
-							<td class="left">Instalation and Customization (cost per hour)</td>
+							<td class="center">1</td>
+							<td class="left">{{ evidencija.proizvod.name }}</td>
+							<td class="left">zasad nemamo opis proizvoda</td>
 
-							<td class="right">$150,00</td>
-							<td class="center">20</td>
-							<td class="right">$3.000,00</td>
+							<td class="right">{{ evidencija.promijenjena_kolicina }}</td>
+							<td class="center">{{ evidencija.vrsta_unosa }}</td>
+							<td class="right">{{ evidencija.proizvod.kolicina }}</td>
 						</tr>
 
 						<tr>
-							<td class="center">3</td>
-							<td class="left">Hosting</td>
-							<td class="left">1 year subcription</td>
-
-							<td class="right">$499,00</td>
 							<td class="center">1</td>
-							<td class="right">$499,00</td>
+							<td class="left">{{ evidencija.proizvod.name }}</td>
+							<td class="left">zasad nemamo opis proizvoda</td>
+
+							<td class="right">{{ evidencija.promijenjena_kolicina }}</td>
+							<td class="center">{{ evidencija.vrsta_unosa }}</td>
+							<td class="right">{{ evidencija.proizvod.kolicina }}</td>
 						</tr>
 
-						<tr>
-							<td class="center">4</td>
-							<td class="left">Platinum Support</td>
-							<td class="left">1 year subcription 24/7</td>
-
-							<td class="right">$3.999,00</td>
-							<td class="center">1</td>
-							<td class="right">$3.999,00</td>
-						</tr>
 					</tbody>
 				</table>
 			</div>
 
-
 			<div class="row">
 				<div class="col-lg-4 col-sm-5">
 
-				</div>
-
-				<div class="col-lg-4 col-sm-5 ml-auto">
-					<table class="table table-clear">
-						<tbody>
-							<tr>
-								<td class="left">
-									<strong>Subtotal</strong>
-								</td>
-								<td class="right">$8.497,00</td>
-							</tr>
-
-							<tr>
-								<td class="left">
-									<strong>Discount (20%)</strong>
-								</td>
-								<td class="right">$1,699,40</td>
-							</tr>
-
-							<tr>
-								<td class="left">
-									<strong>VAT (10%)</strong>
-								</td>
-								<td class="right">$679,76</td>
-							</tr>
-
-							<tr>
-								<td class="left">
-								<strong>Total</strong>
-								</td>
-
-								<td class="right">
-								<strong>$7.477,36</strong>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-
-				</div>
-
+				</div>				
 			</div>
-
 		</div>
-
 	</div>
 </div>
-
-
-	<!--<div class="container">
-
-		<div class="row">
-			<div class="col-md-4 text-left">
-			<h2>TVRTKA</h2>
-			<p>IME TVRTKE: {{ evidencija.tvrtka.name }}</p>
-			<p>OIB: {{ evidencija.tvrtka.oib }}</p>
-			<p>MJESTO: {{ evidencija.tvrtka.grad }}</p>
-			<p>POSTANSKI BROJ: {{ evidencija.tvrtka.p_broj }}</p>
-			<p>DRZAVA: {{ evidencija.tvrtka.drzava }}</p>
-			</div> 
-
-			<div class="col-md-4 text-left">
-			</div>
-
-			<div class="col-md-4 text-left">			
-			</div>
-		</div>
-
-		<div class="row">
-			<div class="col-md-4 text-left">
-		
-			</div> 
-
-			<div class="col-md-4 text-left">			
-			
-			</div>
-
-			<div class="col-md-4 text-left">
-			<h2> SKLADIŠTE </h2>
-			<p>DATUM: {{ evidencija.datum_unosa }}</p>
-			<p>VRSTA: {{ evidencija.vrsta_unosa }}</p>
-			
-			</div>
-		</div>
-
-		<div class="row">
-			<div class="col-md-4 text-left">
-			<h2>TVRTKA</h2>
-			<p>OIB: {{ evidencija.tvrtka.oib }}</p>
-			<p>MJESTO: {{ evidencija.tvrtka.grad }}</p>
-			<p>POSTANSKI BROJ: {{ evidencija.tvrtka.p_broj }}</p>
-			<p>DRZAVA: {{ evidencija.tvrtka.drzava }}</p>
-			</div> 
-
-			<div class="col-md-4 text-left">
-						
-			</div>
-
-			<div class="col-md-4 text-left">
-			<h2>PROIZVOD:</h2>
-			<p>{{ evidencija.proizvod.name }}: <span>{{ evidencija.promijenjena_kolicina }}</span></p>
-			
-			</div>
-		</div>
-
-		<div class="row">
-			<div class="col-md-4 text-left">
-			<h2>TVRTKA</h2>
-			<p>OIB: {{ evidencija.tvrtka.oib }}</p>
-			<p>MJESTO: {{ evidencija.tvrtka.grad }}</p>
-			<p>POSTANSKI BROJ: {{ evidencija.tvrtka.p_broj }}</p>
-			<p>DRZAVA: {{ evidencija.tvrtka.drzava }}</p>
-			</div> 
-
-			<div class="col-md-4 text-left">
-						
-			</div>
-
-			<div class="col-md-4 text-left">
-		
-			</div>
-		</div>
-
-	</div>	-->
-
-
 </div>
 
-<div id="editor"></div>
+
+
 
 <td><a href="../evidencija_pdf/{{id}}">PDF</a></td>
+
 
 {% endblock %}
