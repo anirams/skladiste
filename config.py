@@ -7,4 +7,4 @@ class Config(object):
         'sqlite:///' + os.path.join(basedir, 'app.db')
 	SQLALCHEMY_TRACK_MODIFICATIONS = False
 	POSTS_PER_PAGE = 6
-	
+	PER_PAGE_PARAMETER= 3

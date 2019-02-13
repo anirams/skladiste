@@ -12,17 +12,15 @@
         </p>
         {% for error in form.search.errors %}
             <span style="color: red;">[{{ error }}]</span>
-            <br>
         {% endfor %}
         {% with messages = get_flashed_messages() %}
             {% if messages %}
             {% for message in messages %}
-            <div class="alert alert-danger">{{ message }}</div>
-            <br>
+            <div class="alert alert-danger" role="alert">{{ message }}</div>
             {% endfor %}
         {% endif %}
         {% endwith %}
-        {{ form.submit(type="submit", class="btn btn-primary mt-2") }}
+        {{ form.submit(type="submit", class="btn tipka") }}
         
     </form>
 <table class="table table-striped">
@@ -30,18 +28,25 @@
         <th>Proizvod</th> 
         <th>Kolicina</th>
     </tr>
-    {% for proizvod in proizvodi %}
+    {% for proizvod in proizvodi.items %}
     <tr>
     	<td><a href="proizvod/{{proizvod.name}}">{{ proizvod.name }}</a></td>
     	<td>{{ proizvod.kolicina }}</td>
     </tr>
     {% endfor %}
 </table> 
-    {% if prev_url %}
-        <a href="{{ prev_url }}">Noviji artikli</a>
-    {% endif %}
-    {% if next_url %}
-        <a href="{{ next_url }}">Stariji artikli</a>
-    {% endif %}
+    {% for page in proizvodi.iter_pages(left_edge=3, right_edge=3, left_current=3, right_current=3) %}
+
+        {% if page %}
+            {% if page != proizvodi.page %}
+                <a href="{{ url_for('stanje_skladista', page_num=page) }}">{{ page }}</a>
+            {% else %}
+                <strong>{{ page }}</strong>
+            {% endif %}
+        {% else %}
+            <span class=ellipsis>…</span>
+        {% endif %}
+
+    {% endfor %}
 </div>
 {% endblock %}

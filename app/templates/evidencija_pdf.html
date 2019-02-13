@@ -16,7 +16,7 @@
  
 
 
-<div id="contentToPdf" style="margin-top: 30px;">
+<div id="contentToPdf" class="unos-p">
 	
 <div class="container">
 	
@@ -24,7 +24,7 @@
 
 		<div class="card-header">
 			<span class="float-left">Dok. broj: <strong>"neki broj"</strong></span>
-			<span class="float-center"><strong>Datum dok.: </strong>{{ evidencija.datum_unosa }}</span>
+			<span class="float-center"><strong>Datum dok.: </strong>{{ evidencija.datum_unosa.strftime('%B %d %Y - %H:%M:%S') }}</span>
 			<span class="float-right"> <strong>Status:</strong> U obradi</span>
 		</div>
 
@@ -76,7 +76,7 @@
 
 							<td class="right">{{ evidencija.promijenjena_kolicina }}</td>
 							<td class="center">{{ evidencija.vrsta_unosa }}</td>
-							<td class="right">{{ evidencija.proizvod.kolicina }}</td>
+							<td class="right">{{ evidencija.trenutna_kolicina }}</td>
 						</tr>
 
 					</tbody>
@@ -94,6 +94,5 @@
 
 
 <div id="editor"></div>
-
 
 
