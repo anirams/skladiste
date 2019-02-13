@@ -60,14 +60,14 @@
 		</ul>
 		<ul class="list-unstyled CTAs">
                 <li>
-                    <a href="{{ url_for('user', username=current_user.username) }}" class="tipka">PROFIL</a>
+                    <a href="{{ url_for('user', username=current_user.username) }}" class="btn btn-primary">PROFIL</a>
                 </li>
                 <li>
-                    <a href="{{ url_for('logout') }}" class="tipka">ODJAVI SE</a>
+                    <a href="{{ url_for('logout') }}" class="btn btn-primary">ODJAVI SE</a>
                 </li>
                 {%  if current_user.username == "admin"%}
                     <li>
-                        <a href="{{ url_for('register') }}" class="tipka">Registriraj novog korisnika</a>
+                        <a href="{{ url_for('register') }}" class="btn btn-primary">Registriraj novog korisnika</a>
                     </li>
                 {% endif %}
             </ul>
@@ -106,9 +106,9 @@
             });
         });
 
-        $('#myModal').on('shown.bs.modal', function () {
-  			$('#myInput').trigger('focus')
-			})
+        
+        $(".sakrij-podatke input").val("")
+
     </script>
 </body>
 </html>

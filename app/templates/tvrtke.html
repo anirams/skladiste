@@ -55,6 +55,7 @@
       <div class="modal-body">
         <h5>Dodaj Novu Tvrtku</h5>
         <form action="" method="post" novalidate="">
+        <div class="sakrij-podatke">
         {{ form.hidden_tag() }}
         <p>
             {{ form.name.label }}<br>
@@ -91,7 +92,7 @@
             <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
         </p>
-        
+        </div>
         <div class="modal-footer">
         {{ form.submit(type="submit", class="btn btn-primary") }}
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
