@@ -126,7 +126,7 @@ def stanje_skladista(page_num):
 		
 		if not proizvodi2:
 			flash('Proizvod ne postoji')
-		return render_template("stanje_skladista.html", title='sssasas', form=form, proizvodi=proizvodi2)
+		return render_template("stanje_skladista.html", title='Stanje skladista', form=form, proizvodi=proizvodi2)
 	else:
 		return render_template('stanje_skladista.html', title='Stanje skladista', proizvodi=proizvodi, form=form)
 
