@@ -1,5 +1,5 @@
 from flask import render_template, flash, redirect, url_for, request
-from app import app, db, excel
+from app import app, db
 from app.forms import LoginForm, RegistrationForm, UlazRobeForm, IzlazRobeForm, UnosProizvodaForm, SearchForm, EditPasswordForm, UnosTvrtkeForm
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Proizvod, Tvrtka, Evidencija
@@ -73,13 +73,13 @@ def unos_proizvoda():
 		proizvod = Proizvod(name=form.name.data, zemlja_podrijetla=form.zemlja_podrijetla.data, kolicina=form.kolicina.data)
 		db.session.add(proizvod)
 		db.session.commit()
-		flash('Dodali ste proizvod!')
 		proizvod = Proizvod.query.filter_by(name=form.name.data).first()
 		tvrtka = Tvrtka.query.filter_by(oib=form.oib.data).first()
 		evidencija = Evidencija(proizvod_id=proizvod.id, promijenjena_kolicina=proizvod.kolicina, tvrtka_id=tvrtka.id, user_id=current_user.id, vrsta_unosa='unos', trenutna_kolicina=proizvod.kolicina)
 		db.session.add(evidencija)
 		db.session.commit()
 		tvrtka = Tvrtka.query.all()
+		flash(f'Dodali ste proizvod {form.name.data}!', 'success')
 		return redirect(url_for('unos_proizvoda'))
 	return render_template('unos_proizvoda.html', title='Dodaj proizvod', form=form)
 
@@ -127,6 +127,8 @@ def stanje_skladista():
 			if proizvodi2.has_next else None
 		prev_url2 = url_for('stanje_skladista', page=proizvodi2.prev_num) \
 			if proizvodi2.has_prev else None
+		if not proizvodi2:
+			flash('Proizvod ne postoji')
 		return render_template("stanje_skladista.html", title='sssasas', form=form, proizvodi=proizvodi2.items, next_url=next_url2, prev_url=prev_url2)
 	else:
 		return render_template('stanje_skladista.html', title='Stanje skladista', proizvodi=proizvodi.items, form=form, next_url=next_url, prev_url=prev_url)
@@ -142,7 +144,7 @@ def tvrtke():
 			p_broj=form.p_broj.data, drzava=form.drzava.data)
 		db.session.add(tvrtka)
 		db.session.commit()
-		flash('Uspješno ste unijeli tvrtku!')
+		flash(f'Uspješno ste unijeli tvrtku {form.name.data}!')
 		tvrtke = Tvrtka.query.all()
 		return render_template('tvrtke.html', title='Dodaj tvrtku', form=form, tvrtke=tvrtke)
 	return render_template('tvrtke.html', title='Dodaj tvrtku', form=form, tvrtke=tvrtke)
