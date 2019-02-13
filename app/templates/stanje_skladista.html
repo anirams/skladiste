@@ -9,21 +9,21 @@
         <p>
             {{ form.search.label }}<br>
             {{ form.search(size=32) }}
-            
         </p>
-
-        {{ form.submit(type="submit", class="btn tipka") }}
-        <br>
         {% for error in form.search.errors %}
             <span style="color: red;">[{{ error }}]</span>
+            <br>
         {% endfor %}
         {% with messages = get_flashed_messages() %}
             {% if messages %}
             {% for message in messages %}
-            <div class="alert alert-danger" role="alert">{{ message }}</div>
+            <div class="alert alert-danger">{{ message }}</div>
+            <br>
             {% endfor %}
         {% endif %}
         {% endwith %}
+        {{ form.submit(type="submit", class="btn btn-primary mt-2") }}
+        
     </form>
 <table class="table table-striped">
 	<tr>

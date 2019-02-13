@@ -1,4 +1,4 @@
-#!"c:\users\uc-m12\documents\marina stvoric\skladiste\venv\scripts\python.exe"
+#!c:\users\uc-m02\documents\github\skladiste\venv\scripts\python.exe
 # EASY-INSTALL-ENTRY-SCRIPT: 'Mako==1.0.7','console_scripts','mako-render'
 __requires__ = 'Mako==1.0.7'
 import re

@@ -73,13 +73,13 @@ def unos_proizvoda():
 		proizvod = Proizvod(name=form.name.data, zemlja_podrijetla=form.zemlja_podrijetla.data, kolicina=form.kolicina.data)
 		db.session.add(proizvod)
 		db.session.commit()
-		flash('Dodali ste proizvod!')
 		proizvod = Proizvod.query.filter_by(name=form.name.data).first()
 		tvrtka = Tvrtka.query.filter_by(oib=form.oib.data).first()
-		evidencija = Evidencija(proizvod_id=proizvod.id, promijenjena_kolicina=proizvod.kolicina, tvrtka_id=tvrtka.id, user_id=current_user.id, vrsta_unosa='unos')
+		evidencija = Evidencija(proizvod_id=proizvod.id, promijenjena_kolicina=proizvod.kolicina, tvrtka_id=tvrtka.id, user_id=current_user.id, vrsta_unosa='unos', trenutna_kolicina=proizvod.kolicina)
 		db.session.add(evidencija)
 		db.session.commit()
 		tvrtka = Tvrtka.query.all()
+		flash(f'Dodali ste proizvod {form.name.data}!', 'success')
 		return redirect(url_for('unos_proizvoda'))
 	return render_template('unos_proizvoda.html', title='Dodaj proizvod', form=form)
 
@@ -94,7 +94,7 @@ def proizvod(name):
 	if form_ulaz.submit1.data and form_ulaz.validate():
 			tvrtka = Tvrtka.query.filter_by(oib=form_ulaz.oib.data).first_or_404()
 			proizvod.kolicina += form_ulaz.promijenjena_kolicina.data
-			evidencija = Evidencija(proizvod_id=proizvod.id, tvrtka_id=tvrtka.id, promijenjena_kolicina=form_ulaz.promijenjena_kolicina.data, user_id=current_user.id, vrsta_unosa='unos')
+			evidencija = Evidencija(proizvod_id=proizvod.id, tvrtka_id=tvrtka.id, promijenjena_kolicina=form_ulaz.promijenjena_kolicina.data, user_id=current_user.id, vrsta_unosa='unos', trenutna_kolicina=proizvod.kolicina)
 			db.session.add(evidencija)
 			db.session.commit()
 			flash('Dodali ste kolicinu na stanje!')
@@ -102,7 +102,7 @@ def proizvod(name):
 	if form_izlaz.submit2.data and form_izlaz.validate():
 			tvrtka = Tvrtka.query.filter_by(oib=form_izlaz.oib.data).first_or_404()
 			proizvod.kolicina -= form_izlaz.promijenjena_kolicina.data
-			evidencija = Evidencija(proizvod_id=proizvod.id, tvrtka_id=tvrtka.id, promijenjena_kolicina=form_izlaz.promijenjena_kolicina.data, user_id=current_user.id, vrsta_unosa='izlaz')
+			evidencija = Evidencija(proizvod_id=proizvod.id, tvrtka_id=tvrtka.id, promijenjena_kolicina=form_izlaz.promijenjena_kolicina.data, user_id=current_user.id, vrsta_unosa='izlaz', trenutna_kolicina=proizvod.kolicina)
 			db.session.add(evidencija)
 			db.session.commit()
 			flash('Oduzeli ste kolicinu sa stanja!')
@@ -127,6 +127,8 @@ def stanje_skladista():
 			if proizvodi2.has_next else None
 		prev_url2 = url_for('stanje_skladista', page=proizvodi2.prev_num) \
 			if proizvodi2.has_prev else None
+		if not proizvodi2:
+			flash('Proizvod ne postoji')
 		return render_template("stanje_skladista.html", title='sssasas', form=form, proizvodi=proizvodi2.items, next_url=next_url2, prev_url=prev_url2)
 	else:
 		return render_template('stanje_skladista.html', title='Stanje skladista', proizvodi=proizvodi.items, form=form, next_url=next_url, prev_url=prev_url)
@@ -142,7 +144,7 @@ def tvrtke():
 			p_broj=form.p_broj.data, drzava=form.drzava.data)
 		db.session.add(tvrtka)
 		db.session.commit()
-		flash('Uspješno ste unijeli tvrtku!')
+		flash(f'Uspješno ste unijeli tvrtku {form.name.data}!')
 		tvrtke = Tvrtka.query.all()
 		return render_template('tvrtke.html', title='Dodaj tvrtku', form=form, tvrtke=tvrtke)
 	return render_template('tvrtke.html', title='Dodaj tvrtku', form=form, tvrtke=tvrtke)
@@ -201,3 +203,20 @@ def edit_password():
 		flash('Vaše promjene su spremljene')
 		return redirect(url_for('edit_password'))
 	return render_template('edit_password.html', title='Edit Profile', form=form)
+
+
+@app.route('/export')
+@login_required
+def export():
+	evidencije = Evidencija.query.all()
+	column_names = ['id',
+		'proizvod_id',
+		'tvrtka_id',
+		'promijenjena_kolicina',
+		'datum_unosa',
+		'vrsta_unosa',
+		'user_id'
+		]
+
+	return excel.make_response_from_query_sets(evidencije, column_names, 'xls')
+

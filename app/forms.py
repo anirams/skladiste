@@ -78,7 +78,7 @@ class UnosTvrtkeForm(FlaskForm):
 class UlazRobeForm(FlaskForm):
 	promijenjena_kolicina = IntegerField('Kolicina', validators=[DataRequired()])
 	oib = IntegerField('OIB', validators=[DataRequired()])
-	submit1 = SubmitField()
+	submit1 = SubmitField('Dodaj')
 	def validate(self):
 		rv = FlaskForm.validate(self)
 		if not rv:
@@ -95,7 +95,7 @@ class IzlazRobeForm(FlaskForm):
 	promijenjena_kolicina = IntegerField('Kolicina', validators=[DataRequired()])
 	oib = IntegerField('OIB', validators=[DataRequired()])
 	proizvod_id = HiddenField()
-	submit2 = SubmitField()
+	submit2 = SubmitField('Oduzmi')
 	def validate(self):
 		rv = FlaskForm.validate(self)
 		if not rv:
