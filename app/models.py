@@ -30,6 +30,7 @@ class Proizvod(db.Model):
 	name = db.Column(db.String(64))
 	kolicina = db.Column(db.Integer)
 	zemlja_podrijetla = db.Column(db.String(64))
+	opis_proizvoda = db.Column(db.String(300))
 	datum_unosa = db.Column(db.DateTime, default=datetime.utcnow)
 	evidencija = db.relationship('Evidencija', backref='proizvod', lazy='dynamic')
 

@@ -127,7 +127,7 @@ def stanje_skladista():
 			if proizvodi2.has_next else None
 		prev_url2 = url_for('stanje_skladista', page=proizvodi2.prev_num) \
 			if proizvodi2.has_prev else None
-		if not proizvodi2:
+		if not proizvodi2.items:
 			flash('Proizvod ne postoji')
 		return render_template("stanje_skladista.html", title='sssasas', form=form, proizvodi=proizvodi2.items, next_url=next_url2, prev_url=prev_url2)
 	else:

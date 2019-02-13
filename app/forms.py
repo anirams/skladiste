@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, IntegerField, PasswordField, BooleanField, SubmitField, HiddenField
+from wtforms import StringField, IntegerField, PasswordField, BooleanField, SubmitField, HiddenField, TextAreaField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 from app.models import User, Proizvod, Tvrtka, Evidencija
 from flask import request
@@ -41,6 +41,7 @@ class UnosProizvodaForm(FlaskForm):
 	kolicina = IntegerField('Kolicina', validators=[DataRequired('Unesi Količinu (broj)')])
 	zemlja_podrijetla = StringField('Zemlja podrijetla', validators=[DataRequired('Unesi Zemlju Podrijetla')])
 	oib = IntegerField('OIB', validators=[DataRequired('Unesi OIB Tvrtke (broj)')])
+	opis_proizvoda = TextAreaField('Opis proizvoda')
 	submit = SubmitField('Stvori proizvod')
 	def validate(self):
 		rv = FlaskForm.validate(self)

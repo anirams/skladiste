@@ -150,9 +150,17 @@ ul.CTAs a {
     height: 100vh;
 }
 
+.search-forma {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    max-width: 400px;
+}
+
 /* UNOS PROIZVODA */
 .unos-p {
-    padding-top: 10vh;
+    padding-top: 5vh;
     padding-left: 5vh;
     padding-right: 5vh;
     background-image: url('map.jpg');
