@@ -57,41 +57,36 @@
         <form action="" method="post" novalidate="">
         <div class="sakrij-podatke">
         {{ form.hidden_tag() }}
-        <p>
             {{ form.name.label }}<br>
             {{ form.name(size=32) }}<br>
             {% for error in form.name.errors %}
             <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
-        </p>
-        <p>
+
             {{ form.oib.label }}<br>
             {{ form.oib(size=32) }}<br>
             {% for error in form.oib.errors %}
             <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
-        </p>
-        <p>
+
             {{ form.grad.label }}<br>
             {{ form.grad(size=32) }}<br>
             {% for error in form.grad.errors %}
             <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
-        </p>
-        <p>
+
             {{ form.p_broj.label }}<br>
             {{ form.p_broj(size=32) }}<br>
             {% for error in form.p_broj.errors %}
             <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
-        </p>
-        <p>
+
             {{ form.drzava.label }}<br>
             {{ form.drzava(size=32) }}<br>
             {% for error in form.drzava.errors %}
             <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
-        </p>
+
         </div>
         <div class="modal-footer">
         {{ form.submit(type="submit", class="btn btn-primary") }}
