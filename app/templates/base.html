@@ -60,14 +60,14 @@
 		</ul>
 		<ul class="list-unstyled CTAs">
                 <li>
-                    <a href="{{ url_for('user', username=current_user.username) }}" class="btn btn-primary">PROFIL</a>
+                    <a href="{{ url_for('user', username=current_user.username) }}" class="btn btn-primary hover-plava">PROFIL</a>
                 </li>
                 <li>
-                    <a href="{{ url_for('logout') }}" class="btn btn-primary">ODJAVI SE</a>
+                    <a href="{{ url_for('logout') }}" class="btn btn-primary hover-plava">ODJAVI SE</a>
                 </li>
                 {%  if current_user.username == "admin"%}
                     <li>
-                        <a href="{{ url_for('register') }}" class="btn btn-primary">Registriraj novog korisnika</a>
+                        <a href="{{ url_for('register') }}" class="btn btn-primary hover-plava">Registriraj novog korisnika</a>
                     </li>
                 {% endif %}
             </ul>
@@ -77,7 +77,7 @@
 
 		<div class="tijelo">
 	        <div class="plava-pozadina">
-	            <button type="button" id="sidebarCollapse" class="btn btn-info">
+	            <button type="button" id="sidebarCollapse" class="btn btn-primary">
 	                <i class="fas fa-align-left"></i>
 	                <span>Menu</span>
 	            </button> <br>
