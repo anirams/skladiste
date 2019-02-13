@@ -1,12 +1,16 @@
-from flask import render_template, flash, redirect, url_for, request
+from flask import render_template, flash, redirect, url_for, request, send_file
 from app import app, db
 from app.forms import LoginForm, RegistrationForm, UlazRobeForm, IzlazRobeForm, UnosProizvodaForm, SearchForm, EditPasswordForm, UnosTvrtkeForm
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Proizvod, Tvrtka, Evidencija
 from werkzeug.urls import url_parse
 from datetime import datetime
+import flask_excel as excel
+#from xlsxwriter import Workbook
 import pdfkit
 config = pdfkit.configuration(wkhtmltopdf="C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe")
+
+excel.init_excel(app)
 
 @app.route('/index')
 def index():
@@ -208,19 +212,5 @@ def edit_password():
 @app.route('/export')
 @login_required
 def export():
-	evidencije = (session.query(User, Proizvod, Tvrtka, Evidencija)
-		.join(User)
-		.join(Member)
-		.join(Tvrtka)
-		.join(Evidencija)
-		).all()
-	column_names = ['proizvod.name',
-		'tvrtka.name',
-		'promijenjena_kolicina',
-		'datum_unosa',
-		'vrsta_unosa',
-		'user.username'
-		]
-
-	return excel.make_response_from_query_sets(evidencije, column_names, 'xls')
-
+	#evidencija = db.engine.execute("")
+	return excel.make_response_from_tables(db.session, [User, Tvrtka, Proizvod, Evidencija], 'xls')
