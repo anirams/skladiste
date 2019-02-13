@@ -1,5 +1,5 @@
 from flask import render_template, flash, redirect, url_for, request
-from app import app, db
+from app import app, db, excel
 from app.forms import LoginForm, RegistrationForm, UlazRobeForm, IzlazRobeForm, UnosProizvodaForm, SearchForm, EditPasswordForm, UnosTvrtkeForm
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Proizvod, Tvrtka, Evidencija
@@ -76,7 +76,7 @@ def unos_proizvoda():
 		flash('Dodali ste proizvod!')
 		proizvod = Proizvod.query.filter_by(name=form.name.data).first()
 		tvrtka = Tvrtka.query.filter_by(oib=form.oib.data).first()
-		evidencija = Evidencija(proizvod_id=proizvod.id, promijenjena_kolicina=proizvod.kolicina, tvrtka_id=tvrtka.id, user_id=current_user.id, vrsta_unosa='unos')
+		evidencija = Evidencija(proizvod_id=proizvod.id, promijenjena_kolicina=proizvod.kolicina, tvrtka_id=tvrtka.id, user_id=current_user.id, vrsta_unosa='unos', trenutna_kolicina=proizvod.kolicina)
 		db.session.add(evidencija)
 		db.session.commit()
 		tvrtka = Tvrtka.query.all()
@@ -94,7 +94,7 @@ def proizvod(name):
 	if form_ulaz.submit1.data and form_ulaz.validate():
 			tvrtka = Tvrtka.query.filter_by(oib=form_ulaz.oib.data).first_or_404()
 			proizvod.kolicina += form_ulaz.promijenjena_kolicina.data
-			evidencija = Evidencija(proizvod_id=proizvod.id, tvrtka_id=tvrtka.id, promijenjena_kolicina=form_ulaz.promijenjena_kolicina.data, user_id=current_user.id, vrsta_unosa='unos')
+			evidencija = Evidencija(proizvod_id=proizvod.id, tvrtka_id=tvrtka.id, promijenjena_kolicina=form_ulaz.promijenjena_kolicina.data, user_id=current_user.id, vrsta_unosa='unos', trenutna_kolicina=proizvod.kolicina)
 			db.session.add(evidencija)
 			db.session.commit()
 			flash('Dodali ste kolicinu na stanje!')
@@ -102,7 +102,7 @@ def proizvod(name):
 	if form_izlaz.submit2.data and form_izlaz.validate():
 			tvrtka = Tvrtka.query.filter_by(oib=form_izlaz.oib.data).first_or_404()
 			proizvod.kolicina -= form_izlaz.promijenjena_kolicina.data
-			evidencija = Evidencija(proizvod_id=proizvod.id, tvrtka_id=tvrtka.id, promijenjena_kolicina=form_izlaz.promijenjena_kolicina.data, user_id=current_user.id, vrsta_unosa='izlaz')
+			evidencija = Evidencija(proizvod_id=proizvod.id, tvrtka_id=tvrtka.id, promijenjena_kolicina=form_izlaz.promijenjena_kolicina.data, user_id=current_user.id, vrsta_unosa='izlaz', trenutna_kolicina=proizvod.kolicina)
 			db.session.add(evidencija)
 			db.session.commit()
 			flash('Oduzeli ste kolicinu sa stanja!')
@@ -201,4 +201,20 @@ def edit_password():
 		flash('Vaše promjene su spremljene')
 		return redirect(url_for('edit_password'))
 	return render_template('edit_password.html', title='Edit Profile', form=form)
+
+
+@app.route('/export')
+@login_required
+def export():
+	evidencije = Evidencija.query.all()
+	column_names = ['id',
+		'proizvod_id',
+		'tvrtka_id',
+		'promijenjena_kolicina',
+		'datum_unosa',
+		'vrsta_unosa',
+		'user_id'
+		]
+
+	return excel.make_response_from_query_sets(evidencije, column_names, 'xls')
 

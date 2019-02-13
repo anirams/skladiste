@@ -69,7 +69,7 @@
 
 							<td class="right">{{ evidencija.promijenjena_kolicina }}</td>
 							<td class="center">{{ evidencija.vrsta_unosa }}</td>
-							<td class="right">{{ evidencija.proizvod.kolicina }}</td>
+							<td class="right">{{ evidencija.trenutna_kolicina }}</td>
 						</tr>
 
 					</tbody>
@@ -89,7 +89,7 @@
 <div id="editor"></div>
 
 <td><a href="../evidencija_pdf/{{id}}">PDF</a></td>
-
+<td><a href="/export">Excel</a></td>
 
 
 {% endblock %}
