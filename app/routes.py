@@ -1,14 +1,18 @@
-from flask import render_template, flash, redirect, url_for, request
+from flask import render_template, flash, redirect, url_for, request, send_file
 from app import app, db
 from app.forms import LoginForm, RegistrationForm, UlazRobeForm, IzlazRobeForm, UnosProizvodaForm, SearchForm, EditPasswordForm, UnosTvrtkeForm
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Proizvod, Tvrtka, Evidencija
 from werkzeug.urls import url_parse
 from datetime import datetime
+import flask_excel as excel
+#from xlsxwriter import Workbook
 import pdfkit
 from flask_paginate import Pagination, get_page_parameter, get_page_args
 
 config = pdfkit.configuration(wkhtmltopdf="C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe")
+
+excel.init_excel(app)
 
 @app.route('/index')
 def index():
@@ -115,11 +119,9 @@ def proizvod(name):
 @login_required
 def stanje_skladista(page_num):
 	
-	#page = request.args.get('page', 1, type=int)
 	proizvodi = Proizvod.query.order_by(Proizvod.datum_unosa.desc()).paginate(per_page=6, page=page_num, error_out=True)
 	form = SearchForm()
 	if form.validate_on_submit():
-		#page2 = request.args.get('page2', 1, type=int)
 		proizvodi2 = Proizvod.query.filter(Proizvod.name.like("%" + form.search.data + "%")).paginate(per_page=3, page=page_num, error_out=True)
 		
 		if not proizvodi2:
@@ -216,15 +218,5 @@ def edit_password():
 @app.route('/export')
 @login_required
 def export():
-	evidencije = Evidencija.query.all()
-	column_names = ['id',
-		'proizvod_id',
-		'tvrtka_id',
-		'promijenjena_kolicina',
-		'datum_unosa',
-		'vrsta_unosa',
-		'user_id'
-		]
-
-	return excel.make_response_from_query_sets(evidencije, column_names, 'xls')
-
+	#evidencija = db.engine.execute("")
+	return excel.make_response_from_tables(db.session, [User, Tvrtka, Proizvod, Evidencija], 'xls')

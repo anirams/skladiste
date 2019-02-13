@@ -4,46 +4,44 @@
 
 {% block content %}
 <div class="unos-p">
-    <div class="row">
-        <div class="col"></div>
-        <div class="col-6">
+    <div class="row justify-content-md-center">
+        <div class="col col-lg-2"></div>
+        <div class="col-md-auto">
 
-            <form class="form-container" action="" method="post" novalidate="">
+            <form class="form-container p-4" action="" method="post" novalidate="">
         {{ form.hidden_tag() }}
-        <h1>Stvori novi proizvod</h1>
-        <p>
+        <h2>Stvori novi proizvod</h2>
+        
             {{ form.name.label }}<br>
-            {{ form.name(size=32) }}
-            <br>
+            {{ form.name(size=32, class="form-control") }}
             {% for error in form.name.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        <p>
+            <span style="color: red;">[{{ error }}]</span><br>
+            {% endfor %}<br>
+        
+            {{ form.opis_proizvoda.label }}<br>
+            {{ form.opis_proizvoda(size=300, class="form-control") }}
+            {% for error in form.opis_proizvoda.errors %}
+            <span style="color: red;">[{{ error }}]</span><br>
+            {% endfor %}<br>
+        
             {{ form.kolicina.label }}<br>
-            {{ form.kolicina(size=32) }}
-            <br>
+            {{ form.kolicina(size=32, class="form-control") }}
             {% for error in form.kolicina.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        <p>
+            <span style="color: red;">[{{ error }}]</span><br>
+            {% endfor %}<br>
+        
             {{ form.zemlja_podrijetla.label }}<br>
-            {{ form.zemlja_podrijetla(size=32) }}
-            <br>
+            {{ form.zemlja_podrijetla(size=32, class="form-control") }}
             {% for error in form.zemlja_podrijetla.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-
-        <p>
+            <span style="color: red;">[{{ error }}]</span><br>
+            {% endfor %}<br>
+        
             {{ form.oib.label }}<br>
-            {{ form.oib(size=32) }}
-            <br>
+            {{ form.oib(size=32, class="form-control") }}
             {% for error in form.oib.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
+            <span style="color: red;">[{{ error }}]</span><br>
+            {% endfor %}<br>
+        
         <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
@@ -56,7 +54,7 @@
         {% endwith %}
     </form>
         </div>
-        <div class="col"></div>
+        <div class="col col-lg-2"></div>
     </div>
     
 </div>
