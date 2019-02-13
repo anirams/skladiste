@@ -47,6 +47,7 @@ class Evidencija(db.Model):
 	proizvod_id = db.Column(db.Integer, db.ForeignKey('proizvod.id'))
 	tvrtka_id = db.Column(db.Integer, db.ForeignKey('tvrtka.id'))
 	promijenjena_kolicina = db.Column(db.Integer)
+	trenutna_kolicina = db.Column(db.Integer)
 	datum_unosa = db.Column(db.DateTime, default=datetime.utcnow)
 	vrsta_unosa = db.Column(db.String(64))
 	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
