@@ -208,14 +208,18 @@ def edit_password():
 @app.route('/export')
 @login_required
 def export():
-	evidencije = Evidencija.query.all()
-	column_names = ['id',
-		'proizvod_id',
-		'tvrtka_id',
+	evidencije = (session.query(User, Proizvod, Tvrtka, Evidencija)
+		.join(User)
+		.join(Member)
+		.join(Tvrtka)
+		.join(Evidencija)
+		).all()
+	column_names = ['proizvod.name',
+		'tvrtka.name',
 		'promijenjena_kolicina',
 		'datum_unosa',
 		'vrsta_unosa',
-		'user_id'
+		'user.username'
 		]
 
 	return excel.make_response_from_query_sets(evidencije, column_names, 'xls')
