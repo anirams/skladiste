@@ -99,6 +99,10 @@ ul.CTAs a {
     margin-bottom: 5px;
 }
 
+.hover-plava:hover{
+    background-color: #0069d9!important;
+}
+
 /* BODY */
 
 
@@ -129,7 +133,8 @@ ul.CTAs a {
 /* INDEX */
 .index{
     padding-top: 30vh;
-    background-image: url('http://tadalafilforsale.net/data/media/42/56362100.jpg');
+    background-image: url('map.jpg');
+    background-size: cover;
     height: 100vh;
 }
 
@@ -141,7 +146,7 @@ ul.CTAs a {
     padding-top: 10vh;
     padding-left: 5vh;
     padding-right: 5vh;
-    background-image: url('http://tadalafilforsale.net/data/media/42/56362100.jpg');
+    background-image: url('map.jpg');
     height: 100vh;
 }
 
@@ -150,7 +155,7 @@ ul.CTAs a {
     padding-top: 10vh;
     padding-left: 5vh;
     padding-right: 5vh;
-    background-image: url('http://tadalafilforsale.net/data/media/42/56362100.jpg');
+    background-image: url('map.jpg');
     height: 100vh;
 }
 
