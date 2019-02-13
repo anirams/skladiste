@@ -162,7 +162,13 @@ ul.CTAs a {
     box-shadow: -1px 4px 26px 11px rgba(0,0,0,0.75);       
 }
 
+/* PROIZVOD */
 
+.tipke-sredina {
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+}
 
 
 @media (max-width: 768px) {
