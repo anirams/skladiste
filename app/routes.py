@@ -9,6 +9,7 @@ import flask_excel as excel
 from sqlalchemy import text
 import pdfkit
 from flask_paginate import Pagination, get_page_parameter, get_page_args
+from sqlalchemy import text
 
 config = pdfkit.configuration(wkhtmltopdf="C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe")
 
@@ -115,20 +116,17 @@ def proizvod(name):
 			return redirect(url_for('proizvod', name=proizvod.name))
 	return render_template('proizvod.html', title=proizvod.name, proizvod=proizvod, evidencijaUlaz=evidencijaUlaz, evidencijaIzlaz=evidencijaIzlaz, form_ulaz=form_ulaz, form_izlaz=form_izlaz)
 
-@app.route('/stanje_skladista/<int:page_num>', methods=['GET', 'POST'])
+@app.route('/stanje_skladista', methods=['GET', 'POST'])
 @login_required
 def stanje_skladista(page_num):
-	
 	proizvodi = Proizvod.query.order_by(Proizvod.datum_unosa.desc()).paginate(per_page=6, page=page_num, error_out=True)
 	form = SearchForm()
 	if form.validate_on_submit():
 		proizvodi2 = Proizvod.query.filter(Proizvod.name.like("%" + form.search.data + "%")).paginate(per_page=3, page=page_num, error_out=True)
-		
 		if not proizvodi2:
 			flash('Proizvod ne postoji')
 		return render_template("stanje_skladista.html", title='Stanje skladista', form=form, proizvodi=proizvodi2)
-	else:
-		return render_template('stanje_skladista.html', title='Stanje skladista', proizvodi=proizvodi, form=form)
+	return render_template('stanje_skladista.html', title='Stanje skladista', proizvodi=proizvodi, form=form)
 
 @app.route('/stanje_skladista1', methods=['GET', 'POST'])
 @login_required
@@ -169,22 +167,15 @@ def evidencija_izdavanja():
 @app.route('/search', methods=['GET', 'POST'])
 @login_required
 def search():
-	search=False
-	q = request.args.get('q')
-	if q:
-		search = True
-	per_page=3
-	page = request.args.get(get_page_parameter(), type=int, default=1)
 	proizvodi = Proizvod.query.all()
 	form = SearchForm()
-	pagination = Pagination(page=page, total=len(proizvodi), search=search, record_name='proizvodi', per_page=3)
 	if form.validate_on_submit():
-		proizvodi = Proizvod.query.filter(Proizvod.name.like("%" + form.search.data + "%")).all()
+		search = form.search.data
+		proizvodi = Proizvod.query.filter(Proizvod.name.like("%" + search + "%")).all()
 		if not proizvodi:
 			flash('Nema proizvoda pod tim imenom')
-		pagination = Pagination(page=page, total=len(proizvodi), search=search, record_name='proizvodi', per_page=3)
-		return render_template("search.html", form=form, proizvodi=proizvodi, pagination=pagination)
-	return render_template("search.html", form=form, proizvodi=proizvodi, pagination=pagination)
+		return render_template("search.html", form=form, proizvodi=proizvodi)
+	return render_template("search.html", form=form, proizvodi=proizvodi)
 
 @app.route('/evidencija/<id>')
 @login_required
@@ -218,9 +209,15 @@ def edit_password():
 @app.route('/export')
 @login_required
 def export():
-	sql = text('select name from penguins')
-	result = db.engine.execute(sql)
-	names = [row[0] for row in result]
+	sql= text('SELECT * FROM Evidencija')
+	result= db.engine.execute(sql)
+	query_sets = []
+	for r in result:
+		query_sets.append(r)
+	column_names = [
+		'id',
+		'datum_unosa',
+		'vrsta_unosa',
+		]
+	return excel.make_response_from_query_sets(query_sets, column_names, 'xls')
 
-	#evidencija = db.engine.execute("SELECT user.username, proizvod.name, tvrtka.name, evidencija.datum_unosa, evidencija.vrsta_unosa FROM evidencija INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN user ON evidencija.user_id=user.id")
-	return excel.make_response_from_tables(db.session, evidencija, 'xls')
