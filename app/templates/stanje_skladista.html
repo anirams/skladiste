@@ -4,7 +4,6 @@
 
 {% block content %}
 <div class="stanje-s">
-    <button class="btn btn-primary m-2"><a href="/export_stanje_skladista" target="blank">Excel</a></button>
     <div class="container">
         <div class="row justify-content-md-center">
             <div class="col col-lg-2"></div>
@@ -42,20 +41,31 @@
     </tr>
     {% endfor %}
 </table> 
+    
 
-<h6>Stranice proizvoda</h6>
-    {% for page in proizvodi.iter_pages(left_edge=3, right_edge=3, left_current=3, right_current=3) %}
-        {% if page %}
-            {% if page != proizvodi.page %}
-                <a href="{{ url_for('stanje_skladista', page_num=page) }}">{{ page }}</a>
-            {% else %}
-                <strong>{{ page }}</strong>
-            {% endif %}
-        {% else %}
-            <span class=ellipsis>…</span>
-        {% endif %}
+    
+    <div class="d-flex justify-content-between">
+        <div></div>
+        <div>
+            <h6>Stranice proizvoda</h6>
+            {% for page in proizvodi.iter_pages(left_edge=3, right_edge=3, left_current=3, right_current=3) %}
+                {% if page %}
+                    {% if page != proizvodi.page %}
+                        <a href="{{ url_for('stanje_skladista', page_num=page) }}">{{ page }}</a>
+                    {% else %}
+                        <strong>{{ page }}</strong>
+                    {% endif %}
+                {% else %}
+                    <span class=ellipsis>…</span>
+                {% endif %}
 
-    {% endfor %}
+            {% endfor %}
+        </div>
+        <div>
+            <button class="btn btn-primary m-2"><a href="/export" target="blank">Excel</a></button>
+        </div>
+    </div>
+    
 
 </div>
 {% endblock %}
