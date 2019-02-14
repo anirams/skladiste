@@ -213,14 +213,27 @@ ul.CTAs a {
 
 
 
-@media (max-width: 768px) {
+@media only screen and (max-width: 768px) {
     #sidebar {
         margin-left: -250px;
     }
     #sidebar.active {
         margin-left: 0;
     }
+    #sakrij-tipku{
+        display:inline-block!important;
+    }
+    #pokazi-tipku{
+        display:none!important;
+    }
 }
+
+#sakrij-tipku{
+        display:none!important;
+    }
+#pokazi-tipku{
+        display:inline-block!important;
+    }
 
 .pagination-page-info {
     padding: .6em;
