@@ -164,25 +164,22 @@ def evidencija_izdavanja():
 	evidencija = Evidencija.query.filter_by(vrsta_unosa='izlaz').order_by(Evidencija.datum_unosa.desc()).all()
 	return render_template('evidencija_izdavanja.html', title='Evidencija izdavanja', evidencija=evidencija)
 
-@app.route('/search', methods=['GET', 'POST'])
+@app.route('/search/<int:page_num>', methods=['GET', 'POST'])
 @login_required
-def search():
-	search=False
-	q = request.args.get('q')
-	if q:
-		search = True
-	per_page=3
-	page = request.args.get(get_page_parameter(), type=int, default=1)
-	proizvodi = Proizvod.query.all()
+def search(page_num):
+	proizvodi = Proizvod.query.order_by(Proizvod.datum_unosa.desc()).paginate(per_page=6, page=page_num, error_out=True)
 	form = SearchForm()
-	pagination = Pagination(page=page, total=len(proizvodi), search=search, record_name='proizvodi', per_page=3)
 	if form.validate_on_submit():
-		proizvodi = Proizvod.query.filter(Proizvod.name.like("%" + form.search.data + "%")).all()
-		if not proizvodi:
+		proizvodi2 = Proizvod.query.filter(Proizvod.name.like("%" + form.search.data + "%")).paginate(per_page=3, page=page_num, error_out=True)
+		if not proizvodi2:
 			flash('Nema proizvoda pod tim imenom')
-		pagination = Pagination(page=page, total=len(proizvodi), search=search, record_name='proizvodi', per_page=3)
-		return render_template("search.html", form=form, proizvodi=proizvodi, pagination=pagination)
-	return render_template("search.html", form=form, proizvodi=proizvodi, pagination=pagination)
+		return render_template("search.html", title='Pretraga', form=form, proizvodi=proizvodi2)
+	return render_template("search.html", title='Pretraga', form=form, proizvodi=proizvodi)
+
+@app.route('/search1', methods=['GET', 'POST'])
+@login_required
+def search1():
+	return redirect(url_for('search', page_num=1))
 
 @app.route('/evidencija/<id>')
 @login_required
