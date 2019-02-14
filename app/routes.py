@@ -205,7 +205,7 @@ def edit_password():
 	if form.validate_on_submit():
 		current_user.set_password(form.password.data)
 		db.session.commit()
-		flash('Vaše promjene su spremljene')
+		flash('Vaša lozinka je promijenjena!')
 		return redirect(url_for('edit_password'))
 	return render_template('edit_password.html', title='Edit Profile', form=form)
 
