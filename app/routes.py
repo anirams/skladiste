@@ -116,7 +116,7 @@ def proizvod(name):
 			return redirect(url_for('proizvod', name=proizvod.name))
 	return render_template('proizvod.html', title=proizvod.name, proizvod=proizvod, evidencijaUlaz=evidencijaUlaz, evidencijaIzlaz=evidencijaIzlaz, form_ulaz=form_ulaz, form_izlaz=form_izlaz)
 
-@app.route('/stanje_skladista', methods=['GET', 'POST'])
+@app.route('/stanje_skladista/<int:page_num>', methods=['GET', 'POST'])
 @login_required
 def stanje_skladista(page_num):
 	proizvodi = Proizvod.query.order_by(Proizvod.datum_unosa.desc()).paginate(per_page=6, page=page_num, error_out=True)

@@ -185,6 +185,19 @@ ul.CTAs a {
 
 /* TVRTKE */
 
+ @media (max-width: 450px)  { 
+    .modal-open {
+        width: 100%;
+    }
+    .#sidebar {
+        margin-left: 0;
+    }
+    .modal-dialog {
+        width: 360px;
+        justify-content: center;
+    }
+}
+
 @media (min-width: $screen-sm-min) { // this is the 768px breakpoint
     .modal-dialog {
         max-width: 600px;
@@ -197,6 +210,8 @@ ul.CTAs a {
         max-width: 800px;
     }
 }
+
+
 
 @media (max-width: 768px) {
     #sidebar {
@@ -222,3 +237,5 @@ ul.CTAs a {
     padding: .1em .25em;
     font-size: 150%;
 }
+
+
