@@ -17,6 +17,7 @@ a:focus {
 }
 
 .form-container {
+	border-radius: 3%;
 	border: 0px solid white; padding: 50px 60px; margin-top: 20vh;
 	-webkit-box-shadow: -1px 4px 26px 11px rgba(0,0,0,0.75);
 	-moz-box-shadow: -1px 4px 26px 11px rgba(0,0,0,0.75);
@@ -24,6 +25,7 @@ a:focus {
 }
 
 .form-container-register {
+	border-radius: 3%;
 	border: 0px solid white; padding: 50px 60px; margin-top: 10vh;
 	-webkit-box-shadow: -1px 4px 26px 11px rgba(0,0,0,0.75);
 	-moz-box-shadow: -1px 4px 26px 11px rgba(0,0,0,0.75);
