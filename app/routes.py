@@ -6,7 +6,7 @@ from app.models import User, Proizvod, Tvrtka, Evidencija
 from werkzeug.urls import url_parse
 from datetime import datetime
 import flask_excel as excel
-#from xlsxwriter import Workbook
+from sqlalchemy import text
 import pdfkit
 from flask_paginate import Pagination, get_page_parameter, get_page_args
 from sqlalchemy import text
@@ -218,4 +218,5 @@ def edit_password():
 def export():
 	sql = text('')
 	#evidencija = db.engine.execute("")
+
 	return excel.make_response_from_tables(db.session, evidencija, 'xls')

@@ -183,6 +183,20 @@ ul.CTAs a {
     justify-content: space-around;
 }
 
+/* TVRTKE */
+
+@media (min-width: $screen-sm-min) { // this is the 768px breakpoint
+    .modal-dialog {
+        max-width: 600px;
+        width: auto;
+    }
+}
+
+@media (min-width: $screen-md-min) { // this is the 992px breakpoint
+    .modal-dialog { 
+        max-width: 800px;
+    }
+}
 
 @media (max-width: 768px) {
     #sidebar {
