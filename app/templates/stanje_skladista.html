@@ -4,6 +4,7 @@
 
 {% block content %}
 <div class="stanje-s">
+    <button class="btn btn-primary m-2"><a href="/export" target="blank">Excel</a></button>
     <div class="container">
         <div class="row justify-content-md-center">
             <div class="col col-lg-2"></div>
@@ -36,7 +37,7 @@
     </tr>
     {% for proizvod in proizvodi.items %}
     <tr>
-    	<td><a href="proizvod/{{proizvod.name}}">{{ proizvod.name }}</a></td>
+    	<td><a href="../proizvod/{{proizvod.name}}">{{ proizvod.name }}</a></td>
     	<td>{{ proizvod.kolicina }}</td>
     </tr>
     {% endfor %}

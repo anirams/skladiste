@@ -164,18 +164,22 @@ def evidencija_izdavanja():
 	evidencija = Evidencija.query.filter_by(vrsta_unosa='izlaz').order_by(Evidencija.datum_unosa.desc()).all()
 	return render_template('evidencija_izdavanja.html', title='Evidencija izdavanja', evidencija=evidencija)
 
-@app.route('/search', methods=['GET', 'POST'])
+@app.route('/search/<int:page_num>', methods=['GET', 'POST'])
 @login_required
-def search():
-	proizvodi = Proizvod.query.all()
+def search(page_num):
+	proizvodi = Proizvod.query.order_by(Proizvod.datum_unosa.desc()).paginate(per_page=6, page=page_num, error_out=True)
 	form = SearchForm()
 	if form.validate_on_submit():
-		search = form.search.data
-		proizvodi = Proizvod.query.filter(Proizvod.name.like("%" + search + "%")).all()
-		if not proizvodi:
+		proizvodi2 = Proizvod.query.filter(Proizvod.name.like("%" + form.search.data + "%")).paginate(per_page=3, page=page_num, error_out=True)
+		if not proizvodi2:
 			flash('Nema proizvoda pod tim imenom')
-		return render_template("search.html", form=form, proizvodi=proizvodi)
-	return render_template("search.html", form=form, proizvodi=proizvodi)
+		return render_template("search.html", title='Pretraga', form=form, proizvodi=proizvodi2)
+	return render_template("search.html", title='Pretraga', form=form, proizvodi=proizvodi)
+
+@app.route('/search1', methods=['GET', 'POST'])
+@login_required
+def search1():
+	return redirect(url_for('search', page_num=1))
 
 @app.route('/evidencija/<id>')
 @login_required
@@ -209,15 +213,17 @@ def edit_password():
 @app.route('/export')
 @login_required
 def export():
-	sql= text('SELECT * FROM Evidencija')
+	sql= text('SELECT evidencija.datum_unosa AS datum_unosa, evidencija.vrsta_unosa AS vrsta_unosa, proizvod.name AS ime_proizvoda, tvrtka.name AS ime_tvrtke, user.username AS korisnik FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id')
 	result= db.engine.execute(sql)
 	query_sets = []
 	for r in result:
 		query_sets.append(r)
 	column_names = [
-		'id',
 		'datum_unosa',
 		'vrsta_unosa',
+		'ime_proizvoda',
+		'ime_tvrtke',
+		'korisnik'
 		]
 	return excel.make_response_from_query_sets(query_sets, column_names, 'xls')
 
