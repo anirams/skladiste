@@ -11,7 +11,7 @@ a:focus {
 }
 
 .bg {
-	background: url('https://d2v9y0dukr6mq2.cloudfront.net/video/thumbnail/HeJh0cCLMjdjqymvo/videoblocks-blue-smoke-from-smoke-bomb-on-gray-background-in-slow-motion_hqgd7hrywg_thumbnail-full04.png') no-repeat; width: 100%; height: 100vh;
+	background: url('../static/pozadina.png') no-repeat; width: 100%; height: 100vh;
 	background-size: cover;
 	background-color: #17a2b8;
 }
