@@ -213,7 +213,17 @@ def edit_password():
 @app.route('/export')
 @login_required
 def export():
-	sql = text('')
-	#evidencija = db.engine.execute("")
+	sql= text('SELECT evidencija.datum_unosa AS datum_unosa, evidencija.vrsta_unosa AS vrsta_unosa, proizvod.name AS ime_proizvoda, tvrtka.name AS ime_tvrtke, user.username AS korisnik FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id')
+	result= db.engine.execute(sql)
+	query_sets = []
+	for r in result:
+		query_sets.append(r)
+	column_names = [
+		'datum_unosa',
+		'vrsta_unosa',
+		'ime_proizvoda',
+		'ime_tvrtke',
+		'korisnik'
+		]
+	return excel.make_response_from_query_sets(query_sets, column_names, 'xls')
 
-	return excel.make_response_from_tables(db.session, evidencija, 'xls')
