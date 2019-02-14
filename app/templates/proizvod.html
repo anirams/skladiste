@@ -34,8 +34,8 @@
     <hr>
 
     <h4>Povijest evidencije:</h4>
-    <button class="btn btn-primary m-2"><a href="{{ url_for('export_proizvod', name=name) }}" target="blank">Excel</a></button>
-
+    <button class="btn btn-primary m-2"><a href="{{ url_for('export_proizvod_unos', name=name) }}" target="blank">Excel - Ulazne evidencije</a></button>
+    <button class="btn btn-primary m-2"><a href="{{ url_for('export_proizvod_izlaz', name=name) }}" target="blank">Excel - Izlazne evidencije</a></button>
     <div class="row">
         <div class="col-xl-6">
             <h5>Evidencija unosa</h5>
