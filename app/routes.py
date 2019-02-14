@@ -242,7 +242,7 @@ def export_proizvod_unos(name):
 		'ime_tvrtke',
 		'korisnik'
 		]
-	return excel.make_response_from_query_sets(query_sets, column_names, 'xls')
+	return excel.make_response_from_query_sets(query_sets, column_names, 'xls', file_name="Ulazna evidencija "+name)
 
 @app.route('/export_proizvod_izlaz/<name>')
 @login_required
@@ -262,4 +262,4 @@ def export_proizvod_izlaz(name):
 		'ime_tvrtke',
 		'korisnik'
 		]
-	return excel.make_response_from_query_sets(query_sets, column_names, 'xls')
+	return excel.make_response_from_query_sets(query_sets, column_names, 'xls', file_name="Izlazna evidencija "+name)
