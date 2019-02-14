@@ -9,6 +9,7 @@ import flask_excel as excel
 #from xlsxwriter import Workbook
 import pdfkit
 from flask_paginate import Pagination, get_page_parameter, get_page_args
+from sqlalchemy import text
 
 config = pdfkit.configuration(wkhtmltopdf="C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe")
 
@@ -118,17 +119,14 @@ def proizvod(name):
 @app.route('/stanje_skladista/<int:page_num>', methods=['GET', 'POST'])
 @login_required
 def stanje_skladista(page_num):
-	
 	proizvodi = Proizvod.query.order_by(Proizvod.datum_unosa.desc()).paginate(per_page=6, page=page_num, error_out=True)
 	form = SearchForm()
 	if form.validate_on_submit():
 		proizvodi2 = Proizvod.query.filter(Proizvod.name.like("%" + form.search.data + "%")).paginate(per_page=3, page=page_num, error_out=True)
-		
 		if not proizvodi2:
 			flash('Proizvod ne postoji')
 		return render_template("stanje_skladista.html", title='Stanje skladista', form=form, proizvodi=proizvodi2)
-	else:
-		return render_template('stanje_skladista.html', title='Stanje skladista', proizvodi=proizvodi, form=form)
+	return render_template('stanje_skladista.html', title='Stanje skladista', proizvodi=proizvodi, form=form)
 
 @app.route('/stanje_skladista1', methods=['GET', 'POST'])
 @login_required
@@ -218,5 +216,6 @@ def edit_password():
 @app.route('/export')
 @login_required
 def export():
+	sql = text('')
 	#evidencija = db.engine.execute("")
-	return excel.make_response_from_tables(db.session, [User, Tvrtka, Proizvod, Evidencija], 'xls')
+	return excel.make_response_from_tables(db.session, evidencija, 'xls')
