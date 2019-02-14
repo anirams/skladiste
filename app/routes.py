@@ -114,7 +114,7 @@ def proizvod(name):
 			db.session.commit()
 			flash('Oduzeli ste kolicinu sa stanja!')
 			return redirect(url_for('proizvod', name=proizvod.name))
-	return render_template('proizvod.html', title=proizvod.name, proizvod=proizvod, evidencijaUlaz=evidencijaUlaz, evidencijaIzlaz=evidencijaIzlaz, form_ulaz=form_ulaz, form_izlaz=form_izlaz)
+	return render_template('proizvod.html', title=proizvod.name, proizvod=proizvod, evidencijaUlaz=evidencijaUlaz, evidencijaIzlaz=evidencijaIzlaz, form_ulaz=form_ulaz, form_izlaz=form_izlaz, name=proizvod.name)
 
 @app.route('/stanje_skladista/<int:page_num>', methods=['GET', 'POST'])
 @login_required
@@ -206,10 +206,26 @@ def edit_password():
 	return render_template('edit_password.html', title='Edit Profile', form=form)
 
 
-@app.route('/export')
+@app.route('/export_stanje_skladista')
 @login_required
-def export():
-	sql= text('SELECT evidencija.datum_unosa AS datum_unosa, evidencija.vrsta_unosa AS vrsta_unosa, proizvod.name AS ime_proizvoda, tvrtka.name AS ime_tvrtke, user.username AS korisnik FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id')
+def export_stanje_skladista():
+	sql= text('SELECT proizvod.name AS proizvod, proizvod.kolicina AS kolicina FROM proizvod')
+	result= db.engine.execute(sql)
+	query_sets = []
+	for r in result:
+		query_sets.append(r)
+	column_names = [
+		'proizvod',
+		'kolicina'
+		]
+	return excel.make_response_from_query_sets(query_sets, column_names, 'xls')
+
+@app.route('/export_proizvod/<name>')
+@login_required
+def export_proizvod(name):
+	ovaj_proizvod = Proizvod.query.filter_by(name=name).first_or_404()
+	ovaj_proizvod_name = ovaj_proizvod.name
+	sql= text('SELECT evidencija.datum_unosa AS datum_unosa, evidencija.vrsta_unosa AS vrsta_unosa, evidencija.promijenjena_kolicina AS promijenjena_kolicina, proizvod.name AS ime_proizvoda, proizvod.id AS id_proizvoda, tvrtka.name AS ime_tvrtke, user.username AS korisnik FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id WHERE proizvod.name= "{}"'.format(ovaj_proizvod.name))
 	result= db.engine.execute(sql)
 	query_sets = []
 	for r in result:
@@ -217,9 +233,10 @@ def export():
 	column_names = [
 		'datum_unosa',
 		'vrsta_unosa',
+		'promijenjena_kolicina',
 		'ime_proizvoda',
+		'id_proizvoda',
 		'ime_tvrtke',
 		'korisnik'
 		]
 	return excel.make_response_from_query_sets(query_sets, column_names, 'xls')
-
