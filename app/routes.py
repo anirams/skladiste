@@ -119,7 +119,7 @@ def proizvod(name):
 @app.route('/stanje_skladista/<int:page_num>', methods=['GET', 'POST'])
 @login_required
 def stanje_skladista(page_num):
-	proizvodi = Proizvod.query.order_by(Proizvod.datum_unosa.desc()).paginate(per_page=6, page=page_num, error_out=True)
+	proizvodi = Proizvod.query.order_by(Proizvod.datum_unosa.desc()).paginate(per_page=9, page=page_num, error_out=True)
 	form = SearchForm()
 	if form.validate_on_submit():
 		proizvodi2 = Proizvod.query.filter(Proizvod.name.like("%" + form.search.data + "%")).paginate(per_page=3, page=page_num, error_out=True)
@@ -167,7 +167,7 @@ def evidencija_izdavanja():
 @app.route('/search/<int:page_num>', methods=['GET', 'POST'])
 @login_required
 def search(page_num):
-	proizvodi = Proizvod.query.order_by(Proizvod.datum_unosa.desc()).paginate(per_page=6, page=page_num, error_out=True)
+	proizvodi = Proizvod.query.order_by(Proizvod.datum_unosa.desc()).paginate(per_page=9, page=page_num, error_out=True)
 	form = SearchForm()
 	if form.validate_on_submit():
 		proizvodi2 = Proizvod.query.filter(Proizvod.name.like("%" + form.search.data + "%")).paginate(per_page=3, page=page_num, error_out=True)
