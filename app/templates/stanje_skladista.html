@@ -42,8 +42,9 @@
     </tr>
     {% endfor %}
 </table> 
-    {% for page in proizvodi.iter_pages(left_edge=3, right_edge=3, left_current=3, right_current=3) %}
 
+<h6>Stranice proizvoda</h6>
+    {% for page in proizvodi.iter_pages(left_edge=3, right_edge=3, left_current=3, right_current=3) %}
         {% if page %}
             {% if page != proizvodi.page %}
                 <a href="{{ url_for('stanje_skladista', page_num=page) }}">{{ page }}</a>
@@ -55,5 +56,6 @@
         {% endif %}
 
     {% endfor %}
+
 </div>
 {% endblock %}

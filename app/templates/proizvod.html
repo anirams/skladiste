@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
+
 <div class="unos-p">
+    <h4><strong>Trenutno na zalihi:</strong></h4>
     <table class="table table-striped">
         <tr>
             <th>Naziv Proizvoda</th>
@@ -30,8 +32,10 @@
     </div>  
 
     <hr>
+
     <h4>Povijest evidencije:</h4>
     <button class="btn btn-primary m-2"><a href="{{ url_for('export_proizvod', name=name) }}" target="blank">Excel</a></button>
+
     <div class="row">
         <div class="col-xl-6">
             <h5>Evidencija unosa</h5>
