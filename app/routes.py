@@ -8,6 +8,9 @@ from datetime import datetime
 import flask_excel as excel
 from sqlalchemy import text
 import pdfkit
+from flask_paginate import Pagination, get_page_parameter, get_page_args
+from sqlalchemy import text
+
 config = pdfkit.configuration(wkhtmltopdf="C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe")
 
 excel.init_excel(app)
@@ -115,27 +118,21 @@ def proizvod(name):
 
 @app.route('/stanje_skladista', methods=['GET', 'POST'])
 @login_required
-def stanje_skladista():
-	
-	page = request.args.get('page', 1, type=int)
-	proizvodi = Proizvod.query.order_by(Proizvod.datum_unosa.desc()).paginate(page, app.config['POSTS_PER_PAGE'], False)
-	next_url = url_for('stanje_skladista', page=proizvodi.next_num) \
-		if proizvodi.has_next else None
-	prev_url = url_for('stanje_skladista', page=proizvodi.prev_num) \
-		if proizvodi.has_prev else None
+def stanje_skladista(page_num):
+	proizvodi = Proizvod.query.order_by(Proizvod.datum_unosa.desc()).paginate(per_page=6, page=page_num, error_out=True)
 	form = SearchForm()
 	if form.validate_on_submit():
-		page2 = request.args.get('page2', 1, type=int)
-		proizvodi2 = Proizvod.query.filter(Proizvod.name.like("%" + form.search.data + "%")).paginate(page2, app.config['POSTS_PER_PAGE'], False)
-		next_url2 = url_for('stanje_skladista', page=proizvodi2.next_num) \
-			if proizvodi2.has_next else None
-		prev_url2 = url_for('stanje_skladista', page=proizvodi2.prev_num) \
-			if proizvodi2.has_prev else None
+		proizvodi2 = Proizvod.query.filter(Proizvod.name.like("%" + form.search.data + "%")).paginate(per_page=3, page=page_num, error_out=True)
 		if not proizvodi2:
 			flash('Proizvod ne postoji')
-		return render_template("stanje_skladista.html", title='sssasas', form=form, proizvodi=proizvodi2.items, next_url=next_url2, prev_url=prev_url2)
-	else:
-		return render_template('stanje_skladista.html', title='Stanje skladista', proizvodi=proizvodi.items, form=form, next_url=next_url, prev_url=prev_url)
+		return render_template("stanje_skladista.html", title='Stanje skladista', form=form, proizvodi=proizvodi2)
+	return render_template('stanje_skladista.html', title='Stanje skladista', proizvodi=proizvodi, form=form)
+
+@app.route('/stanje_skladista1', methods=['GET', 'POST'])
+@login_required
+def stanje_skladista1():
+	return redirect(url_for('stanje_skladista', page_num=1))
+
 
 @app.route('/tvrtke', methods=['GET', 'POST'])
 @login_required
@@ -223,3 +220,4 @@ def export():
 		'vrsta_unosa',
 		]
 	return excel.make_response_from_query_sets(query_sets, column_names, 'xls')
+
