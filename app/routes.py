@@ -6,7 +6,7 @@ from app.models import User, Proizvod, Tvrtka, Evidencija
 from werkzeug.urls import url_parse
 from datetime import datetime
 import flask_excel as excel
-#from xlsxwriter import Workbook
+from sqlalchemy import text
 import pdfkit
 config = pdfkit.configuration(wkhtmltopdf="C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe")
 
@@ -212,5 +212,9 @@ def edit_password():
 @app.route('/export')
 @login_required
 def export():
-	#evidencija = db.engine.execute("")
-	return excel.make_response_from_tables(db.session, [User, Tvrtka, Proizvod, Evidencija], 'xls')
+	sql = text('select name from penguins')
+	result = db.engine.execute(sql)
+	names = [row[0] for row in result]
+
+	#evidencija = db.engine.execute("SELECT user.username, proizvod.name, tvrtka.name, evidencija.datum_unosa, evidencija.vrsta_unosa FROM evidencija INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN user ON evidencija.user_id=user.id")
+	return excel.make_response_from_tables(db.session, evidencija, 'xls')
