@@ -4,44 +4,55 @@
 
 {% block content %}
 <div class="stanje-s">
-<form action="" method="post" novalidate="">
-        {{ form.hidden_tag() }}
-        <p>
-            {{ form.search.label }}<br>
-            {{ form.search(size=32) }}
-        </p>
-        {% for error in form.search.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            <br>
-        {% endfor %}
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-            {% for message in messages %}
-            <div class="alert alert-danger">{{ message }}</div>
-            <br>
-            {% endfor %}
-        {% endif %}
-        {% endwith %}
-        {{ form.submit(type="submit", class="btn btn-primary mt-2") }}
-        
-    </form>
+    <div class="container">
+        <div class="row justify-content-md-center">
+            <div class="col col-lg-2"></div>
+            <div class="col-md-auto">
+                <form class="search-forma" action="" method="post" novalidate="">
+                    {{ form.hidden_tag() }}
+                    {{ form.search.label(class="h4") }}
+                    {{ form.search(size=32, class="form-control") }}
+                        {% for error in form.search.errors %}
+                            <div class="alert-danger p-1 mt-1">{{ error }}</div>
+                        {% endfor %}
+                        {% with messages = get_flashed_messages() %}
+                            {% if messages %}
+                                {% for message in messages %}
+                                    <div class="alert-danger p-1 mt-1">{{ message }}</div>
+                                {% endfor %}
+                            {% endif %}
+                        {% endwith %}
+                    {{ form.submit(type="submit", class="btn btn-primary mt-3") }}
+                </form>
+            </div>
+            <div class="col col-lg-2"></div>
+        </div>
+    </div>
+
 <table class="table table-striped">
 	<tr>
         <th>Proizvod</th> 
         <th>Kolicina</th>
     </tr>
-    {% for proizvod in proizvodi %}
+    {% for proizvod in proizvodi.items %}
     <tr>
     	<td><a href="proizvod/{{proizvod.name}}">{{ proizvod.name }}</a></td>
     	<td>{{ proizvod.kolicina }}</td>
     </tr>
     {% endfor %}
 </table> 
-    {% if prev_url %}
-        <a href="{{ prev_url }}">Noviji artikli</a>
-    {% endif %}
-    {% if next_url %}
-        <a href="{{ next_url }}">Stariji artikli</a>
-    {% endif %}
+    {% for page in proizvodi.iter_pages(left_edge=3, right_edge=3, left_current=3, right_current=3) %}
+
+        {% if page %}
+            {% if page != proizvodi.page %}
+                <a href="{{ url_for('stanje_skladista', page_num=page) }}">{{ page }}</a>
+            {% else %}
+                <strong>{{ page }}</strong>
+            {% endif %}
+        {% else %}
+            <span class=ellipsis>…</span>
+        {% endif %}
+
+    {% endfor %}
 </div>
 {% endblock %}

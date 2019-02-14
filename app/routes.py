@@ -8,6 +8,8 @@ from datetime import datetime
 import flask_excel as excel
 from sqlalchemy import text
 import pdfkit
+from flask_paginate import Pagination, get_page_parameter, get_page_args
+
 config = pdfkit.configuration(wkhtmltopdf="C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe")
 
 excel.init_excel(app)
@@ -113,29 +115,26 @@ def proizvod(name):
 			return redirect(url_for('proizvod', name=proizvod.name))
 	return render_template('proizvod.html', title=proizvod.name, proizvod=proizvod, evidencijaUlaz=evidencijaUlaz, evidencijaIzlaz=evidencijaIzlaz, form_ulaz=form_ulaz, form_izlaz=form_izlaz)
 
-@app.route('/stanje_skladista', methods=['GET', 'POST'])
+@app.route('/stanje_skladista/<int:page_num>', methods=['GET', 'POST'])
 @login_required
-def stanje_skladista():
+def stanje_skladista(page_num):
 	
-	page = request.args.get('page', 1, type=int)
-	proizvodi = Proizvod.query.order_by(Proizvod.datum_unosa.desc()).paginate(page, app.config['POSTS_PER_PAGE'], False)
-	next_url = url_for('stanje_skladista', page=proizvodi.next_num) \
-		if proizvodi.has_next else None
-	prev_url = url_for('stanje_skladista', page=proizvodi.prev_num) \
-		if proizvodi.has_prev else None
+	proizvodi = Proizvod.query.order_by(Proizvod.datum_unosa.desc()).paginate(per_page=6, page=page_num, error_out=True)
 	form = SearchForm()
 	if form.validate_on_submit():
-		page2 = request.args.get('page2', 1, type=int)
-		proizvodi2 = Proizvod.query.filter(Proizvod.name.like("%" + form.search.data + "%")).paginate(page2, app.config['POSTS_PER_PAGE'], False)
-		next_url2 = url_for('stanje_skladista', page=proizvodi2.next_num) \
-			if proizvodi2.has_next else None
-		prev_url2 = url_for('stanje_skladista', page=proizvodi2.prev_num) \
-			if proizvodi2.has_prev else None
+		proizvodi2 = Proizvod.query.filter(Proizvod.name.like("%" + form.search.data + "%")).paginate(per_page=3, page=page_num, error_out=True)
+		
 		if not proizvodi2:
 			flash('Proizvod ne postoji')
-		return render_template("stanje_skladista.html", title='sssasas', form=form, proizvodi=proizvodi2.items, next_url=next_url2, prev_url=prev_url2)
+		return render_template("stanje_skladista.html", title='Stanje skladista', form=form, proizvodi=proizvodi2)
 	else:
-		return render_template('stanje_skladista.html', title='Stanje skladista', proizvodi=proizvodi.items, form=form, next_url=next_url, prev_url=prev_url)
+		return render_template('stanje_skladista.html', title='Stanje skladista', proizvodi=proizvodi, form=form)
+
+@app.route('/stanje_skladista1', methods=['GET', 'POST'])
+@login_required
+def stanje_skladista1():
+	return redirect(url_for('stanje_skladista', page_num=1))
+
 
 @app.route('/tvrtke', methods=['GET', 'POST'])
 @login_required
@@ -170,15 +169,22 @@ def evidencija_izdavanja():
 @app.route('/search', methods=['GET', 'POST'])
 @login_required
 def search():
+	search=False
+	q = request.args.get('q')
+	if q:
+		search = True
+	per_page=3
+	page = request.args.get(get_page_parameter(), type=int, default=1)
 	proizvodi = Proizvod.query.all()
 	form = SearchForm()
+	pagination = Pagination(page=page, total=len(proizvodi), search=search, record_name='proizvodi', per_page=3)
 	if form.validate_on_submit():
-		search = form.search.data
-		proizvodi = Proizvod.query.filter(Proizvod.name.like("%" + search + "%")).all()
+		proizvodi = Proizvod.query.filter(Proizvod.name.like("%" + form.search.data + "%")).all()
 		if not proizvodi:
 			flash('Nema proizvoda pod tim imenom')
-		return render_template("search.html", form=form, proizvodi=proizvodi)
-	return render_template("search.html", form=form, proizvodi=proizvodi)
+		pagination = Pagination(page=page, total=len(proizvodi), search=search, record_name='proizvodi', per_page=3)
+		return render_template("search.html", form=form, proizvodi=proizvodi, pagination=pagination)
+	return render_template("search.html", form=form, proizvodi=proizvodi, pagination=pagination)
 
 @app.route('/evidencija/<id>')
 @login_required
