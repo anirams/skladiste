@@ -108,8 +108,6 @@ def proizvod(name):
 	evidencijaIzlaz = Evidencija.query.filter_by(proizvod_id=proizvod.id, vrsta_unosa='izlaz').order_by(Evidencija.datum_unosa.desc()).all()
 	form_ulaz = UlazRobeForm()
 	form_izlaz = IzlazRobeForm()
-	potvrda1=0
-	potvrda2=0
 	if form_ulaz.submit1.data and form_ulaz.validate():
 			tvrtka = Tvrtka.query.filter_by(oib=form_ulaz.oib.data).first_or_404()
 			proizvod.kolicina += form_ulaz.promijenjena_kolicina.data
@@ -126,30 +124,34 @@ def proizvod(name):
 			db.session.commit()
 			flash('Oduzeli ste kolicinu sa stanja!')
 			return redirect(url_for('proizvod', name=proizvod.name))
-	return render_template('proizvod.html', title=proizvod.name, proizvod=proizvod, evidencijaUlaz=evidencijaUlaz, evidencijaIzlaz=evidencijaIzlaz, form_ulaz=form_ulaz, form_izlaz=form_izlaz, name=proizvod.name, potvrda1=potvrda1, potvrda2=potvrda2)
+	return render_template('proizvod.html', title=proizvod.name, proizvod=proizvod, evidencijaUlaz=evidencijaUlaz, evidencijaIzlaz=evidencijaIzlaz, form_ulaz=form_ulaz, form_izlaz=form_izlaz, name=proizvod.name)
 
-@app.route('/stanje_skladista/<int:page_num>', methods=['GET', 'POST'])
+@app.route('/stanje_skladista/<int:page_num>+<s>', methods=['GET', 'POST'])
 @login_required
-def stanje_skladista(page_num):
-	proizvodi = Proizvod.query.order_by(Proizvod.datum_unosa.desc()).paginate(per_page=9, page=page_num, error_out=True)
+def stanje_skladista(page_num, s):
 	form = SearchForm()
+	if s == ' ':
+		proizvodi = Proizvod.query.order_by(Proizvod.datum_unosa.desc()).paginate(per_page=9, page=page_num, error_out=True)
+		
+	else:
+		proizvodi2 = Proizvod.query.filter(Proizvod.name.like("%" + s + "%")).paginate(per_page=3, page=page_num, error_out=True)
+		return render_template("stanje_skladista.html", title='Stanje skladista', form=form, proizvodi=proizvodi2, search=s )
 	if form.validate_on_submit():
 		proizvodi2 = Proizvod.query.filter(Proizvod.name.like("%" + form.search.data + "%")).paginate(per_page=3, page=page_num, error_out=True)
 		if not proizvodi2:
 			flash('Proizvod ne postoji')
-		return render_template("stanje_skladista.html", title='Stanje skladista', form=form, proizvodi=proizvodi2)
-	return render_template('stanje_skladista.html', title='Stanje skladista', proizvodi=proizvodi, form=form)
+		return render_template("stanje_skladista.html", title='Stanje skladista', form=form, proizvodi=proizvodi2, search=form.search.data )
+	return render_template('stanje_skladista.html', title='Stanje skladista', proizvodi=proizvodi, form=form, search=' ')
 
 @app.route('/stanje_skladista1', methods=['GET', 'POST'])
 @login_required
 def stanje_skladista1():
-	return redirect(url_for('stanje_skladista', page_num=1))
+	return redirect(url_for('stanje_skladista', page_num=1, s=' '))
 
 
 @app.route('/tvrtke', methods=['GET', 'POST'])
 @login_required
 def tvrtke():
-	potvrda=0
 	form = UnosTvrtkeForm()
 	tvrtke = Tvrtka.query.all()
 	#dob = Dobavljac.query.all()
@@ -160,39 +162,52 @@ def tvrtke():
 		db.session.commit()
 		flash(f'Uspješno ste unijeli tvrtku {form.name.data}!')
 		tvrtke = Tvrtka.query.all()
-		return render_template('tvrtke.html', title='Dodaj tvrtku', form=form, tvrtke=tvrtke, potvrda=potvrda)
-	return render_template('tvrtke.html', title='Dodaj tvrtku', form=form, tvrtke=tvrtke, potvrda=potvrda)
+		return render_template('tvrtke.html', title='Dodaj tvrtku', form=form, tvrtke=tvrtke)
+	return render_template('tvrtke.html', title='Dodaj tvrtku', form=form, tvrtke=tvrtke)
 
-@app.route('/evidencija_unosa')
+@app.route('/evidencija_unosa/<int:page_num>')
 @login_required
-def evidencija_unosa():
-	evidencija = Evidencija.query.filter_by(vrsta_unosa='unos').order_by(Evidencija.datum_unosa.desc()).all()
-	html = render_template('evidencija_unosa.html', title='Evidencija unosa', evidencija=evidencija)
-	
+def evidencija_unosa(page_num):
+	evidencija = Evidencija.query.filter_by(vrsta_unosa='unos').order_by(Evidencija.datum_unosa.desc()).paginate(per_page=5, page=page_num, error_out=True)
 	return render_template('evidencija_unosa.html', title='Evidencija unosa', evidencija=evidencija)
 
-@app.route('/evidencija_izdavanja')
+@app.route('/evidencija_unosa1', methods=['GET', 'POST'])
 @login_required
-def evidencija_izdavanja():
-	evidencija = Evidencija.query.filter_by(vrsta_unosa='izlaz').order_by(Evidencija.datum_unosa.desc()).all()
+def evidencija_unosa1():
+	return redirect(url_for('evidencija_unosa', page_num=1))
+
+@app.route('/evidencija_izdavanja/<int:page_num>')
+@login_required
+def evidencija_izdavanja(page_num):
+	evidencija = Evidencija.query.filter_by(vrsta_unosa='izlaz').order_by(Evidencija.datum_unosa.desc()).paginate(per_page=5, page=page_num, error_out=True)
 	return render_template('evidencija_izdavanja.html', title='Evidencija izdavanja', evidencija=evidencija)
 
-@app.route('/search/<int:page_num>', methods=['GET', 'POST'])
+@app.route('/evidencija_izdavanja1', methods=['GET', 'POST'])
 @login_required
-def search(page_num):
-	proizvodi = Proizvod.query.order_by(Proizvod.datum_unosa.desc()).paginate(per_page=9, page=page_num, error_out=True)
+def evidencija_izdavanja1():
+	return redirect(url_for('evidencija_izdavanja', page_num=1))
+
+@app.route('/search/<int:page_num>+<s>', methods=['GET', 'POST'])
+@login_required
+def search(page_num, s):
 	form = SearchForm()
+	if s == ' ':
+		proizvodi = Proizvod.query.order_by(Proizvod.datum_unosa.desc()).paginate(per_page=9, page=page_num, error_out=True)
+		
+	else:
+		proizvodi2 = Proizvod.query.filter(Proizvod.name.like("%" + s + "%")).paginate(per_page=3, page=page_num, error_out=True)
+		return render_template("stanje_skladista.html", title='Stanje skladista', form=form, proizvodi=proizvodi2, search=s )
 	if form.validate_on_submit():
 		proizvodi2 = Proizvod.query.filter(Proizvod.name.like("%" + form.search.data + "%")).paginate(per_page=3, page=page_num, error_out=True)
 		if not proizvodi2:
-			flash('Nema proizvoda pod tim imenom')
-		return render_template("search.html", title='Pretraga', form=form, proizvodi=proizvodi2)
-	return render_template("search.html", title='Pretraga', form=form, proizvodi=proizvodi)
+			flash('Proizvod ne postoji')
+		return render_template("stanje_skladista.html", title='Stanje skladista', form=form, proizvodi=proizvodi2, search=form.search.data )
+	return render_template('stanje_skladista.html', title='Stanje skladista', proizvodi=proizvodi, form=form, search=' ')
 
 @app.route('/search1', methods=['GET', 'POST'])
 @login_required
 def search1():
-	return redirect(url_for('search', page_num=1))
+	return redirect(url_for('search', page_num=1, s=' '))
 
 @app.route('/evidencija/<id>')
 @login_required

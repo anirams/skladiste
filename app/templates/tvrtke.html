@@ -52,7 +52,7 @@
         </button>
       </div>
       <script>
-        var pot = {{ potvrda }};
+        var form_error = false;
       </script>
       <div class="modal-body">
         <h5>Dodaj Novu Tvrtku</h5>
@@ -64,7 +64,7 @@
             {% for error in form.name.errors %}
             <span style="color: red;">[{{ error }}]</span>
             {% if form.name.errors %}
-                <script> pot = 1; </script><br>
+                <script> form_error = true; </script><br>
             {% endif %}
             {% endfor %}
 
@@ -73,7 +73,7 @@
             {% for error in form.oib.errors %}
             <span style="color: red;">[{{ error }}]</span>
             {% if form.oib.errors %}
-                <script> pot = 1; </script><br>
+                <script> form_error = true; </script><br>
             {% endif %}
             {% endfor %}
 
@@ -82,7 +82,7 @@
             {% for error in form.grad.errors %}
             <span style="color: red;">[{{ error }}]</span>
             {% if form.grad.errors %}
-                <script> pot = 1; </script><br>
+                <script> form_error = true; </script><br>
             {% endif %}
             {% endfor %}
 
@@ -91,7 +91,7 @@
             {% for error in form.p_broj.errors %}
             <span style="color: red;">[{{ error }}]</span>
             {% if form.p_broj.errors %}
-                <script> pot = 1; </script><br>
+                <script> form_error = true; </script><br>
             {% endif %}
             {% endfor %}
 
@@ -100,7 +100,7 @@
             {% for error in form.drzava.errors %}
             <span style="color: red;">[{{ error }}]</span>
             {% if form.drzava.errors %}
-                <script> pot = 1; </script><br>
+                <script> form_error = true; </script><br>
             {% endif %}
             {% endfor %}
 
@@ -120,8 +120,8 @@
 </div>
 
 <script type="text/javascript">
-if (pot > 0) {
-    console.log("to je to" + pot);
+if (form_error) {
+    console.log("form error" + form_error);
     $(document).ready(function () {
    $('#tvrtka-potvrda').click();
 });
@@ -129,7 +129,7 @@ if (pot > 0) {
    
 }
 else{
-    console.log("to nije to" + pot)
+    console.log("form error" + pot)
 }
 
 </script>

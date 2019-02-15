@@ -99,7 +99,7 @@
         </button>
       </div>
       <script>
-        var pot1 = {{ potvrda1 }};
+        var form_error1 = false;
       </script>
       <div class="modal-body">
         <h5>Unos Robe</h5>
@@ -111,7 +111,7 @@
             {% for error in form_ulaz.promijenjena_kolicina.errors %}
             <span style="color: red;">[{{ error }}]</span>
             {% if form_ulaz.promijenjena_kolicina.errors %}
-                <script> pot1 = 1; </script><br>
+                <script> form_error1 = true; </script><br>
             {% endif %}
             {% endfor %}
         </p>
@@ -121,7 +121,7 @@
             {% for error in form_ulaz.oib.errors %}
             <span style="color: red;">[{{ error }}]</span>
             {% if form_ulaz.oib.errors %}
-                <script> pot1 = 1; </script><br>
+                <script> form_error1 = true; </script><br>
             {% endif %}
             {% endfor %}
         </p>
@@ -149,7 +149,7 @@
         </button>
       </div>
       <script>
-        var pot2 = {{ potvrda2 }};
+        var form_error2 = false;
       </script>
       <div class="modal-body">
         <h5>Izlaz Robe</h5>
@@ -162,7 +162,7 @@
             {% for error in form_izlaz.promijenjena_kolicina.errors %}
             <span style="color: red;">[{{ error }}]</span>
             {% if form_izlaz.promijenjena_kolicina.errors %}
-                <script> pot2 = 1; </script><br>
+                <script> form_error2 = true; </script><br>
             {% endif %}
             {% endfor %}
         </p>
@@ -172,7 +172,7 @@
             {% for error in form_izlaz.oib.errors %}
             <span style="color: red;">[{{ error }}]</span>
             {% if form_izlaz.oib.errors %}
-                <script> pot2 = 1; </script><br>
+                <script> form_error2 = true; </script><br>
             {% endif %}
             {% endfor %}
         </p>
@@ -189,24 +189,24 @@
 </div>
 
 <script type="text/javascript">
-if (pot1 > 0) {
-    console.log("to je to" + pot1);
+if (form_error1) {
+    console.log("form error" + form_error1);
     $(document).ready(function () {
    $('#ulaz-tipka').click();
 });  
 }
 else{
-    console.log("to nije to" + pot1)
+    console.log("form error" + form_error1)
 }
 
-if (pot2 > 0) {
-    console.log("to je to" + pot1);
+if (form_error2) {
+    console.log("form error" + form_error2);
     $(document).ready(function () {
    $('#izlaz-tipka').click();
 });  
 }
 else{
-    console.log("to nije to" + pot2)
+    console.log("form error" + form_error2)
 }
 
 </script>

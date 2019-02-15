@@ -15,7 +15,7 @@
         <th>Korisnik</th>
         <th></th>
     </tr>
-    {% for e in evidencija %}
+    {% for e in evidencija.items %}
     <tr>
     	<td><a href="/proizvod/{{e.proizvod.name}}">{{ e.proizvod.name }}</a></td>
     	<td>{{ e.promijenjena_kolicina }}</td>
@@ -27,5 +27,23 @@
     </tr>
     {% endfor %}
 </table> 
+<div class="d-flex justify-content-between">
+        <div></div>
+        <div>
+            <h6>Evidencije izdavanja</h6>
+            {% for page in evidencija.iter_pages(left_edge=3, right_edge=3, left_current=3, right_current=3) %}
+                {% if page %}
+                    {% if page != evidencija.page %}
+                        <a href="{{ url_for('evidencija_izdavanja', page_num=page) }}">{{ page }}</a>
+                    {% else %}
+                        <strong>{{ page }}</strong>
+                    {% endif %}
+                {% else %}
+                    <span class=ellipsis>…</span>
+                {% endif %}
+            {% endfor %}
+        </div>
+       
+    </div>
 </div>
 {% endblock %}
