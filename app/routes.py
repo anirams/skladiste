@@ -197,7 +197,6 @@ def evidencija_pdf(id):
 	pdfkit.from_string(html, 'evidencija '+id +'.pdf', configuration=config)
 	return render_template('evidencija.html', id=id, evidencija=evidencija)
 
-
 @app.route('/edit_password', methods=['GET', 'POST'])
 @login_required
 def edit_password():
