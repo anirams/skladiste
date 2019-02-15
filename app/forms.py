@@ -60,7 +60,7 @@ class UnosProizvodaForm(FlaskForm):
 
 class UnosTvrtkeForm(FlaskForm):
 	name = StringField('Naziv tvrtke', validators=[DataRequired('Unesi ime tvrtke')])
-	oib = IntegerField('OIB', validators=[DataRequired('Unesi OIB tvrtke'), NumberRange(min=11111111111, max=99999999999, message='Invalid length')])
+	oib = IntegerField('OIB', validators=[DataRequired('Unesi OIB tvrtke'), NumberRange(min=10000000000, max=99999999999, message='Invalid length')])
 	grad = StringField('Grad', validators=[DataRequired('Unesi grad')])
 	p_broj = IntegerField('Poštanski broj', validators=[DataRequired('Unesi poštanski broj')])
 	drzava = StringField('Država', validators=[DataRequired('Unesi državu')])

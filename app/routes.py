@@ -195,12 +195,12 @@ def evidencija(id):
 def evidencija_pdf(id):
 	evidencija = Evidencija.query.filter_by(id=id).first_or_404()
 	html = render_template('evidencija_pdf.html', id=id, evidencija=evidencija)
-	pdfkit.from_string(html, 'app/Evidencije/evidencija '+id +'.pdf' ,configuration=config)
+	pdfkit.from_string(html, 'app/Evidencije/evidencija '+id +'.pdf', configuration=config)
 	return send_file('Evidencije/evidencija '+id +'.pdf')
 	#return send_from_directory(directory='Evidencije',filename='evidencija '+id +'.pdf',
                           #mimetype='application/pdf')
 	#os.remove('C:/Users/UC-M02/Downloads/evidencija '+id +'.pdf')
-	return render_template('evidencija.html', id=id, evidencija=evidencija)
+	#return render_template('evidencija.html', id=id, evidencija=evidencija)
 
 
 @app.route('/edit_password', methods=['GET', 'POST'])
