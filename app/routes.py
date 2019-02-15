@@ -204,7 +204,7 @@ def evidencija(id):
 def evidencija_pdf(id):
 	evidencija = Evidencija.query.filter_by(id=id).first_or_404()
 	html = render_template('evidencija_pdf.html', id=id, evidencija=evidencija)
-	pdfkit.from_string(html, 'app/Evidencije/evidencija '+id +'.pdf' ,configuration=config)
+	pdfkit.from_string(html, 'app/Evidencije/evidencija '+id +'.pdf', configuration=config)
 	return send_file('Evidencije/evidencija '+id +'.pdf')
 
 
