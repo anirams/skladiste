@@ -19,6 +19,14 @@ excel.init_excel(app)
 @app.route('/index')
 @login_required
 def index():
+	folder = 'app/Evidencije/'
+	for the_file in os.listdir(folder):
+		file_path = os.path.join(folder, the_file)
+		try:
+			if os.path.isfile(file_path):
+				os.unlink(file_path)
+		except Exception as e:
+			print(e)
 	return render_template('index.html', title='Home')
 
 @app.route('/', methods=['GET', 'POST'])
@@ -190,7 +198,8 @@ def search1():
 @login_required
 def evidencija(id):
 	evidencija = Evidencija.query.filter_by(id=id).first_or_404()
-	#render_template_to_pdf('evidencija.html', id=id, download=True, save=False, param='hello')
+	if os.path.exists('app/Evidencije/evidencija '+id +'.pdf'):
+		os.remove('app/Evidencije/evidencija '+id +'.pdf')
 	return render_template('evidencija.html', id=id, evidencija=evidencija)
 
 @app.route('/evidencija_pdf/<id>')
@@ -198,12 +207,15 @@ def evidencija(id):
 def evidencija_pdf(id):
 	evidencija = Evidencija.query.filter_by(id=id).first_or_404()
 	html = render_template('evidencija_pdf.html', id=id, evidencija=evidencija)
-	pdfkit.from_string(html, 'app/Evidencije/evidencija '+id +'.pdf' ,configuration=config)
+	pdfkit.from_string(html, 'app/Evidencije/evidencija '+id +'.pdf', configuration=config)
 	return send_file('Evidencije/evidencija '+id +'.pdf')
+<<<<<<< HEAD
 	#return send_from_directory(directory='Evidencije',filename='evidencija '+id +'.pdf',
                           #mimetype='application/pdf')
 	#os.remove('C:/Users/UC-M02/Downloads/evidencija '+id +'.pdf')
 	#return render_template('evidencija.html', id=id, evidencija=evidencija)
+=======
+>>>>>>> b3eec907a5646a239d79bfee5b72ef4e7bad6f83
 
 
 @app.route('/edit_password', methods=['GET', 'POST'])
