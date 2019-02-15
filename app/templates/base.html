@@ -133,14 +133,14 @@
     var hr = today.getHours();
     var min = today.getMinutes();
     var sec = today.getSeconds();
-    ap = (hr < 12) ? "<span>AM</span>" : "<span>PM</span>";
-    hr = (hr == 0) ? 12 : hr;
-    hr = (hr > 12) ? hr - 12 : hr;
+    //ap = (hr < 12) ? "<span>AM</span>" : "<span>PM</span>";
+    //hr = (hr == 0) ? 12 : hr;
+    //hr = (hr > 12) ? hr - 12 : hr;
     //Add a zero in front of numbers<10
     hr = checkTime(hr);
     min = checkTime(min);
     sec = checkTime(sec);
-    document.getElementById("clock").innerHTML = hr + ":" + min + ":" + sec + " " + ap;
+    document.getElementById("clock").innerHTML = hr + ":" + min + ":" + sec// + " " + ap;
     
     var months = ['Siječnja', 'Veljače', 'Ožujka', 'Travnja', 'Svibnja', 'Lipnja', 'Srpnja', 'Kolovoza', 'Rujna', 'Listopada', 'Studenog', 'Prosinca'];
     var days = ['Nedjelja','Ponedjeljak', 'Utorak', 'Srijeda', 'Četvrtak', 'Petak', 'Subota'];
