@@ -16,6 +16,8 @@
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
 
 
+	<!--JQUERY -->
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 
 </head>
 <body>
@@ -91,12 +93,11 @@
 			</div>
 		</div>
 
-		
+
+<footer>Copyright © 2019 Teletubbies Inc. All rights reserved.</footer>
+
 	
-	
-	
-	
-	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
 
@@ -110,7 +111,7 @@
         });
 
         /* IZBRISI STARE PODATKE IZ MODALA */
-        $(".sakrij-podatke input").val("")
+        /*$(".sakrij-podatke input").val("")*/
 
 
         /* MODAL RESPONSIVE */
@@ -120,6 +121,42 @@
         	'max-height': '100%'
         });
         });
+
+
+        /* VRIJEME */
+        function startTime() {
+    var today = new Date();
+    var hr = today.getHours();
+    var min = today.getMinutes();
+    var sec = today.getSeconds();
+    //ap = (hr < 12) ? "<span>AM</span>" : "<span>PM</span>";
+    //hr = (hr == 0) ? 12 : hr;
+    //hr = (hr > 12) ? hr - 12 : hr;
+    //Add a zero in front of numbers<10
+    hr = checkTime(hr);
+    min = checkTime(min);
+    sec = checkTime(sec);
+    document.getElementById("clock").innerHTML = hr + ":" + min + ":" + sec// + " " + ap;
+    
+    var months = ['Siječnja', 'Veljače', 'Ožujka', 'Travnja', 'Svibnja', 'Lipnja', 'Srpnja', 'Kolovoza', 'Rujna', 'Listopada', 'Studenog', 'Prosinca'];
+    var days = ['Nedjelja','Ponedjeljak', 'Utorak', 'Srijeda', 'Četvrtak', 'Petak', 'Subota'];
+    var curWeekDay = days[today.getDay()];
+    var curDay = today.getDate();
+    var curMonth = months[today.getMonth()];
+    var curYear = today.getFullYear();
+    var date = curWeekDay+", "+curDay+" "+curMonth+" "+curYear;
+    document.getElementById("date").innerHTML = date;
+    
+    var time = setTimeout(function(){ startTime() }, 500);
+}
+function checkTime(i) {
+    if (i < 10) {
+        i = "0" + i;
+    }
+    return i;
+}
+
+
 
     </script>
 </body>
