@@ -42,7 +42,7 @@
             <span style="color: red;">[{{ error }}]</span><br>
             {% endfor %}<br>
         
-        <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+        
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
@@ -52,6 +52,7 @@
                 {% endfor %}
             {% endif %}
         {% endwith %}
+        <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
     </form>
         </div>
         <div class="col col-lg-2"></div>
