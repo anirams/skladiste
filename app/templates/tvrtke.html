@@ -35,7 +35,7 @@
 
     </table>
             <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter" id="tvrtka-potvrda">
   Dodaj novu tvrtku
 </button>
     
@@ -51,40 +51,57 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      
+      <script>
+        var pot = {{ potvrda }};
+      </script>
       <div class="modal-body">
         <h5>Dodaj Novu Tvrtku</h5>
         <form action="" method="post" novalidate="">
-        <div class="sakrij-podatke">
+        <div>
         {{ form.hidden_tag() }}
             {{ form.name.label }}<br>
             {{ form.name(size=32) }}<br>
             {% for error in form.name.errors %}
             <span style="color: red;">[{{ error }}]</span>
+            {% if form.name.errors %}
+                <script> pot = 1; </script><br>
+            {% endif %}
             {% endfor %}
 
             {{ form.oib.label }}<br>
             {{ form.oib(size=32) }}<br>
             {% for error in form.oib.errors %}
             <span style="color: red;">[{{ error }}]</span>
+            {% if form.oib.errors %}
+                <script> pot = 1; </script><br>
+            {% endif %}
             {% endfor %}
 
             {{ form.grad.label }}<br>
             {{ form.grad(size=32) }}<br>
             {% for error in form.grad.errors %}
             <span style="color: red;">[{{ error }}]</span>
+            {% if form.grad.errors %}
+                <script> pot = 1; </script><br>
+            {% endif %}
             {% endfor %}
 
             {{ form.p_broj.label }}<br>
             {{ form.p_broj(size=32) }}<br>
             {% for error in form.p_broj.errors %}
             <span style="color: red;">[{{ error }}]</span>
+            {% if form.p_broj.errors %}
+                <script> pot = 1; </script><br>
+            {% endif %}
             {% endfor %}
 
             {{ form.drzava.label }}<br>
             {{ form.drzava(size=32) }}<br>
             {% for error in form.drzava.errors %}
             <span style="color: red;">[{{ error }}]</span>
+            {% if form.drzava.errors %}
+                <script> pot = 1; </script><br>
+            {% endif %}
             {% endfor %}
 
         </div>
@@ -101,4 +118,19 @@
     </div>
   </div>
 </div>
+
+<script type="text/javascript">
+if (pot > 0) {
+    console.log("to je to" + pot);
+    $(document).ready(function () {
+   $('#tvrtka-potvrda').click();
+});
+   
+   
+}
+else{
+    console.log("to nije to" + pot)
+}
+
+</script>
 {% endblock %}

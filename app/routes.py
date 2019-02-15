@@ -100,6 +100,8 @@ def proizvod(name):
 	evidencijaIzlaz = Evidencija.query.filter_by(proizvod_id=proizvod.id, vrsta_unosa='izlaz').order_by(Evidencija.datum_unosa.desc()).all()
 	form_ulaz = UlazRobeForm()
 	form_izlaz = IzlazRobeForm()
+	potvrda1=0
+	potvrda2=0
 	if form_ulaz.submit1.data and form_ulaz.validate():
 			tvrtka = Tvrtka.query.filter_by(oib=form_ulaz.oib.data).first_or_404()
 			proizvod.kolicina += form_ulaz.promijenjena_kolicina.data
@@ -116,7 +118,7 @@ def proizvod(name):
 			db.session.commit()
 			flash('Oduzeli ste kolicinu sa stanja!')
 			return redirect(url_for('proizvod', name=proizvod.name))
-	return render_template('proizvod.html', title=proizvod.name, proizvod=proizvod, evidencijaUlaz=evidencijaUlaz, evidencijaIzlaz=evidencijaIzlaz, form_ulaz=form_ulaz, form_izlaz=form_izlaz, name=proizvod.name)
+	return render_template('proizvod.html', title=proizvod.name, proizvod=proizvod, evidencijaUlaz=evidencijaUlaz, evidencijaIzlaz=evidencijaIzlaz, form_ulaz=form_ulaz, form_izlaz=form_izlaz, name=proizvod.name, potvrda1=potvrda1, potvrda2=potvrda2)
 
 @app.route('/stanje_skladista/<int:page_num>', methods=['GET', 'POST'])
 @login_required
@@ -139,6 +141,7 @@ def stanje_skladista1():
 @app.route('/tvrtke', methods=['GET', 'POST'])
 @login_required
 def tvrtke():
+	potvrda=0
 	form = UnosTvrtkeForm()
 	tvrtke = Tvrtka.query.all()
 	#dob = Dobavljac.query.all()
@@ -149,8 +152,8 @@ def tvrtke():
 		db.session.commit()
 		flash(f'Uspješno ste unijeli tvrtku {form.name.data}!')
 		tvrtke = Tvrtka.query.all()
-		return render_template('tvrtke.html', title='Dodaj tvrtku', form=form, tvrtke=tvrtke)
-	return render_template('tvrtke.html', title='Dodaj tvrtku', form=form, tvrtke=tvrtke)
+		return render_template('tvrtke.html', title='Dodaj tvrtku', form=form, tvrtke=tvrtke, potvrda=potvrda)
+	return render_template('tvrtke.html', title='Dodaj tvrtku', form=form, tvrtke=tvrtke, potvrda=potvrda)
 
 @app.route('/evidencija_unosa')
 @login_required
@@ -200,7 +203,7 @@ def evidencija_pdf(id):
 	#return send_from_directory(directory='Evidencije',filename='evidencija '+id +'.pdf',
                           #mimetype='application/pdf')
 	#os.remove('C:/Users/UC-M02/Downloads/evidencija '+id +'.pdf')
-	return render_template('evidencija.html', id=id, evidencija=evidencija)
+	#return render_template('evidencija.html', id=id, evidencija=evidencija)
 
 
 @app.route('/edit_password', methods=['GET', 'POST'])
