@@ -17,6 +17,7 @@ config = pdfkit.configuration(wkhtmltopdf="C:/Program Files/wkhtmltopdf/bin/wkht
 excel.init_excel(app)
 
 @app.route('/index')
+@login_required
 def index():
 	return render_template('index.html', title='Home')
 
@@ -78,7 +79,7 @@ def before_request():
 def unos_proizvoda():
 	form = UnosProizvodaForm()
 	if form.validate_on_submit():
-		proizvod = Proizvod(name=form.name.data, zemlja_podrijetla=form.zemlja_podrijetla.data, kolicina=form.kolicina.data)
+		proizvod = Proizvod(name=form.name.data, zemlja_podrijetla=form.zemlja_podrijetla.data, kolicina=form.kolicina.data, opis_proizvoda=form.opis_proizvoda.data)
 		db.session.add(proizvod)
 		db.session.commit()
 		proizvod = Proizvod.query.filter_by(name=form.name.data).first()
