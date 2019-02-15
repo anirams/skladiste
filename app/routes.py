@@ -1,4 +1,4 @@
-from flask import render_template, flash, redirect, url_for, request, send_file
+from flask import render_template, flash, redirect, url_for, request, send_file, send_from_directory
 from app import app, db
 from app.forms import LoginForm, RegistrationForm, UlazRobeForm, IzlazRobeForm, UnosProizvodaForm, SearchForm, EditPasswordForm, UnosTvrtkeForm
 from flask_login import current_user, login_user, logout_user, login_required
@@ -10,12 +10,14 @@ from sqlalchemy import text
 import pdfkit
 from flask_paginate import Pagination, get_page_parameter, get_page_args
 from sqlalchemy import text
+import os
 
 config = pdfkit.configuration(wkhtmltopdf="C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe")
 
 excel.init_excel(app)
 
 @app.route('/index')
+@login_required
 def index():
 	return render_template('index.html', title='Home')
 
@@ -77,7 +79,7 @@ def before_request():
 def unos_proizvoda():
 	form = UnosProizvodaForm()
 	if form.validate_on_submit():
-		proizvod = Proizvod(name=form.name.data, zemlja_podrijetla=form.zemlja_podrijetla.data, kolicina=form.kolicina.data)
+		proizvod = Proizvod(name=form.name.data, zemlja_podrijetla=form.zemlja_podrijetla.data, kolicina=form.kolicina.data, opis_proizvoda=form.opis_proizvoda.data)
 		db.session.add(proizvod)
 		db.session.commit()
 		proizvod = Proizvod.query.filter_by(name=form.name.data).first()
@@ -192,9 +194,12 @@ def evidencija(id):
 @login_required
 def evidencija_pdf(id):
 	evidencija = Evidencija.query.filter_by(id=id).first_or_404()
-	#render_template_to_pdf('evidencija.html', id=id, download=True, save=False, param='hello')
 	html = render_template('evidencija_pdf.html', id=id, evidencija=evidencija)
-	pdfkit.from_string(html, 'evidencija '+id +'.pdf', configuration=config)
+	pdfkit.from_string(html, 'app/Evidencije/evidencija '+id +'.pdf' ,configuration=config)
+	return send_file('Evidencije/evidencija '+id +'.pdf')
+	#return send_from_directory(directory='Evidencije',filename='evidencija '+id +'.pdf',
+                          #mimetype='application/pdf')
+	#os.remove('C:/Users/UC-M02/Downloads/evidencija '+id +'.pdf')
 	return render_template('evidencija.html', id=id, evidencija=evidencija)
 
 

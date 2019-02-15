@@ -9,26 +9,27 @@
             <form class=" form-inline" action="" method="post" novalidate="">
                 {{ form.hidden_tag() }}
                 <div class="form-group">
-                    {{ form.search(size=32, class="form-control", placeholder="Pronađi proizvod") }}
-                        {% for error in form.search.errors %}
-                            <div class="alert-danger p-1 mt-1">{{ error }}</div>
-                        {% endfor %}
-                        {% with messages = get_flashed_messages() %}
-                            {% if messages %}
-                                {% for message in messages %}
-                                    <div class="alert-danger p-1 mt-1">{{ message }}</div>
-                                {% endfor %}
-                            {% endif %}
-                        {% endwith %}
+                    {{ form.search(size=32, class="form-control", placeholder="Pronađi proizvod") }}    
                 </div>
                 <div class="form-group">
                     {{ form.submit(type="submit", class="btn btn-primary ml-3") }}
                 </div>
             </form>
+
         </div>
+        {% for error in form.search.errors %}
+            <div class="alert-danger p-1">{{ error }}</div>
+        {% endfor %}
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert-danger p-1 mt-1">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
     </div>
 
-    <table class="table table-striped">
+    <table class="table table-striped mt-2">
 	   <tr>
             <th>Proizvod</th> 
             <th>Kolicina</th>
@@ -58,7 +59,7 @@
             {% endfor %}
         </div>
         <div>
-            <button class="btn btn-primary m-2"><a href="/export" target="blank">Excel</a></button>
+            <button class="btn btn-primary m-2"><a href="/export_stanje_skladista" target="blank">Excel</a></button>
         </div>
     </div>
 </div>
