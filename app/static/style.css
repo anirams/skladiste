@@ -281,3 +281,15 @@ ul.CTAs a {
     color:#bec9cd;
 }
 
+
+/* FOOTER */
+
+footer {
+   position: fixed;
+   left: 0;
+   bottom: 0;
+   width: 100%;
+   background-color: #477ea5;
+   color: #bec9cd;
+   text-align: center;
+}
