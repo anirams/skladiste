@@ -35,7 +35,7 @@
 			<li class="{% block index %}{% endblock %}">
 				<a href="{{ url_for('index') }}"><i class="fas fa-home mr-2"></i>Pocetna</a>
 			</li>
-			<li class="{% block stanje_skladista1 %}{% endblock %}">
+			<li class="{% block stanje_skladista %}{% endblock %}">
 				<a href="{{ url_for('stanje_skladista1') }}"><i class="fas fa-warehouse mr-2"></i>Stanje Skladista</a>
 			</li>
 			<li class="{% block unos_proizvoda %}{% endblock %}">
@@ -81,8 +81,7 @@
 	        <div class="plava-pozadina">
 	            <button type="button" id="sidebarCollapse" class="btn btn-primary">
 	                <i class="fas fa-align-left"></i>
-	                <span id="sakrij-tipku">Sakrij</span>
-	                <span id="pokazi-tipku">Prikaži</span>
+	                <span class="sakrij-tipku"></span>
 	            </button> <br>
 			
 	    	</div>

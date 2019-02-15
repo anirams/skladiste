@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField, PasswordField, BooleanField, SubmitField, HiddenField, TextAreaField
-from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
+from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, Length, NumberRange
 from app.models import User, Proizvod, Tvrtka, Evidencija
 from flask import request
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -13,11 +13,10 @@ class LoginForm(FlaskForm):
 	submit = SubmitField('Prijavi se')
 
 
-
 class RegistrationForm(FlaskForm):
 	username = StringField('Korisnicko ime', validators=[DataRequired('Ovo polje je nužno')])
 	email = StringField('Email', validators=[DataRequired(), Email('Unesite valjanu email adresu')])
-	password = PasswordField('Lozinka', validators=[DataRequired('Ovo polje je nužno')])
+	password = PasswordField('Lozinka', validators=[DataRequired('Ovo polje je nužno'), Length(min=5, max=35)])
 	password2 = PasswordField(
 		'Ponovite lozinku', validators=[DataRequired('Ovo polje je nužno'), EqualTo('password', message='Lozinke moraju biti jednake')])
 	submit = SubmitField('Registriraj se')
@@ -35,6 +34,7 @@ class RegistrationForm(FlaskForm):
 	def validate_admin(self, email):
 		if current_user.username is not "admin":
 			raise ValidationError('Niste admin!')
+
 
 class UnosProizvodaForm(FlaskForm):
 	name = StringField('Naziv proizvoda', validators=[DataRequired('Unesi Naziv Proizvoda')])
@@ -60,7 +60,7 @@ class UnosProizvodaForm(FlaskForm):
 
 class UnosTvrtkeForm(FlaskForm):
 	name = StringField('Naziv tvrtke', validators=[DataRequired('Unesi ime tvrtke')])
-	oib = IntegerField('OIB', validators=[DataRequired('Unesi OIB tvrtke')])
+	oib = IntegerField('OIB', validators=[DataRequired('Unesi OIB tvrtke'), NumberRange(min=11111111111, max=99999999999, message='Invalid length')])
 	grad = StringField('Grad', validators=[DataRequired('Unesi grad')])
 	p_broj = IntegerField('Poštanski broj', validators=[DataRequired('Unesi poštanski broj')])
 	drzava = StringField('Država', validators=[DataRequired('Unesi državu')])

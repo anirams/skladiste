@@ -6,12 +6,10 @@
 <div class="stanje-s">
     <div class="container">
         <div class="row justify-content-md-center">
-            <div class="col col-lg-2"></div>
-            <div class="col-md-auto">
-                <form class="search-forma" action="" method="post" novalidate="">
-                    {{ form.hidden_tag() }}
-                    {{ form.search.label(class="h4") }}
-                    {{ form.search(size=32, class="form-control") }}
+            <form class=" form-inline" action="" method="post" novalidate="">
+                {{ form.hidden_tag() }}
+                <div class="form-group">
+                    {{ form.search(size=32, class="form-control", placeholder="Pronađi proizvod") }}
                         {% for error in form.search.errors %}
                             <div class="alert-danger p-1 mt-1">{{ error }}</div>
                         {% endfor %}
@@ -22,27 +20,26 @@
                                 {% endfor %}
                             {% endif %}
                         {% endwith %}
-                    {{ form.submit(type="submit", class="btn btn-primary mt-3") }}
-                </form>
-            </div>
-            <div class="col col-lg-2"></div>
+                </div>
+                <div class="form-group">
+                    {{ form.submit(type="submit", class="btn btn-primary ml-3") }}
+                </div>
+            </form>
         </div>
     </div>
 
-<table class="table table-striped">
-	<tr>
-        <th>Proizvod</th> 
-        <th>Kolicina</th>
-    </tr>
-    {% for proizvod in proizvodi.items %}
-    <tr>
-    	<td><a href="../proizvod/{{proizvod.name}}">{{ proizvod.name }}</a></td>
-    	<td>{{ proizvod.kolicina }}</td>
-    </tr>
-    {% endfor %}
-</table> 
-    
-
+    <table class="table table-striped">
+	   <tr>
+            <th>Proizvod</th> 
+            <th>Kolicina</th>
+        </tr>
+        {% for proizvod in proizvodi.items %}
+        <tr>
+    	   <td><a href="../proizvod/{{proizvod.name}}">{{ proizvod.name }}</a></td>
+    	   <td>{{ proizvod.kolicina }}</td>
+        </tr>
+        {% endfor %}
+    </table> 
     
     <div class="d-flex justify-content-between">
         <div></div>
@@ -58,14 +55,11 @@
                 {% else %}
                     <span class=ellipsis>…</span>
                 {% endif %}
-
             {% endfor %}
         </div>
         <div>
-            <button class="btn btn-primary m-2"><a href="/export" target="blank">Excel</a></button>
+            <button class="btn btn-primary m-2"><a href="/export_stanje_skladista" target="blank">Excel</a></button>
         </div>
     </div>
-    
-
 </div>
 {% endblock %}

@@ -1,4 +1,4 @@
-from flask import render_template, flash, redirect, url_for, request, send_file
+from flask import render_template, flash, redirect, url_for, request, send_file, send_from_directory
 from app import app, db
 from app.forms import LoginForm, RegistrationForm, UlazRobeForm, IzlazRobeForm, UnosProizvodaForm, SearchForm, EditPasswordForm, UnosTvrtkeForm
 from flask_login import current_user, login_user, logout_user, login_required
@@ -10,6 +10,7 @@ from sqlalchemy import text
 import pdfkit
 from flask_paginate import Pagination, get_page_parameter, get_page_args
 from sqlalchemy import text
+import os
 
 config = pdfkit.configuration(wkhtmltopdf="C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe")
 
@@ -119,7 +120,7 @@ def proizvod(name):
 @app.route('/stanje_skladista/<int:page_num>', methods=['GET', 'POST'])
 @login_required
 def stanje_skladista(page_num):
-	proizvodi = Proizvod.query.order_by(Proizvod.datum_unosa.desc()).paginate(per_page=6, page=page_num, error_out=True)
+	proizvodi = Proizvod.query.order_by(Proizvod.datum_unosa.desc()).paginate(per_page=9, page=page_num, error_out=True)
 	form = SearchForm()
 	if form.validate_on_submit():
 		proizvodi2 = Proizvod.query.filter(Proizvod.name.like("%" + form.search.data + "%")).paginate(per_page=3, page=page_num, error_out=True)
@@ -167,7 +168,7 @@ def evidencija_izdavanja():
 @app.route('/search/<int:page_num>', methods=['GET', 'POST'])
 @login_required
 def search(page_num):
-	proizvodi = Proizvod.query.order_by(Proizvod.datum_unosa.desc()).paginate(per_page=6, page=page_num, error_out=True)
+	proizvodi = Proizvod.query.order_by(Proizvod.datum_unosa.desc()).paginate(per_page=9, page=page_num, error_out=True)
 	form = SearchForm()
 	if form.validate_on_submit():
 		proizvodi2 = Proizvod.query.filter(Proizvod.name.like("%" + form.search.data + "%")).paginate(per_page=3, page=page_num, error_out=True)
@@ -192,9 +193,11 @@ def evidencija(id):
 @login_required
 def evidencija_pdf(id):
 	evidencija = Evidencija.query.filter_by(id=id).first_or_404()
-	#render_template_to_pdf('evidencija.html', id=id, download=True, save=False, param='hello')
 	html = render_template('evidencija_pdf.html', id=id, evidencija=evidencija)
-	pdfkit.from_string(html, 'evidencija '+id +'.pdf', configuration=config)
+	pdfkit.from_string(html, 'C:/Users/UC-M02/Downloads/evidencija '+id +'.pdf' ,configuration=config)
+	return send_from_directory(directory='C:/Users/UC-M02/Downloads',filename='evidencija '+id +'.pdf',
+                          mimetype='application/pdf')
+	os.remove('C:/Users/UC-M02/Downloads/evidencija '+id +'.pdf')
 	return render_template('evidencija.html', id=id, evidencija=evidencija)
 
 @app.route('/edit_password', methods=['GET', 'POST'])
@@ -241,7 +244,7 @@ def export_proizvod_unos(name):
 		'ime_tvrtke',
 		'korisnik'
 		]
-	return excel.make_response_from_query_sets(query_sets, column_names, 'xls')
+	return excel.make_response_from_query_sets(query_sets, column_names, 'xls', file_name="Ulazna evidencija "+name)
 
 @app.route('/export_proizvod_izlaz/<name>')
 @login_required
@@ -261,4 +264,4 @@ def export_proizvod_izlaz(name):
 		'ime_tvrtke',
 		'korisnik'
 		]
-	return excel.make_response_from_query_sets(query_sets, column_names, 'xls')
+	return excel.make_response_from_query_sets(query_sets, column_names, 'xls', file_name="Izlazna evidencija "+name)
