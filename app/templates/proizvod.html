@@ -27,8 +27,8 @@
     {% endwith %}
     
     <div class="tipke-sredina">
-        <button type="button" class="btn btn-primary m-2" data-toggle="modal" data-target="#exampleModalCenter">Ulaz Robe</button>
-        <button type="button" class="btn btn-primary m-2" data-toggle="modal" data-target="#exampleModalCenter2">Izlaz Robe</button>
+        <button type="button" class="btn btn-primary m-2" data-toggle="modal" data-target="#exampleModalCenter" id="ulaz-tipka">Ulaz Robe</button>
+        <button type="button" class="btn btn-primary m-2" data-toggle="modal" data-target="#exampleModalCenter2" id="izlaz-tipka">Izlaz Robe</button>
     </div>  
 
     <hr>
@@ -98,23 +98,31 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      
+      <script>
+        var form_error1 = false;
+      </script>
       <div class="modal-body">
         <h5>Unos Robe</h5>
         <form action="" method="post" novalidate="">
         {{ form_ulaz.hidden_tag() }}
          <p>
             {{ form_ulaz.promijenjena_kolicina.label }}<br>
-            {{ form_ulaz.promijenjena_kolicina(size=32) }}
+            {{ form_ulaz.promijenjena_kolicina(size=32) }}<br>
             {% for error in form_ulaz.promijenjena_kolicina.errors %}
             <span style="color: red;">[{{ error }}]</span>
+            {% if form_ulaz.promijenjena_kolicina.errors %}
+                <script> form_error1 = true; </script><br>
+            {% endif %}
             {% endfor %}
         </p>
          <p>
             {{ form_ulaz.oib.label }}<br>
-            {{ form_ulaz.oib(size=32) }}
+            {{ form_ulaz.oib(size=32) }}<br>
             {% for error in form_ulaz.oib.errors %}
             <span style="color: red;">[{{ error }}]</span>
+            {% if form_ulaz.oib.errors %}
+                <script> form_error1 = true; </script><br>
+            {% endif %}
             {% endfor %}
         </p>
         <div class="modal-footer">
@@ -140,24 +148,32 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      
+      <script>
+        var form_error2 = false;
+      </script>
       <div class="modal-body">
         <h5>Izlaz Robe</h5>
         <form action="" method="post" novalidate="">
         {{ form_izlaz.csrf_token }}
          <p>
             {{ form_izlaz.promijenjena_kolicina.label }}<br>
-            {{ form_izlaz.promijenjena_kolicina(size=32) }}
+            {{ form_izlaz.promijenjena_kolicina(size=32) }}<br>
             {{ form_izlaz.proizvod_id(value=proizvod.id) }}
             {% for error in form_izlaz.promijenjena_kolicina.errors %}
             <span style="color: red;">[{{ error }}]</span>
+            {% if form_izlaz.promijenjena_kolicina.errors %}
+                <script> form_error2 = true; </script><br>
+            {% endif %}
             {% endfor %}
         </p>
          <p>
             {{ form_izlaz.oib.label }}<br>
-            {{ form_izlaz.oib(size=32) }}
+            {{ form_izlaz.oib(size=32) }}<br>
             {% for error in form_izlaz.oib.errors %}
             <span style="color: red;">[{{ error }}]</span>
+            {% if form_izlaz.oib.errors %}
+                <script> form_error2 = true; </script><br>
+            {% endif %}
             {% endfor %}
         </p>
         <div class="modal-footer">
@@ -171,4 +187,27 @@
     </div>
   </div>
 </div>
+
+<script type="text/javascript">
+if (form_error1) {
+    console.log("form error" + form_error1);
+    $(document).ready(function () {
+   $('#ulaz-tipka').click();
+});  
+}
+else{
+    console.log("form error" + form_error1)
+}
+
+if (form_error2) {
+    console.log("form error" + form_error2);
+    $(document).ready(function () {
+   $('#izlaz-tipka').click();
+});  
+}
+else{
+    console.log("form error" + form_error2)
+}
+
+</script>
 {% endblock %}

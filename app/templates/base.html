@@ -14,8 +14,14 @@
 
 	<!-- Font Awesome -->
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+
+
+	<!--JQUERY -->
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+
 </head>
-<body onload="startTime()">
+<body>
+
 	<div class="wrapper">
 
 	<!-- Sidebar -->
@@ -48,10 +54,10 @@
 				<a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fas fa-book-open mr-2"></i>Evidencije</a>
 				<ul class="collapse list-unstyled" id="pageSubmenu">
 					<li>
-						<a class="link-dropdown" href="{{ url_for('evidencija_unosa') }}">Evidencija unosa</a>
+						<a class="link-dropdown" href="{{ url_for('evidencija_unosa1') }}">Evidencija unosa</a>
 					</li>
 					<li>
-						<a class="link-dropdown" href="{{ url_for('evidencija_izdavanja' )}}">Evidencija izdavanja</a>
+						<a class="link-dropdown" href="{{ url_for('evidencija_izdavanja1' )}}">Evidencija izdavanja</a>
 					</li>
 				</ul>
 			</li> 
@@ -75,31 +81,23 @@
 
 		<div class="tijelo">
 	        <div class="plava-pozadina">
-	        	<div class="d-flex bd-highlight">
-  <div class="bd-highlight"><button type="button" id="sidebarCollapse" class="btn btn-primary">
+	            <button type="button" id="sidebarCollapse" class="btn btn-primary">
 	                <i class="fas fa-align-left"></i>
 	                <span class="sakrij-tipku"></span>
-	            </button> <br></div>
-  <div class="ml-auto bd-highlight"><div id="clockdate">
-  					<div class="clockdate-wrapper">
-    					<div id="clock"></div>
-    					<div id="date"></div>
-  					</div>
-				</div></div>
-</div>
-	            
-				
+	            </button> <br>
+			
 	    	</div>
 			<div class="plavo">
-				
 			{% block content %}
 			{% endblock %}
 			</div>
 		</div>
 
+
 <footer>Copyright © 2019 Teletubbies Inc. All rights reserved.</footer>
 
-	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	
+
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
 
@@ -113,7 +111,7 @@
         });
 
         /* IZBRISI STARE PODATKE IZ MODALA */
-        $(".sakrij-podatke input").val("")
+        /*$(".sakrij-podatke input").val("")*/
 
 
         /* MODAL RESPONSIVE */
@@ -124,20 +122,21 @@
         });
         });
 
+
         /* VRIJEME */
         function startTime() {
     var today = new Date();
     var hr = today.getHours();
     var min = today.getMinutes();
     var sec = today.getSeconds();
-    ap = (hr < 12) ? "<span>AM</span>" : "<span>PM</span>";
-    hr = (hr == 0) ? 12 : hr;
-    hr = (hr > 12) ? hr - 12 : hr;
+    //ap = (hr < 12) ? "<span>AM</span>" : "<span>PM</span>";
+    //hr = (hr == 0) ? 12 : hr;
+    //hr = (hr > 12) ? hr - 12 : hr;
     //Add a zero in front of numbers<10
     hr = checkTime(hr);
     min = checkTime(min);
     sec = checkTime(sec);
-    document.getElementById("clock").innerHTML = hr + ":" + min + ":" + sec + " " + ap;
+    document.getElementById("clock").innerHTML = hr + ":" + min + ":" + sec// + " " + ap;
     
     var months = ['Siječnja', 'Veljače', 'Ožujka', 'Travnja', 'Svibnja', 'Lipnja', 'Srpnja', 'Kolovoza', 'Rujna', 'Listopada', 'Studenog', 'Prosinca'];
     var days = ['Nedjelja','Ponedjeljak', 'Utorak', 'Srijeda', 'Četvrtak', 'Petak', 'Subota'];
@@ -156,6 +155,8 @@ function checkTime(i) {
     }
     return i;
 }
+
+
 
     </script>
 </body>

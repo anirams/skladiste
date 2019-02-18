@@ -15,7 +15,7 @@
         <th>Korisnik</th>
         <th></th>
     </tr>
-    {% for e in evidencija %}
+    {% for e in evidencija.items %}
     <tr>
     	<td><a href="/proizvod/{{e.proizvod.name}}">{{ e.proizvod.name }}</a></td>
     	<td>{{ e.promijenjena_kolicina }}</td>
@@ -23,9 +23,27 @@
     	<td>{{ e.tvrtka.oib }}</td>
     	<td>{{ e.datum_unosa.strftime('%B %d %Y - %H:%M:%S') }}</td>
         <td>{{ e.user.username }}</td>
-        <td><button class="btn btn-primary"><a href="evidencija/{{e.id}}">PDF</a></button></td>
+        <td><button class="btn btn-primary"><a href="../evidencija/{{e.id}}">PDF</a></button></td>
     </tr>
     {% endfor %}
 </table> 
+<div class="d-flex justify-content-between">
+        <div></div>
+        <div>
+            <h6>Evidencije unosa</h6>
+            {% for page in evidencija.iter_pages(left_edge=3, right_edge=3, left_current=3, right_current=3) %}
+                {% if page %}
+                    {% if page != evidencija.page %}
+                        <a href="{{ url_for('evidencija_unosa', page_num=page) }}">{{ page }}</a>
+                    {% else %}
+                        <strong>{{ page }}</strong>
+                    {% endif %}
+                {% else %}
+                    <span class=ellipsis>…</span>
+                {% endif %}
+            {% endfor %}
+        </div>
+       
+    </div>
 </div>
 {% endblock %}
