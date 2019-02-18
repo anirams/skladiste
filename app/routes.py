@@ -54,7 +54,7 @@ def logout():
 	logout_user()
 	return redirect(url_for('login'))
 
-@app.route('/register', methods=['GET', 'POST'])
+@app.route('/registracija2', methods=['GET', 'POST'])
 def register():
 	if not current_user.is_authenticated:
 		return redirect(url_for('login'))
@@ -68,7 +68,7 @@ def register():
 		db.session.commit()
 		flash(f'Registrirali ste korisnika {form.username.data}!', 'success')
 		return redirect(url_for('login'))
-	return render_template('register.html', title='Registriraj se', form=form)
+	return render_template('registracija2.html', title='Registriraj se', form=form)
 
 @app.route('/user/<username>')
 @login_required
@@ -168,7 +168,7 @@ def tvrtke():
 @app.route('/evidencija_unosa/<int:page_num>')
 @login_required
 def evidencija_unosa(page_num):
-	evidencija = Evidencija.query.filter_by(vrsta_unosa='unos').order_by(Evidencija.datum_unosa.desc()).paginate(per_page=5, page=page_num, error_out=True)
+	evidencija = Evidencija.query.filter_by(vrsta_unosa='unos').order_by(Evidencija.datum_unosa.desc()).paginate(per_page=7, page=page_num, error_out=True)
 	return render_template('evidencija_unosa.html', title='Evidencija unosa', evidencija=evidencija)
 
 @app.route('/evidencija_unosa1', methods=['GET', 'POST'])
@@ -179,7 +179,7 @@ def evidencija_unosa1():
 @app.route('/evidencija_izdavanja/<int:page_num>')
 @login_required
 def evidencija_izdavanja(page_num):
-	evidencija = Evidencija.query.filter_by(vrsta_unosa='izlaz').order_by(Evidencija.datum_unosa.desc()).paginate(per_page=5, page=page_num, error_out=True)
+	evidencija = Evidencija.query.filter_by(vrsta_unosa='izlaz').order_by(Evidencija.datum_unosa.desc()).paginate(per_page=7, page=page_num, error_out=True)
 	return render_template('evidencija_izdavanja.html', title='Evidencija izdavanja', evidencija=evidencija)
 
 @app.route('/evidencija_izdavanja1', methods=['GET', 'POST'])

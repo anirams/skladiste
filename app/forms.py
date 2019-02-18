@@ -15,7 +15,7 @@ class LoginForm(FlaskForm):
 
 class RegistrationForm(FlaskForm):
 	username = StringField('Korisnicko ime', validators=[DataRequired('Ovo polje je nužno')])
-	email = StringField('Email', validators=[DataRequired(), Email('Unesite valjanu email adresu')])
+	email = StringField('Email', validators=[DataRequired('Ovo polje je nužno'), Email('Unesite valjanu email adresu')])
 	password = PasswordField('Lozinka', validators=[DataRequired('Ovo polje je nužno'), Length(min=5, max=35)])
 	password2 = PasswordField(
 		'Ponovite lozinku', validators=[DataRequired('Ovo polje je nužno'), EqualTo('password', message='Lozinke moraju biti jednake')])
