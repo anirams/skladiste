@@ -35,6 +35,7 @@ class Proizvod(db.Model):
 	evidencija = db.relationship('Evidencija', backref='proizvod', lazy='dynamic')
 
 class Tvrtka(db.Model):
+	__searchable__ = ['name']
 	id = db.Column(db.Integer, primary_key=True)
 	name = db.Column(db.String(64))
 	oib = db.Column(db.Integer, unique=True)
