@@ -114,6 +114,17 @@ class IzlazRobeForm(FlaskForm):
 		else:
 			return True
 
+class UrediProizvodForm(FlaskForm):
+	name = StringField('Naziv proizvoda', validators=[DataRequired('Unesi Naziv Proizvoda')])
+	zemlja_podrijetla = StringField('Zemlja podrijetla')
+	opis_proizvoda = TextAreaField('Opis proizvoda')
+	submit3 = SubmitField('Uredi')
+	def validate(self):
+		rv = FlaskForm.validate(self)
+		if not rv:
+			return False		
+		return True
+
 class SearchForm(FlaskForm):
 	search = StringField(('Pronađi Proizvod'), validators=[DataRequired('Unesi ime proizvoda')])
 	submit = SubmitField('Pronađi')
