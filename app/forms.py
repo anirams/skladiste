@@ -120,7 +120,7 @@ class SearchForm(FlaskForm):
 
 class SearchFormTvrtka(FlaskForm):
 	search = StringField(('Pronađi Tvrtku'), validators=[DataRequired('Unesi ime tvrtke')])
-	submit = SubmitField('Pronađi')
+	submit2 = SubmitField('Pronađi')
 
 
 class EditPasswordForm(FlaskForm):
