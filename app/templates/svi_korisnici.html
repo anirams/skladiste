@@ -36,7 +36,7 @@
         </tr>
         {% for user in svi_korisnici.items %}
         <tr>
-           <td><a href="../user/{{user.username}}">{{ user.username }}</a></td>
+           <td><a href="../user/{{user.username}}" class="dekoracija">{{ user.username }}</a></td>
            <td>{{ user.email }}</td>
            <td>{{ user.last_seen.strftime('%B %d %Y - %H:%M:%S')  }}</td>
         </tr>

@@ -293,3 +293,35 @@ footer {
    color: #bec9cd;
    text-align: center;
 }
+
+/* LINK DECORATION */
+.dekoracija {
+  background:
+     linear-gradient(
+       to right,
+       var(--mainColor) 0%,
+       var(--mainColor) 2px,
+       transparent 2px
+     );
+    background-repeat: repeat-x;
+    background-size: 100%;
+  color: #000;
+  padding-left: 10px;
+  text-decoration: none;
+  padding: 0 10px;
+}
+
+.dekoracija:hover {
+  background:
+     linear-gradient(
+       to right,
+       var(--mainColor) 0%,
+       var(--mainColor) 5px,
+       transparent
+     );
+}
+
+:root {
+  --mainColor: #007bff;
+}
+
