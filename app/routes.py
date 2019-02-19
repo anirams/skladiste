@@ -174,24 +174,20 @@ def tvrtke(page_num, s):
 	else:
 		tvrtke2 = Tvrtka.query.filter(Tvrtka.name.like("%" + s + "%")).paginate(per_page=3, page=page_num, error_out=True)
 		return render_template("tvrtke.html", title='Tvrtke', form=form, form2=form2, tvrtke=tvrtke2, search=s )
-	if form2.validate_on_submit() and form2.submit2.data:
-		tvrtke2 = Tvrtka.query.filter(Tvrtka.name.like("%" + form2.search.data + "%")).paginate(per_page=3, page=1, error_out=True)
-		if not form.submit.data:
-			form = UnosTvrtkeForm()
-		return render_template("tvrtke.html", title='Tvrtke', form=form, form2=form2, tvrtke=tvrtke2, search=form2.search.data)
+	if  form2.submit2.data:
+		if form2.validate_on_submit():
+			tvrtke2 = Tvrtka.query.filter(Tvrtka.name.like("%" + form2.search.data + "%")).paginate(per_page=3, page=1, error_out=True)
+			return render_template("tvrtke.html", title='Tvrtke', form=form, form2=form2, tvrtke=tvrtke2, search=form2.search.data)
 	
-	if form.validate_on_submit() and form.submit.data:
-		tvrtka = Tvrtka(name=form.name.data, oib=form.oib.data, grad=form.grad.data, 
-			p_broj=form.p_broj.data, drzava=form.drzava.data)
-		db.session.add(tvrtka)
-		db.session.commit()
-		flash(f'Uspješno ste unijeli tvrtku {form.name.data}!')
-		tvrtke = Tvrtka.query.order_by(Tvrtka.name.desc()).paginate(per_page=5, page=page_num, error_out=True)
-		if not form2.submit2.data:
-			form2 = SearchFormTvrtka()
-		#return render_template('tvrtke.html', title='Dodaj tvrtku', form=form, form2=form2, tvrtke=tvrtke, search=' ')
-	if not form.submit.data:
-			form = UnosTvrtkeForm()
+	if form.submit.data:
+		if form.validate_on_submit():
+			tvrtka = Tvrtka(name=form.name.data, oib=form.oib.data, grad=form.grad.data, 
+				p_broj=form.p_broj.data, drzava=form.drzava.data)
+			db.session.add(tvrtka)
+			db.session.commit()
+			flash(f'Uspješno ste unijeli tvrtku {form.name.data}!')
+			tvrtke = Tvrtka.query.order_by(Tvrtka.name.desc()).paginate(per_page=5, page=page_num, error_out=True)
+			#return render_template('tvrtke.html', title='Dodaj tvrtku', form=form, form2=form2, tvrtke=tvrtke, search=' ')
 	return render_template('tvrtke.html', title='Tvrtke', tvrtke=tvrtke, form=form, form2= form2, search=' ')
 
 @app.route('/tvrtke1', methods=['GET', 'POST'])
