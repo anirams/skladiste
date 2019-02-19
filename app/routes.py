@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, url_for, request, send_file, send_from_directory
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, UlazRobeForm, IzlazRobeForm, UnosProizvodaForm, SearchForm, EditPasswordForm, UnosTvrtkeForm
+from app.forms import LoginForm, RegistrationForm, UlazRobeForm, IzlazRobeForm, UnosProizvodaForm, SearchForm, EditPasswordForm, UnosTvrtkeForm, SearchFormTvrtka
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Proizvod, Tvrtka, Evidencija
 from werkzeug.urls import url_parse
@@ -137,7 +137,7 @@ def stanje_skladista(page_num, s):
 		proizvodi2 = Proizvod.query.filter(Proizvod.name.like("%" + s + "%")).paginate(per_page=3, page=page_num, error_out=True)
 		return render_template("stanje_skladista.html", title='Stanje skladista', form=form, proizvodi=proizvodi2, search=s )
 	if form.validate_on_submit():
-		proizvodi2 = Proizvod.query.filter(Proizvod.name.like("%" + form.search.data + "%")).paginate(per_page=3, page=page_num, error_out=True)
+		proizvodi2 = Proizvod.query.filter(Proizvod.name.like("%" + form.search.data + "%")).paginate(per_page=3, page=1, error_out=True)
 		if not proizvodi2:
 			flash('Proizvod ne postoji')
 		return render_template("stanje_skladista.html", title='Stanje skladista', form=form, proizvodi=proizvodi2, search=form.search.data )
@@ -149,21 +149,60 @@ def stanje_skladista1():
 	return redirect(url_for('stanje_skladista', page_num=1, s=' '))
 
 
-@app.route('/tvrtke', methods=['GET', 'POST'])
+@app.route('/tvrtke/<int:page_num>+<s>', methods=['GET', 'POST'])
 @login_required
-def tvrtke():
+def tvrtke(page_num, s):
 	form = UnosTvrtkeForm()
+	form2 = SearchFormTvrtka()
 	tvrtke = Tvrtka.query.all()
 	#dob = Dobavljac.query.all()
+	
+	if s == ' ':
+		tvrtke = Tvrtka.query.order_by(Tvrtka.name).paginate(per_page=5, page=page_num, error_out=True)
+		
+	else:
+		tvrtke2 = Tvrtka.query.filter(Tvrtka.name.like("%" + s + "%")).paginate(per_page=3, page=page_num, error_out=True)
+		return render_template("tvrtke.html", title='Tvrtke', form=form, form2=form2, tvrtke=tvrtke2, search=s )
+	if form2.validate_on_submit():
+		tvrtke2 = Tvrtka.query.filter(Tvrtka.name.like("%" + form2.search.data + "%")).paginate(per_page=3, page=1, error_out=True)
+		return render_template("tvrtke.html", title='Tvrtke', form=form, form2=form2, tvrtke=tvrtke2, search=form2.search.data)
+	
 	if form.validate_on_submit():
 		tvrtka = Tvrtka(name=form.name.data, oib=form.oib.data, grad=form.grad.data, 
 			p_broj=form.p_broj.data, drzava=form.drzava.data)
 		db.session.add(tvrtka)
 		db.session.commit()
 		flash(f'Uspješno ste unijeli tvrtku {form.name.data}!')
-		tvrtke = Tvrtka.query.all()
-		return render_template('tvrtke.html', title='Dodaj tvrtku', form=form, tvrtke=tvrtke)
-	return render_template('tvrtke.html', title='Dodaj tvrtku', form=form, tvrtke=tvrtke)
+		tvrtke = Tvrtka.query.order_by(Tvrtka.name.desc()).paginate(per_page=5, page=page_num, error_out=True)
+		return render_template('tvrtke.html', title='Dodaj tvrtku', form=form, form2=form2, tvrtke=tvrtke, search=' ')
+	return render_template('tvrtke.html', title='Tvrtke', tvrtke=tvrtke, form=form, form2= form2, search=' ')
+
+@app.route('/tvrtke1', methods=['GET', 'POST'])
+@login_required
+def tvrtke1():
+	return redirect(url_for('tvrtke', page_num=1, s=' '))
+
+@app.route('/svi_korisnici/<int:page_num>+<s>', methods=['GET', 'POST'])
+@login_required
+def svi_korisnici(page_num, s):
+	form = SearchForm()
+	if s == ' ':
+		svi_korisnici = User.query.order_by(User.username.desc()).paginate(per_page=7, page=page_num, error_out=True)
+		
+	else:
+		svi_korisnici2 = User.query.filter(User.username.like("%" + s + "%")).paginate(per_page=3, page=page_num, error_out=True)
+		return render_template("svi_korisnici.html", title='Svi korisnici', form=form, svi_korisnici=svi_korisnici2, search=s )
+	if form.validate_on_submit():
+		svi_korisnici2 = User.query.filter(User.username.like("%" + form.search.data + "%")).paginate(per_page=3, page=1, error_out=True)
+		if not svi_korisnici2:
+			flash('Korisnik ne postoji')
+		return render_template("svi_korisnici.html", title='Svi korisnici', form=form, svi_korisnici=svi_korisnici2, search=form.search.data )
+	return render_template('svi_korisnici.html', title='Svi korisnici', svi_korisnici=svi_korisnici, form=form, search=' ')
+
+@app.route('/svi_korisnici1', methods=['GET', 'POST'])
+@login_required
+def svi_korisnici1():
+	return redirect(url_for('svi_korisnici', page_num=1, s=' '))
 
 @app.route('/evidencija_unosa/<int:page_num>')
 @login_required

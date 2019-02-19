@@ -118,6 +118,10 @@ class SearchForm(FlaskForm):
 	search = StringField(('Pronađi Proizvod'), validators=[DataRequired('Unesi ime proizvoda')])
 	submit = SubmitField('Pronađi')
 
+class SearchFormTvrtka(FlaskForm):
+	search = StringField(('Pronađi Tvrtku'), validators=[DataRequired('Unesi ime tvrtke')])
+	submit = SubmitField('Pronađi')
+
 
 class EditPasswordForm(FlaskForm):
 	old_password = PasswordField('Stara Lozinka', validators=[DataRequired()])
