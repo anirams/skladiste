@@ -176,7 +176,6 @@ def tvrtke(page_num, s):
 	form = UnosTvrtkeForm()
 	form2 = SearchFormTvrtka()
 	tvrtke = Tvrtka.query.all()
-	#dob = Dobavljac.query.all()
 	
 	if s == ' ':
 		tvrtke = Tvrtka.query.order_by(Tvrtka.name).paginate(per_page=5, page=page_num, error_out=True)
