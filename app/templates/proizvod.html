@@ -206,17 +206,17 @@
         <h5>Uredi proizvod</h5>
         <form action="" method="post" novalidate="">
         {{ form_uredi.hidden_tag() }}
-         <p>
+         
             {{ form_uredi.name.label }}<br>
-            {{ form_uredi.name(size=32, value=proizvod.name) }}<br>
+            {{ form_uredi.name(size=32, value=proizvod.name, class="form-control") }}<br>
             {% for error in form_uredi.name.errors %}
             <span style="color: red;">[{{ error }}]</span>
             {% if form_uredi.name.errors %}
                 <script> form_error3 = true; </script><br>
             {% endif %}
             {% endfor %}
-        </p>
-         <p>
+        
+         
             {{ form_uredi.zemlja_podrijetla.label }}<br>
             {{ form_uredi.zemlja_podrijetla(size=32, value=proizvod.zemlja_podrijetla) }}<br>
             {% for error in form_uredi.zemlja_podrijetla.errors %}
@@ -225,8 +225,8 @@
                 <script> form_error3 = true; </script><br>
             {% endif %}
             {% endfor %}
-        </p>
-        <p>
+        
+        
             {{ form_uredi.opis_proizvoda.label }}<br>
             {{ form_uredi.opis_proizvoda(size=300, value=proizvod.opis_proizvoda) }}<br>
             {% for error in form_uredi.opis_proizvoda.errors %}
@@ -235,7 +235,7 @@
                 <script> form_error3 = true; </script><br>
             {% endif %}
             {% endfor %}
-        </p>
+        
         <div class="modal-footer">
         {{ form_uredi.submit3(type="submit", class="btn btn-primary") }}
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
