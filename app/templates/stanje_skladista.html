@@ -15,6 +15,8 @@
                     {{ form.submit(type="submit", class="btn btn-primary ml-3") }}
                 </div>
             </form>
+        </div>
+        <div>
             {% for error in form.search.errors %}
             <div class="alert-danger p-1">{{ error }}</div>
             {% endfor %}
@@ -61,8 +63,9 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-auto">
-            <form class="form-container pl-5 pr-5" action="" method="post" novalidate="">
+
+        <div class="col">
+            <form class="form-container pl-5 pr-5 mt-3" action="" method="post" novalidate="">
                 {{ form2.hidden_tag() }}
                 <h3>Stvori novi proizvod</h3>
         
@@ -100,7 +103,7 @@
                         {% endfor %}
                     {% endif %}
                 {% endwith %}
-                <p>{{ form2.submit(type="submit", class="btn btn-primary") }}</p>
+                <p>{{ form2.submit2(type="submit", class="btn btn-primary") }}</p>
             </form>
 
         </div>

@@ -140,6 +140,7 @@ def proizvod(name):
 def stanje_skladista(page_num, s):
 	form = SearchForm()
 	form2 = UnosProizvodaForm()
+	
 	if s == ' ':
 		proizvodi = Proizvod.query.order_by(Proizvod.datum_unosa.desc()).paginate(per_page=8, page=page_num, error_out=True)
 	else:
@@ -149,9 +150,9 @@ def stanje_skladista(page_num, s):
 		if form.validate_on_submit():
 			proizvodi2 = Proizvod.query.filter(Proizvod.name.like("%" + form.search.data + "%")).paginate(per_page=3, page=1, error_out=True)
 			return render_template("stanje_skladista.html", title='Stanje skladista', form=form, proizvodi=proizvodi2, search=form.search.data, form2=form2 )
-	if form2.submit.data:
+	if form2.submit2.data:
 		if form2.validate_on_submit():
-			proizvod = Proizvod(name=form2.name.data, zemlja_podrijetla=form2.zemlja_podrijetla.data, kolicina=form2.kolicina.data, opis_proizvoda=form2.opis_proizvoda.data)
+			proizvod = Proizvod(name=form2.name.data, zemlja_podrijetla=form2.zemlja_podrijetla.data, opis_proizvoda=form2.opis_proizvoda.data)
 			db.session.add(proizvod)
 			db.session.commit()
 			proizvod = Proizvod.query.filter_by(name=form2.name.data).first()
@@ -176,6 +177,10 @@ def tvrtke(page_num, s):
 	form = UnosTvrtkeForm()
 	form2 = SearchFormTvrtka()
 	tvrtke = Tvrtka.query.all()
+	lista = []
+	sve_tvrtke = Tvrtka.query.all() #query all devices
+	for tvrtkaa in sve_tvrtke:
+		lista.append(tvrtkaa.name)
 	
 	if s == ' ':
 		tvrtke = Tvrtka.query.order_by(Tvrtka.name).paginate(per_page=5, page=page_num, error_out=True)
@@ -198,7 +203,7 @@ def tvrtke(page_num, s):
 			flash(f'Uspješno ste unijeli tvrtku {form.name.data}!')
 			tvrtke = Tvrtka.query.order_by(Tvrtka.name.desc()).paginate(per_page=5, page=page_num, error_out=True)
 			#return render_template('tvrtke.html', title='Dodaj tvrtku', form=form, form2=form2, tvrtke=tvrtke, search=' ')
-	return render_template('tvrtke.html', title='Tvrtke', tvrtke=tvrtke, form=form, form2= form2, search=' ')
+	return render_template('tvrtke.html', title='Tvrtke', tvrtke=tvrtke, form=form, form2= form2, search=' ', lista=lista)
 
 @app.route('/tvrtke1', methods=['GET', 'POST'])
 @login_required
