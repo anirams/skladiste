@@ -38,11 +38,11 @@ class RegistrationForm(FlaskForm):
 
 class UnosProizvodaForm(FlaskForm):
 	name = StringField('Naziv proizvoda', validators=[DataRequired('Unesi Naziv Proizvoda')])
-	kolicina = IntegerField('Kolicina', validators=[DataRequired('Unesi Količinu (broj)')])
+	promijenjena_kolicina = IntegerField('Kolicina', validators=[DataRequired('Unesi Količinu (broj)')])
 	zemlja_podrijetla = StringField('Zemlja podrijetla', validators=[DataRequired('Unesi Zemlju Podrijetla')])
 	oib = IntegerField('OIB', validators=[DataRequired('Unesi OIB Tvrtke (broj)')])
-	opis_proizvoda = TextAreaField('Opis proizvoda')
-	submit = SubmitField('Stvori proizvod')
+	dodaj_jos = SubmitField('Dodaj jos')
+	submit = SubmitField('Gotovo')
 	def validate(self):
 		rv = FlaskForm.validate(self)
 		if not rv:
@@ -151,3 +151,8 @@ class EditPasswordForm(FlaskForm):
 		else:
 			return True
 	submit = SubmitField()
+
+class PrviUnosProizvodaForm(FlaskForm):
+	name = StringField('Naziv proizvoda', validators=[DataRequired('Unesi Naziv Proizvoda')])
+	opis_proizvoda = StringField('Opis proizvoda')
+	submit = SubmitField('Stvori proizvod')

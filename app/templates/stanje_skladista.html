@@ -85,19 +85,6 @@
             <span style="color: red;">[{{ error }}]</span><br>
             {% endfor %}<br>
         
-            {{ form2.zemlja_podrijetla.label }}<br>
-            {{ form2.zemlja_podrijetla(size=32, class="form-control") }}
-            {% for error in form2.zemlja_podrijetla.errors %}
-            <span style="color: red;">[{{ error }}]</span><br>
-            {% endfor %}<br>
-        
-            {{ form2.oib.label }}<br>
-            {{ form2.oib(size=32, class="form-control") }}
-            {% for error in form2.oib.errors %}
-            <span style="color: red;">[{{ error }}]</span><br>
-            {% endfor %}<br>
-        
-        
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
