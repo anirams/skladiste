@@ -140,11 +140,7 @@ def proizvod(name):
 def stanje_skladista(page_num, s):
 	form = SearchForm()
 	form2 = UnosProizvodaForm()
-	sql = text('SELECT tvrtka.name FROM tvrtka')
-	result = db.engine.execute(sql)
-	lista = []
-	for r in result:
-		lista.append(r)
+	
 	if s == ' ':
 		proizvodi = Proizvod.query.order_by(Proizvod.datum_unosa.desc()).paginate(per_page=8, page=page_num, error_out=True)
 	else:
@@ -167,7 +163,7 @@ def stanje_skladista(page_num, s):
 			tvrtka = Tvrtka.query.all()
 			flash(f'Dodali ste proizvod {form2.name.data}!', 'success')
 			return redirect(url_for('stanje_skladista1'))
-	return render_template('stanje_skladista.html', title='Stanje skladista', proizvodi=proizvodi, form=form, form2=form2, search=' ', lista=lista)
+	return render_template('stanje_skladista.html', title='Stanje skladista', proizvodi=proizvodi, form=form, form2=form2, search=' ')
 
 @app.route('/stanje_skladista1', methods=['GET', 'POST'])
 @login_required
@@ -181,6 +177,10 @@ def tvrtke(page_num, s):
 	form = UnosTvrtkeForm()
 	form2 = SearchFormTvrtka()
 	tvrtke = Tvrtka.query.all()
+	lista = []
+	sve_tvrtke = Tvrtka.query.all() #query all devices
+	for tvrtkaa in sve_tvrtke:
+		lista.append(tvrtkaa.name)
 	
 	if s == ' ':
 		tvrtke = Tvrtka.query.order_by(Tvrtka.name).paginate(per_page=5, page=page_num, error_out=True)
@@ -203,7 +203,7 @@ def tvrtke(page_num, s):
 			flash(f'Uspješno ste unijeli tvrtku {form.name.data}!')
 			tvrtke = Tvrtka.query.order_by(Tvrtka.name.desc()).paginate(per_page=5, page=page_num, error_out=True)
 			#return render_template('tvrtke.html', title='Dodaj tvrtku', form=form, form2=form2, tvrtke=tvrtke, search=' ')
-	return render_template('tvrtke.html', title='Tvrtke', tvrtke=tvrtke, form=form, form2= form2, search=' ')
+	return render_template('tvrtke.html', title='Tvrtke', tvrtke=tvrtke, form=form, form2= form2, search=' ', lista=lista)
 
 @app.route('/tvrtke1', methods=['GET', 'POST'])
 @login_required
