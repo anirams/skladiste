@@ -39,6 +39,7 @@ class RegistrationForm(FlaskForm):
 class UnosProizvodaForm(FlaskForm):
 	name = StringField('Naziv proizvoda', validators=[DataRequired('Unesi Naziv Proizvoda')])
 	promijenjena_kolicina = IntegerField('Kolicina', validators=[DataRequired('Unesi Količinu (broj)')])
+	opis_proizvoda = StringField ('Opis proizvoda')
 	zemlja_podrijetla = StringField('Zemlja podrijetla', validators=[DataRequired('Unesi Zemlju Podrijetla')])
 	oib = IntegerField('OIB', validators=[DataRequired('Unesi OIB Tvrtke (broj)')])
 	dodaj_jos = SubmitField('Dodaj jos')
@@ -155,8 +156,3 @@ class EditPasswordForm(FlaskForm):
 		else:
 			return True
 	submit = SubmitField()
-
-class PrviUnosProizvodaForm(FlaskForm):
-	name = StringField('Naziv proizvoda', validators=[DataRequired('Unesi Naziv Proizvoda')])
-	opis_proizvoda = StringField('Opis proizvoda')
-	submit = SubmitField('Stvori proizvod')
