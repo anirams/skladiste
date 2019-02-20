@@ -8,6 +8,30 @@
     
 
     <h2 class="mb-4">Popis tvrtki</h2>
+    <div class="container">
+        <div class="row justify-content-md-center">
+            <form class=" form-inline" action="" method="post" novalidate="">
+                {{ form.hidden_tag() }}
+                <div class="form-group">
+                    {{ form2.search(size=32, class="form-control", placeholder="Pronađi tvrtku") }}    
+                </div>
+                <div class="form-group">
+                    {{ form2.submit2(type="submit", class="btn btn-primary ml-3") }}
+                </div>
+            </form>
+
+        </div>
+        {% for error in form2.search.errors %}
+            <div class="alert-danger p-1">{{ error }}</div>
+        {% endfor %}
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert-danger p-1 mt-1">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
     {% with messages = get_flashed_messages() %}
     {% if messages %}
         {% for message in messages %}
@@ -23,7 +47,7 @@
             <th>POŠTANSKI BROJ</th>
             <th>DRŽAVA</th>
         </tr>
-    {% for tvrtka in tvrtke %}
+    {% for tvrtka in tvrtke.items %}
         <tr>
             <td>{{ tvrtka.name }}</td>
             <td>{{ tvrtka.oib }}</td> 
@@ -34,8 +58,32 @@
     {% endfor %}
 
     </table>
+    <div class="d-flex justify-content-between">
+        <div></div>
+        <div>
+            <h6>Stranice tvrtki</h6>
+            {% for page in tvrtke.iter_pages(left_edge=3, right_edge=3, left_current=3, right_current=3) %}
+                {% if page %}
+                    {% if page != tvrtke.page %}
+                        {% if search!=' ' %}
+                        <a href="{{ url_for('tvrtke', page_num=page, s=search) }}">{{ page }}</a>
+                        {% else %}
+                        <a href="{{ url_for('tvrtke', page_num=page, s=' ') }}">{{ page }}</a>
+                        {% endif %}
+                    {% else %}
+                        <strong>{{ page }}</strong>
+                    {% endif %}
+                {% else %}
+                    <span class=ellipsis>…</span>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <div>
+            <button class="btn btn-primary m-2"><a href="/export_stanje_skladista" target="blank">Excel</a></button>
+        </div>
+    </div>
             <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+<button type="button" class="btn btn-primary mr-5" data-toggle="modal" data-target="#exampleModalCenter" id="tvrtka-potvrda">
   Dodaj novu tvrtku
 </button>
     
@@ -51,40 +99,57 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      
+      <script>
+        var form_error = false;
+      </script>
       <div class="modal-body">
         <h5>Dodaj Novu Tvrtku</h5>
         <form action="" method="post" novalidate="">
-        <div class="sakrij-podatke">
+        <div>
         {{ form.hidden_tag() }}
             {{ form.name.label }}<br>
             {{ form.name(size=32) }}<br>
             {% for error in form.name.errors %}
             <span style="color: red;">[{{ error }}]</span>
+            {% if form.name.errors %}
+                <script> form_error = true; </script><br>
+            {% endif %}
             {% endfor %}
 
             {{ form.oib.label }}<br>
             {{ form.oib(size=32) }}<br>
             {% for error in form.oib.errors %}
             <span style="color: red;">[{{ error }}]</span>
+            {% if form.oib.errors %}
+                <script> form_error = true; </script><br>
+            {% endif %}
             {% endfor %}
 
             {{ form.grad.label }}<br>
             {{ form.grad(size=32) }}<br>
             {% for error in form.grad.errors %}
             <span style="color: red;">[{{ error }}]</span>
+            {% if form.grad.errors %}
+                <script> form_error = true; </script><br>
+            {% endif %}
             {% endfor %}
 
             {{ form.p_broj.label }}<br>
             {{ form.p_broj(size=32) }}<br>
             {% for error in form.p_broj.errors %}
             <span style="color: red;">[{{ error }}]</span>
+            {% if form.p_broj.errors %}
+                <script> form_error = true; </script><br>
+            {% endif %}
             {% endfor %}
 
             {{ form.drzava.label }}<br>
             {{ form.drzava(size=32) }}<br>
             {% for error in form.drzava.errors %}
             <span style="color: red;">[{{ error }}]</span>
+            {% if form.drzava.errors %}
+                <script> form_error = true; </script><br>
+            {% endif %}
             {% endfor %}
 
         </div>
@@ -101,4 +166,26 @@
     </div>
   </div>
 </div>
+<a id="klikni" href="{{ url_for('tvrtke1') }}">{{ page }}</a>
+
+
+<script type="text/javascript">
+    
+   
+
+
+if (form_error) {
+    console.log("form error " + form_error);
+    $(document).ready(function () {
+   $('#tvrtka-potvrda').click();
+});
+   
+   
+}
+else{
+    console.log("form error " + form_error)
+}
+
+ 
+</script>
 {% endblock %}

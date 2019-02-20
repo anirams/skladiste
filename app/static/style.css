@@ -142,7 +142,7 @@ ul.CTAs a {
     width: 50%;
 }
 .stanje-s{
-    padding-top: 5vh;
+    padding-top: 3vh;
     padding-left: 5vh;
     padding-right: 5vh;
     background-image: url('map.jpg');
@@ -159,7 +159,7 @@ ul.CTAs a {
 
 /* UNOS PROIZVODA */
 .unos-p {
-    padding-top: 5vh;
+    padding-top: 2vh;
     padding-left: 5vh;
     padding-right: 5vh;
     background-image: url('map.jpg');
@@ -275,7 +275,7 @@ ul.CTAs a {
     left:-2px;
 }
 #date {
-    letter-spacing:5px;
+    letter-spacing:3px;
     font-size:0.8rem;
     font-family:arial,sans-serif;
     color:#bec9cd;
@@ -293,3 +293,35 @@ footer {
    color: #bec9cd;
    text-align: center;
 }
+
+/* LINK DECORATION */
+.dekoracija {
+  background:
+     linear-gradient(
+       to right,
+       var(--mainColor) 0%,
+       var(--mainColor) 2px,
+       transparent 2px
+     );
+    background-repeat: repeat-x;
+    background-size: 100%;
+  color: #000;
+  padding-left: 10px;
+  text-decoration: none;
+  padding: 0 10px;
+}
+
+.dekoracija:hover {
+  background:
+     linear-gradient(
+       to right,
+       var(--mainColor) 0%,
+       var(--mainColor) 5px,
+       transparent
+     );
+}
+
+:root {
+  --mainColor: #007bff;
+}
+

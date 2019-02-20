@@ -40,18 +40,23 @@
     </tr>
     {% endfor %}
 </table> 
-{% for page in proizvodi.iter_pages(left_edge=3, right_edge=3, left_current=3, right_current=3) %}
-
-        {% if page %}
-            {% if page != proizvodi.page %}
-                <a href="{{ url_for('search', page_num=page) }}">{{ page }}</a>
-            {% else %}
-                <strong>{{ page }}</strong>
-            {% endif %}
-        {% else %}
-            <span class=ellipsis>…</span>
-        {% endif %}
-
-    {% endfor %}
+<div>
+            <h6>Stranice proizvoda</h6>
+            {% for page in proizvodi.iter_pages(left_edge=3, right_edge=3, left_current=3, right_current=3) %}
+                {% if page %}
+                    {% if page != proizvodi.page %}
+                        {% if search!=' ' %}
+                        <a href="{{ url_for('stanje_skladista', page_num=page, s=search) }}">{{ page }}</a>
+                        {% else %}
+                        <a href="{{ url_for('stanje_skladista', page_num=page, s=' ') }}">{{ page }}</a>
+                        {% endif %}
+                    {% else %}
+                        <strong>{{ page }}</strong>
+                    {% endif %}
+                {% else %}
+                    <span class=ellipsis>…</span>
+                {% endif %}
+            {% endfor %}
+        </div>
 </div>
 {% endblock %}

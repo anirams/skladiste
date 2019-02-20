@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+<div class="stanje-s">
+    <div class="container">
+        <div class="row justify-content-md-center">
+            <form class=" form-inline" action="" method="post" novalidate="">
+                {{ form.hidden_tag() }}
+                <div class="form-group">
+                    {{ form.search(size=32, class="form-control", placeholder="Pronađi korisnika") }}    
+                </div>
+                <div class="form-group">
+                    {{ form.submit(type="submit", class="btn btn-primary ml-3") }}
+                </div>
+            </form>
+
+        </div>
+        {% for error in form.search.errors %}
+            <div class="alert-danger p-1">{{ error }}</div>
+        {% endfor %}
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert-danger p-1 mt-1">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <table class="table table-striped mt-2">
+       <tr>
+            <th>Korisnik</th> 
+            <th>Email</th>
+            <th>Posljednja aktivnost</th>
+        </tr>
+        {% for user in svi_korisnici.items %}
+        <tr>
+           <td><a href="../user/{{user.username}}" class="dekoracija">{{ user.username }}</a></td>
+           <td>{{ user.email }}</td>
+           <td>{{ user.last_seen.strftime('%B %d %Y - %H:%M:%S')  }}</td>
+        </tr>
+        {% endfor %}
+    </table> 
+    
+    <div class="d-flex justify-content-between">
+        <div></div>
+        <div>
+            <h6>Stranice korisnika</h6>
+            {% for page in svi_korisnici.iter_pages(left_edge=3, right_edge=3, left_current=3, right_current=3) %}
+                {% if page %}
+                    {% if page != svi_korisnici.page %}
+                        {% if search!=' ' %}
+                        <a href="{{ url_for('svi_korisnici', page_num=page, s=search) }}">{{ page }}</a>
+                        {% else %}
+                        <a href="{{ url_for('svi_korisnici', page_num=page, s=' ') }}">{{ page }}</a>
+                        {% endif %}
+                    {% else %}
+                        <strong>{{ page }}</strong>
+                    {% endif %}
+                {% else %}
+                    <span class=ellipsis>…</span>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <div></div>
+    </div>
+</div>
+{% endblock %}
