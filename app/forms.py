@@ -129,6 +129,10 @@ class SearchForm(FlaskForm):
 	search = StringField(('Pronađi Proizvod'), validators=[DataRequired('Unesi ime proizvoda')])
 	submit = SubmitField('Pronađi')
 
+class SearchFormKorisnik(FlaskForm):
+	search = StringField(('Pronađi Proizvod'), validators=[DataRequired('Unesi ime korisnika')])
+	submit = SubmitField('Pronađi')
+
 class SearchFormTvrtka(FlaskForm):
 	search = StringField(('Pronađi Tvrtku'), validators=[DataRequired('Unesi ime tvrtke')])
 	submit2 = SubmitField('Pronađi')
