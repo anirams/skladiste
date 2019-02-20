@@ -17,14 +17,7 @@
             </form>
             {% for error in form.search.errors %}
             <div class="alert-danger p-1">{{ error }}</div>
-        {% endfor %}
-        <!--{% with messages = get_flashed_messages() %}
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="alert-danger p-1 mt-1">{{ message }}</div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}-->
+            {% endfor %}
         </div>
         
     
@@ -36,83 +29,81 @@
                     <th>Proizvod</th> 
                     <th>Kolicina</th>
                 </tr>
-        {% for proizvod in proizvodi.items %}
-        <tr>
-           <td><a href="../proizvod/{{proizvod.name}}" class="dekoracija">{{ proizvod.name }}</a></td>
-           <td>{{ proizvod.kolicina }}</td>
-        </tr>
-        {% endfor %}
-    </table> 
-    <div class="d-flex justify-content-between">
-        <div></div>
-        <div>
-            <h6>Stranice proizvoda</h6>
-            {% for page in proizvodi.iter_pages(left_edge=3, right_edge=3, left_current=3, right_current=3) %}
-                {% if page %}
-                    {% if page != proizvodi.page %}
-                        {% if search!=' ' %}
-                        <a href="{{ url_for('stanje_skladista', page_num=page, s=search) }}">{{ page }}</a>
+                {% for proizvod in proizvodi.items %}
+                <tr>
+                    <td><a href="../proizvod/{{proizvod.name}}" class="dekoracija">{{ proizvod.name }}</a></td>
+                    <td>{{ proizvod.kolicina }}</td>
+                </tr>
+                {% endfor %}
+            </table> 
+            <div class="d-flex justify-content-between">
+                <div></div>
+                <div>
+                    <h6>Stranice proizvoda</h6>
+                    {% for page in proizvodi.iter_pages(left_edge=3, right_edge=3, left_current=3, right_current=3) %}
+                        {% if page %}
+                            {% if page != proizvodi.page %}
+                                {% if search!=' ' %}
+                                <a href="{{ url_for('stanje_skladista', page_num=page, s=search) }}">{{ page }}</a>
+                                {% else %}
+                                <a href="{{ url_for('stanje_skladista', page_num=page, s=' ') }}">{{ page }}</a>
+                                {% endif %}
+                            {% else %}
+                                <strong>{{ page }}</strong>
+                            {% endif %}
                         {% else %}
-                        <a href="{{ url_for('stanje_skladista', page_num=page, s=' ') }}">{{ page }}</a>
+                            <span class=ellipsis>…</span>
                         {% endif %}
-                    {% else %}
-                        <strong>{{ page }}</strong>
-                    {% endif %}
-                {% else %}
-                    <span class=ellipsis>…</span>
-                {% endif %}
-            {% endfor %}
-        </div>
-        <div>
-            <button class="btn btn-primary m-2"><a href="/export_stanje_skladista" target="blank">Excel</a></button>
-        </div>
-    </div>
+                    {% endfor %}
+                </div>
+                <div>
+                    <button class="btn btn-primary m-2"><a href="/export_stanje_skladista" target="blank">Excel</a></button>
+                </div>
+            </div>
         </div>
         <div class="col-md-auto">
             <form class="form-container pl-5 pr-5" action="" method="post" novalidate="">
-        {{ form2.hidden_tag() }}
-        <h3>Stvori novi proizvod</h3>
+                {{ form2.hidden_tag() }}
+                <h3>Stvori novi proizvod</h3>
         
-            {{ form2.name.label }}<br>
-            {{ form2.name(size=32, class="form-control") }}
-            {% for error in form2.name.errors %}
-            <span style="color: red;">[{{ error }}]</span><br>
-            {% endfor %}<br>
+                    {{ form2.name.label }}<br>
+                    {{ form2.name(size=32, class="form-control") }}
+                    {% for error in form2.name.errors %}
+                    <span style="color: red;">[{{ error }}]</span><br>
+                    {% endfor %}<br>
         
-            {{ form2.opis_proizvoda.label }}<br>
-            {{ form2.opis_proizvoda(size=300, class="form-control") }}
-            {% for error in form2.opis_proizvoda.errors %}
-            <span style="color: red;">[{{ error }}]</span><br>
-            {% endfor %}<br>
+                    {{ form2.opis_proizvoda.label }}<br>
+                    {{ form2.opis_proizvoda(size=300, class="form-control") }}
+                    {% for error in form2.opis_proizvoda.errors %}
+                    <span style="color: red;">[{{ error }}]</span><br>
+                    {% endfor %}<br>
         
-            {{ form2.zemlja_podrijetla.label }}<br>
-            {{ form2.zemlja_podrijetla(size=32, class="form-control") }}
-            {% for error in form2.zemlja_podrijetla.errors %}
-            <span style="color: red;">[{{ error }}]</span><br>
-            {% endfor %}<br>
+                    {{ form2.zemlja_podrijetla.label }}<br>
+                    {{ form2.zemlja_podrijetla(size=32, class="form-control") }}
+                    {% for error in form2.zemlja_podrijetla.errors %}
+                    <span style="color: red;">[{{ error }}]</span><br>
+                    {% endfor %}<br>
         
-            {{ form2.oib.label }}<br>
-            {{ form2.oib(size=32, class="form-control") }}
-            {% for error in form2.oib.errors %}
-            <span style="color: red;">[{{ error }}]</span><br>
-            {% endfor %}<br>
+                    {{ form2.oib.label }}<br>
+                    {{ form2.oib(size=32, class="form-control") }}
+                    {% for error in form2.oib.errors %}
+                    <span style="color: red;">[{{ error }}]</span><br>
+                    {% endfor %}<br>
         
         
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <div class="alert alert-{{ category }}">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
-        <p>{{ form2.submit(type="submit", class="btn btn-primary") }}</p>
-    </form>
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+                <p>{{ form2.submit(type="submit", class="btn btn-primary") }}</p>
+            </form>
         </div>
 
-    </div>
-    
-    
+    </div> 
 </div>
 {% endblock %}
