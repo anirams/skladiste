@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, url_for, request, send_file, send_from_directory
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, UlazRobeForm, IzlazRobeForm, UrediProizvodForm, UnosProizvodaForm, SearchForm, EditPasswordForm, UnosTvrtkeForm, SearchFormTvrtka
+from app.forms import LoginForm, RegistrationForm, UlazRobeForm, IzlazRobeForm, UrediProizvodForm, UnosProizvodaForm, SearchForm, EditPasswordForm, UnosTvrtkeForm, SearchFormTvrtka, SearchFormKorisnik
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Proizvod, Tvrtka, Evidencija
 from werkzeug.urls import url_parse
@@ -86,16 +86,15 @@ def before_request():
 @login_required
 def unos_proizvoda():
 	form = UnosProizvodaForm()
-	if form.validate_on_submit():
-		proizvod = Proizvod(name=form.name.data, zemlja_podrijetla=form.zemlja_podrijetla.data, kolicina=form.kolicina.data, opis_proizvoda=form.opis_proizvoda.data)
-		db.session.add(proizvod)
-		db.session.commit()
+	if form.submit.data:
+		return redirect(url_for('stanje_skladista', page_num=1, s=' '))
+	while form.dodaj_jos.data:
 		proizvod = Proizvod.query.filter_by(name=form.name.data).first()
+		proizvod.kolicina += form.promijenjena_kolicina.data
 		tvrtka = Tvrtka.query.filter_by(oib=form.oib.data).first()
-		evidencija = Evidencija(proizvod_id=proizvod.id, promijenjena_kolicina=proizvod.kolicina, tvrtka_id=tvrtka.id, user_id=current_user.id, vrsta_unosa='unos', trenutna_kolicina=proizvod.kolicina)
+		evidencija = Evidencija(proizvod_id=proizvod.id, promijenjena_kolicina=form.promijenjena_kolicina.data, tvrtka_id=tvrtka.id, user_id=current_user.id, vrsta_unosa='unos', trenutna_kolicina=proizvod.kolicina)
 		db.session.add(evidencija)
 		db.session.commit()
-		tvrtka = Tvrtka.query.all()
 		flash(f'Dodali ste proizvod {form.name.data}!', 'success')
 		return redirect(url_for('unos_proizvoda'))
 	return render_template('unos_proizvoda.html', title='Dodaj proizvod', form=form)
@@ -140,28 +139,29 @@ def proizvod(name):
 @login_required
 def stanje_skladista(page_num, s):
 	form = SearchForm()
-	form2 = UnosProizvodaForm()
+	form2 = PrviUnosProizvodaForm()
 	if s == ' ':
 		proizvodi = Proizvod.query.order_by(Proizvod.datum_unosa.desc()).paginate(per_page=8, page=page_num, error_out=True)
-		
 	else:
 		proizvodi2 = Proizvod.query.filter(Proizvod.name.like("%" + s + "%")).paginate(per_page=3, page=page_num, error_out=True)
 		return render_template("stanje_skladista.html", title='Stanje skladista', form=form, proizvodi=proizvodi2, search=s, form2=form2 )
-	if form.validate_on_submit():
-		proizvodi2 = Proizvod.query.filter(Proizvod.name.like("%" + form.search.data + "%")).paginate(per_page=3, page=1, error_out=True)
-		return render_template("stanje_skladista.html", title='Stanje skladista', form=form, proizvodi=proizvodi2, search=form.search.data, form2=form2 )
-	if form2.validate_on_submit():
-		proizvod = Proizvod(name=form2.name.data, zemlja_podrijetla=form2.zemlja_podrijetla.data, kolicina=form2.kolicina.data, opis_proizvoda=form2.opis_proizvoda.data)
-		db.session.add(proizvod)
-		db.session.commit()
-		proizvod = Proizvod.query.filter_by(name=form2.name.data).first()
-		tvrtka = Tvrtka.query.filter_by(oib=form2.oib.data).first()
-		evidencija = Evidencija(proizvod_id=proizvod.id, promijenjena_kolicina=proizvod.kolicina, tvrtka_id=tvrtka.id, user_id=current_user.id, vrsta_unosa='unos', trenutna_kolicina=proizvod.kolicina)
-		db.session.add(evidencija)
-		db.session.commit()
-		tvrtka = Tvrtka.query.all()
-		flash(f'Dodali ste proizvod {form2.name.data}!', 'success')
-		return redirect(url_for('stanje_skladista1'))
+	if form.submit.data:
+		if form.validate_on_submit():
+			proizvodi2 = Proizvod.query.filter(Proizvod.name.like("%" + form.search.data + "%")).paginate(per_page=3, page=1, error_out=True)
+			return render_template("stanje_skladista.html", title='Stanje skladista', form=form, proizvodi=proizvodi2, search=form.search.data, form2=form2 )
+	if form2.submit.data:
+		if form2.validate_on_submit():
+			proizvod = Proizvod(name=form2.name.data, zemlja_podrijetla=form2.zemlja_podrijetla.data, kolicina=form2.kolicina.data, opis_proizvoda=form2.opis_proizvoda.data)
+			db.session.add(proizvod)
+			db.session.commit()
+			proizvod = Proizvod.query.filter_by(name=form2.name.data).first()
+			tvrtka = Tvrtka.query.filter_by(oib=form2.oib.data).first()
+			evidencija = Evidencija(proizvod_id=proizvod.id, promijenjena_kolicina=proizvod.kolicina, tvrtka_id=tvrtka.id, user_id=current_user.id, vrsta_unosa='unos', trenutna_kolicina=proizvod.kolicina)
+			db.session.add(evidencija)
+			db.session.commit()
+			tvrtka = Tvrtka.query.all()
+			flash(f'Dodali ste proizvod {form2.name.data}!', 'success')
+			return redirect(url_for('stanje_skladista1'))
 	return render_template('stanje_skladista.html', title='Stanje skladista', proizvodi=proizvodi, form=form, form2=form2, search=' ')
 
 @app.route('/stanje_skladista1', methods=['GET', 'POST'])
@@ -186,7 +186,8 @@ def tvrtke(page_num, s):
 	if  form2.submit2.data:
 		if form2.validate_on_submit():
 			tvrtke2 = Tvrtka.query.filter(Tvrtka.name.like("%" + form2.search.data + "%")).paginate(per_page=3, page=1, error_out=True)
-			return render_template("tvrtke.html", title='Tvrtke', form=form, form2=form2, tvrtke=tvrtke2, search=form2.search.data)
+			tvrtke_lista=Tvrtka.query.filter(Tvrtka.name.like("%" + form2.search.data + "%"))
+			return render_template("tvrtke.html", title='Tvrtke', form=form, form2=form2, tvrtke=tvrtke2, search=form2.search.data, tvrtke_lista=tvrtke_lista)
 	
 	if form.submit.data:
 		if form.validate_on_submit():
@@ -207,7 +208,7 @@ def tvrtke1():
 @app.route('/svi_korisnici/<int:page_num>+<s>', methods=['GET', 'POST'])
 @login_required
 def svi_korisnici(page_num, s):
-	form = SearchForm()
+	form = SearchFormKorisnik()
 	if s == ' ':
 		svi_korisnici = User.query.order_by(User.username.desc()).paginate(per_page=7, page=page_num, error_out=True)
 		
@@ -302,14 +303,14 @@ def edit_password():
 @app.route('/export_stanje_skladista')
 @login_required
 def export_stanje_skladista():
-	sql= text('SELECT proizvod.name AS proizvod, proizvod.kolicina AS kolicina FROM proizvod')
+	sql= text('SELECT proizvod.name AS Proizvod, proizvod.kolicina AS Kolicina FROM proizvod')
 	result= db.engine.execute(sql)
 	query_sets = []
 	for r in result:
 		query_sets.append(r)
 	column_names = [
-		'proizvod',
-		'kolicina'
+		'Proizvod',
+		'Kolicina'
 		]
 	return excel.make_response_from_query_sets(query_sets, column_names, 'xls')
 
@@ -318,18 +319,18 @@ def export_stanje_skladista():
 def export_proizvod_unos(name):
 	ovaj_proizvod = Proizvod.query.filter_by(name=name).first_or_404()
 	ovaj_proizvod_name = ovaj_proizvod.name
-	sql= text('SELECT evidencija.datum_unosa AS datum_unosa, evidencija.promijenjena_kolicina AS promijenjena_kolicina, proizvod.name AS ime_proizvoda, proizvod.id AS id_proizvoda, tvrtka.name AS ime_tvrtke, user.username AS korisnik FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id WHERE proizvod.name= "{}" AND evidencija.vrsta_unosa="unos"'.format(ovaj_proizvod.name))
+	sql= text('SELECT evidencija.datum_unosa AS "Datum Unosa", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvoda, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id WHERE proizvod.name= "{}" AND evidencija.vrsta_unosa="unos"'.format(ovaj_proizvod.name))
 	result= db.engine.execute(sql)
 	query_sets = []
 	for r in result:
 		query_sets.append(r)
 	column_names = [
-		'datum_unosa',
-		'promijenjena_kolicina',
-		'ime_proizvoda',
-		'id_proizvoda',
-		'ime_tvrtke',
-		'korisnik'
+		'Datum Unosa',
+		'Promijenjena Kolicina',
+		'Proizvoda',
+		'ID Proizvoda',
+		'Tvrtka',
+		'Korisnik'
 		]
 	return excel.make_response_from_query_sets(query_sets, column_names, 'xls', file_name="Ulazna evidencija "+name)
 
@@ -338,17 +339,17 @@ def export_proizvod_unos(name):
 def export_proizvod_izlaz(name):
 	ovaj_proizvod = Proizvod.query.filter_by(name=name).first_or_404()
 	ovaj_proizvod_name = ovaj_proizvod.name
-	sql= text('SELECT evidencija.datum_unosa AS datum_unosa, evidencija.promijenjena_kolicina AS promijenjena_kolicina, proizvod.name AS ime_proizvoda, proizvod.id AS id_proizvoda, tvrtka.name AS ime_tvrtke, user.username AS korisnik FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id WHERE proizvod.name= "{}" AND evidencija.vrsta_unosa="izlaz"'.format(ovaj_proizvod.name))
+	sql= ('SELECT evidencija.datum_unosa AS "Datum Unosa", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvoda, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id WHERE proizvod.name= "{}" AND evidencija.vrsta_unosa="izlaz"'.format(ovaj_proizvod.name))
 	result= db.engine.execute(sql)
 	query_sets = []
 	for r in result:
 		query_sets.append(r)
 	column_names = [
-		'datum_unosa',
-		'promijenjena_kolicina',
-		'ime_proizvoda',
-		'id_proizvoda',
-		'ime_tvrtke',
-		'korisnik'
+		'Datum Unosa',
+		'Promijenjena Kolicina',
+		'Proizvoda',
+		'ID Proizvoda',
+		'Tvrtka',
+		'Korisnik'
 		]
 	return excel.make_response_from_query_sets(query_sets, column_names, 'xls', file_name="Izlazna evidencija "+name)
