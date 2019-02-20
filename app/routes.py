@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, url_for, request, send_file, send_from_directory
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, UlazRobeForm, IzlazRobeForm, UrediProizvodForm, UnosProizvodaForm, SearchForm, EditPasswordForm, UnosTvrtkeForm, SearchFormTvrtka
+from app.forms import LoginForm, RegistrationForm, UlazRobeForm, IzlazRobeForm, UrediProizvodForm, UnosProizvodaForm, SearchForm, EditPasswordForm, UnosTvrtkeForm, SearchFormTvrtka, SearchFormKorisnik
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Proizvod, Tvrtka, Evidencija
 from werkzeug.urls import url_parse
@@ -143,25 +143,26 @@ def stanje_skladista(page_num, s):
 	form2 = UnosProizvodaForm()
 	if s == ' ':
 		proizvodi = Proizvod.query.order_by(Proizvod.datum_unosa.desc()).paginate(per_page=8, page=page_num, error_out=True)
-		
 	else:
 		proizvodi2 = Proizvod.query.filter(Proizvod.name.like("%" + s + "%")).paginate(per_page=3, page=page_num, error_out=True)
 		return render_template("stanje_skladista.html", title='Stanje skladista', form=form, proizvodi=proizvodi2, search=s, form2=form2 )
-	if form.validate_on_submit():
-		proizvodi2 = Proizvod.query.filter(Proizvod.name.like("%" + form.search.data + "%")).paginate(per_page=3, page=1, error_out=True)
-		return render_template("stanje_skladista.html", title='Stanje skladista', form=form, proizvodi=proizvodi2, search=form.search.data, form2=form2 )
-	if form2.validate_on_submit():
-		proizvod = Proizvod(name=form2.name.data, zemlja_podrijetla=form2.zemlja_podrijetla.data, kolicina=form2.kolicina.data, opis_proizvoda=form2.opis_proizvoda.data)
-		db.session.add(proizvod)
-		db.session.commit()
-		proizvod = Proizvod.query.filter_by(name=form2.name.data).first()
-		tvrtka = Tvrtka.query.filter_by(oib=form2.oib.data).first()
-		evidencija = Evidencija(proizvod_id=proizvod.id, promijenjena_kolicina=proizvod.kolicina, tvrtka_id=tvrtka.id, user_id=current_user.id, vrsta_unosa='unos', trenutna_kolicina=proizvod.kolicina)
-		db.session.add(evidencija)
-		db.session.commit()
-		tvrtka = Tvrtka.query.all()
-		flash(f'Dodali ste proizvod {form2.name.data}!', 'success')
-		return redirect(url_for('stanje_skladista1'))
+	if form.submit.data:
+		if form.validate_on_submit():
+			proizvodi2 = Proizvod.query.filter(Proizvod.name.like("%" + form.search.data + "%")).paginate(per_page=3, page=1, error_out=True)
+			return render_template("stanje_skladista.html", title='Stanje skladista', form=form, proizvodi=proizvodi2, search=form.search.data, form2=form2 )
+	if form2.submit.data:
+		if form2.validate_on_submit():
+			proizvod = Proizvod(name=form2.name.data, zemlja_podrijetla=form2.zemlja_podrijetla.data, kolicina=form2.kolicina.data, opis_proizvoda=form2.opis_proizvoda.data)
+			db.session.add(proizvod)
+			db.session.commit()
+			proizvod = Proizvod.query.filter_by(name=form2.name.data).first()
+			tvrtka = Tvrtka.query.filter_by(oib=form2.oib.data).first()
+			evidencija = Evidencija(proizvod_id=proizvod.id, promijenjena_kolicina=proizvod.kolicina, tvrtka_id=tvrtka.id, user_id=current_user.id, vrsta_unosa='unos', trenutna_kolicina=proizvod.kolicina)
+			db.session.add(evidencija)
+			db.session.commit()
+			tvrtka = Tvrtka.query.all()
+			flash(f'Dodali ste proizvod {form2.name.data}!', 'success')
+			return redirect(url_for('stanje_skladista1'))
 	return render_template('stanje_skladista.html', title='Stanje skladista', proizvodi=proizvodi, form=form, form2=form2, search=' ')
 
 @app.route('/stanje_skladista1', methods=['GET', 'POST'])
@@ -186,7 +187,8 @@ def tvrtke(page_num, s):
 	if  form2.submit2.data:
 		if form2.validate_on_submit():
 			tvrtke2 = Tvrtka.query.filter(Tvrtka.name.like("%" + form2.search.data + "%")).paginate(per_page=3, page=1, error_out=True)
-			return render_template("tvrtke.html", title='Tvrtke', form=form, form2=form2, tvrtke=tvrtke2, search=form2.search.data)
+			tvrtke_lista=Tvrtka.query.filter(Tvrtka.name.like("%" + form2.search.data + "%"))
+			return render_template("tvrtke.html", title='Tvrtke', form=form, form2=form2, tvrtke=tvrtke2, search=form2.search.data, tvrtke_lista=tvrtke_lista)
 	
 	if form.submit.data:
 		if form.validate_on_submit():
@@ -207,7 +209,7 @@ def tvrtke1():
 @app.route('/svi_korisnici/<int:page_num>+<s>', methods=['GET', 'POST'])
 @login_required
 def svi_korisnici(page_num, s):
-	form = SearchForm()
+	form = SearchFormKorisnik()
 	if s == ' ':
 		svi_korisnici = User.query.order_by(User.username.desc()).paginate(per_page=7, page=page_num, error_out=True)
 		
