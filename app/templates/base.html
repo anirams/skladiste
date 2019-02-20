@@ -20,7 +20,7 @@
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 
 </head>
-<body>
+<body onload="startTime()">
 
 	<div class="wrapper">
 
@@ -81,16 +81,31 @@
 
 		<div class="tijelo">
 	        <div class="plava-pozadina">
-	            <button type="button" id="sidebarCollapse" class="btn btn-primary">
-	                <i class="fas fa-align-left"></i>
+	        	<div class="d-flex bd-highlight">
+  				<div class="bd-highlight">
+	            	<button type="button" id="sidebarCollapse" class="btn btn-primary">
+	                	<i class="fas fa-align-left"></i>
 	                <span class="sakrij-tipku"></span>
+	           </div>
+  				<div class="ml-auto bd-highlight">
+  					<div id="clockdate">
+  					<div class="clockdate-wrapper">
+    					<div id="clock"></div>
+    					<div id="date"></div>
+  					</div>
+				</div>
+			</div>
+			</div>
+	            
+				
 	            </button> <br>
 			
-	    	</div>
-			<div class="plavo">
-			{% block content %}
-			{% endblock %}
-			</div>
+	    		</div>
+				<div class="plavo">
+				
+				{% block content %}
+				{% endblock %}
+				</div>
 		</div>
 
 
