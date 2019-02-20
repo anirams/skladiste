@@ -139,7 +139,7 @@ def proizvod(name):
 @login_required
 def stanje_skladista(page_num, s):
 	form = SearchForm()
-	form2 = PrviUnosProizvodaForm()
+	form2 = UnosProizvodaForm()
 	if s == ' ':
 		proizvodi = Proizvod.query.order_by(Proizvod.datum_unosa.desc()).paginate(per_page=8, page=page_num, error_out=True)
 	else:
