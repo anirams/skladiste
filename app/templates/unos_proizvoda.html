@@ -18,15 +18,9 @@
             <span style="color: red;">[{{ error }}]</span><br>
             {% endfor %}<br>
         
-            {{ form.opis_proizvoda.label }}<br>
-            {{ form.opis_proizvoda(size=300, class="form-control") }}
-            {% for error in form.opis_proizvoda.errors %}
-            <span style="color: red;">[{{ error }}]</span><br>
-            {% endfor %}<br>
-        
-            {{ form.kolicina.label }}<br>
-            {{ form.kolicina(size=32, class="form-control") }}
-            {% for error in form.kolicina.errors %}
+            {{ form.promijenjena_kolicina.label }}<br>
+            {{ form.promijenjena_kolicina(size=32, class="form-control") }}
+            {% for error in form.promijenjena_kolicina.errors %}
             <span style="color: red;">[{{ error }}]</span><br>
             {% endfor %}<br>
         
@@ -52,6 +46,7 @@
                 {% endfor %}
             {% endif %}
         {% endwith %}
+        <p>{{ form.dodaj_jos(type="submit", class="btn btn-primary") }}</p>
         <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
     </form>
         </div>
