@@ -13,7 +13,7 @@
      <div class="row justify-content-md-cente">
        <form class="form-inline" action="" novalidate="" autocomplete="off">
                 <div class="form-group autocomplete">
-                    <input size=32, class="form-control", placeholder="Unesi ime proizvoda", type="text", id="Ime"></input>   
+                    <input size=32, class="form-control", placeholder="Unesi ime proizvoda", type="text", id="Ime", autocomplete="off"></input>   
                     <input size=32, class="form-control", placeholder="Unesi količinu", type="text", value=1 , id="Kolicina"></input>
                     <input size=32, class="form-control", placeholder="Unesi tvrtku", type="text", id="Tvrtka"></input>
                 </div>
@@ -175,6 +175,8 @@ var counter=0;
       tablica.appendChild(tableR);
       ispisi();
       document.getElementById("tajnaLista").value=lista;
+
+      $("#Ime").val('');
 
     }
     function obrisi(id){
