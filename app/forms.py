@@ -156,7 +156,3 @@ class EditPasswordForm(FlaskForm):
 		else:
 			return True
 	submit = SubmitField()
-
-class ListForm(FlaskForm):
-	listaProizvoda=HiddenField()
-	submit = SubmitField()

@@ -386,5 +386,4 @@ def ulaz():
 			evidencija = Evidencija(proizvod_id=proizvod.id, tvrtka_id=tvrtka.id, promijenjena_kolicina=int(x[1]), user_id=current_user.id, vrsta_unosa='unos', trenutna_kolicina=proizvod.kolicina)
 			db.session.add(evidencija)
 			db.session.commit()
-			
 	return render_template("ulaz.html", title='Ulaz', tvrtke=tvrtke, lista=lista, form=form)
