@@ -13,7 +13,7 @@
      <div class="row justify-content-md-cente">
        <form class="form-inline" action="" novalidate="" autocomplete="off">
                 <div class="form-group autocomplete">
-                    <input size=32, class="form-control", placeholder="Unesi ime proizvoda", type="text", id="Ime"></input>   
+                    <input size=32, class="form-control", placeholder="Unesi ime proizvoda", type="text", id="Ime", autocomplete="off"></input>   
                     <input size=32, class="form-control", placeholder="Unesi količinu", type="text", value=1 , id="Kolicina"></input>
                     <input size=32, class="form-control", placeholder="Unesi tvrtku", type="text", id="Tvrtka"></input>
                 </div>
@@ -152,30 +152,33 @@ var counter=0;
 
     function dodaj() {
       var listaSve = [];
-      listaSve.push(document.getElementById("Ime").value);
-      listaSve.push(document.getElementById("Kolicina").value);
-      listaSve.push(document.getElementById("Tvrtka").value);
-      lista.push(listaSve)
+      if (document.getElementById("Ime").value !== "" && document.getElementById("Kolicina").value !== "" && document.getElementById("Tvrtka").value !== "") {
+          listaSve.push(document.getElementById("Ime").value);
+          listaSve.push(document.getElementById("Kolicina").value);
+          listaSve.push(document.getElementById("Tvrtka").value);
+          lista.push(listaSve)
 
-      var tableR = document.createElement("tr");
-      for(var k=0; k<3; k++){
-        var tableD = document.createElement("td");
-        var tableDime = document.createTextNode(listaSve[k]);
-        tableD.appendChild(tableDime);
-        tableR.appendChild(tableD)
+          var tableR = document.createElement("tr");
+          for(var k=0; k<3; k++){
+            var tableD = document.createElement("td");
+            var tableDime = document.createTextNode(listaSve[k]);
+            tableD.appendChild(tableDime);
+            tableR.appendChild(tableD)
+          }
+          var button = document.createElement("BUTTON")
+          button.setAttribute('id', counter)
+          tableR.setAttribute('id', counter)
+          button.setAttribute('onclick', 'obrisi(id);')
+          
+          counter++;
+          tableR.appendChild(button)
+          var tablica = document.getElementById("tablica");
+          tablica.appendChild(tableR);
+          ispisi();
+          document.getElementById("tajnaLista").value=lista;
+
+          $("#Ime").val('');
       }
-      var button = document.createElement("BUTTON")
-      button.setAttribute('id', counter)
-      tableR.setAttribute('id', counter)
-      button.setAttribute('onclick', 'obrisi(id);')
-      
-      counter++;
-      tableR.appendChild(button)
-      var tablica = document.getElementById("tablica");
-      tablica.appendChild(tableR);
-      ispisi();
-      document.getElementById("tajnaLista").value=lista;
-
     }
     function obrisi(id){
       var elem = document.getElementById(id);
