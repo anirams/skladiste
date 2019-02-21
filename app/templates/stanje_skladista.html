@@ -3,13 +3,16 @@
 {% block stanje_skladista %}active{% endblock %}
 
 {% block content %}
+<script type="text/javascript">
+    var lista1 = {{ lista|safe }}
+</script>
 <div class="stanje-s">
     
         <div class="row justify-content-md-center">
-            <form class=" form-inline" action="" method="post" novalidate="">
+            <form class=" form-inline" action="" method="post" novalidate="" autocomplete="off">
                 {{ form.hidden_tag() }}
-                <div class="form-group">
-                    {{ form.search(size=32, class="form-control", placeholder="Pronađi proizvod") }}    
+                <div class="form-group autocomplete">
+                    {{ form.search(size=32, class="form-control", placeholder="Pronađi proizvod", id="myInput") }}    
                 </div>
                 <div class="form-group">
                     {{ form.submit(type="submit", class="btn btn-primary ml-3") }}
@@ -25,16 +28,18 @@
     
 
     <div class="row">
-        <div class="col-lg">
+        <div class="col-sm-8">
             <table class="table table-striped mt-2">
                 <tr>
                     <th>Proizvod</th> 
                     <th>Kolicina</th>
+                    <th>Opis Proizvoda</th>
                 </tr>
                 {% for proizvod in proizvodi.items %}
                 <tr>
                     <td><a href="../proizvod/{{proizvod.name}}" class="dekoracija">{{ proizvod.name }}</a></td>
                     <td>{{ proizvod.kolicina }}</td>
+                    <td>{{ proizvod.opis_proizvoda }}</td>
                 </tr>
                 {% endfor %}
             </table> 
@@ -64,10 +69,10 @@
             </div>
         </div>
 
-        <div class="col">
-            <form class="form-container pl-5 pr-5 mt-3" action="" method="post" novalidate="">
+        <div class="col-sm-4">
+            <form class="form-container p-5 mt-3" action="" method="post" novalidate="">
                 {{ form2.hidden_tag() }}
-                <h3>Stvori novi proizvod</h3>
+                <h3 class="pb-3">Stvori novi proizvod</h3>
         
                     {{ form2.name.label }}<br>
                     {{ form2.name(size=32, class="form-control") }}
@@ -80,16 +85,10 @@
                     {% for error in form2.opis_proizvoda.errors %}
                     <span style="color: red;">[{{ error }}]</span><br>
                     {% endfor %}<br>
-        
+
                     {{ form2.zemlja_podrijetla.label }}<br>
-                    {{ form2.zemlja_podrijetla(size=32, class="form-control") }}
+                    {{ form2.zemlja_podrijetla(size=300, class="form-control") }}
                     {% for error in form2.zemlja_podrijetla.errors %}
-                    <span style="color: red;">[{{ error }}]</span><br>
-                    {% endfor %}<br>
-        
-                    {{ form2.oib.label }}<br>
-                    {{ form2.oib(size=32, class="form-control") }}
-                    {% for error in form2.oib.errors %}
                     <span style="color: red;">[{{ error }}]</span><br>
                     {% endfor %}<br>
         
@@ -103,11 +102,111 @@
                         {% endfor %}
                     {% endif %}
                 {% endwith %}
-                <p>{{ form2.submit2(type="submit", class="btn btn-primary") }}</p>
+                <p class="pt-3">{{ form2.submit2(type="submit", class="btn btn-primary") }}</p>
             </form>
 
         </div>
 
     </div> 
 </div>
+
+<script type="text/javascript">
+    function autocomplete(inp, arr) {
+  /* text field and array of values */
+  var currentFocus;
+  /*execute a function when someone writes in the text field:*/
+  inp.addEventListener("input", function(e) {
+      var a, b, i, val = this.value;
+      /*close any already open lists of autocompleted values*/
+      closeAllLists();
+      if (!val) { return false;}
+      currentFocus = -1;
+      /*create a DIV element that will contain the items (values):*/
+      a = document.createElement("DIV");
+      a.setAttribute("id", this.id + "autocomplete-list");
+      a.setAttribute("class", "autocomplete-items");
+      /*append the DIV element as a child of the autocomplete container:*/
+      this.parentNode.appendChild(a);
+      /*for each item in the array...*/
+      for (i = 0; i < arr.length; i++) {
+        /*check if the item starts with the same letters as the text field value:*/
+        if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+          /*create a DIV element for each matching element:*/
+          b = document.createElement("DIV");
+          /*make the matching letters bold:*/
+          b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+          b.innerHTML += arr[i].substr(val.length);
+          /*insert a input field that will hold the current array item's value:*/
+          b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+          /*execute a function when someone clicks on the item value (DIV element):*/
+              b.addEventListener("click", function(e) {
+              /*insert the value for the autocomplete text field:*/
+              inp.value = this.getElementsByTagName("input")[0].value;
+              /*close the list of autocompleted values,
+              (or any other open lists of autocompleted values:*/
+              closeAllLists();
+          });
+          a.appendChild(b);
+        }
+      }
+  });
+  /*execute a function presses a key on the keyboard:*/
+  inp.addEventListener("keydown", function(e) {
+      var x = document.getElementById(this.id + "autocomplete-list");
+      if (x) x = x.getElementsByTagName("div");
+      if (e.keyCode == 40) {
+        /*If the arrow DOWN key is pressed,
+        increase the currentFocus variable:*/
+        currentFocus++;
+        /*and and make the current item more visible:*/
+        addActive(x);
+      } else if (e.keyCode == 38) { //up
+        /*If the arrow UP key is pressed,
+        decrease the currentFocus variable:*/
+        currentFocus--;
+        /*and and make the current item more visible:*/
+        addActive(x);
+      } else if (e.keyCode == 13) {
+        /*If the ENTER key is pressed, prevent the form from being submitted,*/
+        e.preventDefault();
+        if (currentFocus > -1) {
+          /*and simulate a click on the "active" item:*/
+          if (x) x[currentFocus].click();
+        }
+      }
+  });
+  function addActive(x) {
+    /*a function to classify an item as "active":*/
+    if (!x) return false;
+    /*start by removing the "active" class on all items:*/
+    removeActive(x);
+    if (currentFocus >= x.length) currentFocus = 0;
+    if (currentFocus < 0) currentFocus = (x.length - 1);
+    /*add class "autocomplete-active":*/
+    x[currentFocus].classList.add("autocomplete-active");
+  }
+  function removeActive(x) {
+    /*a function to remove the "active" class from all autocomplete items:*/
+    for (var i = 0; i < x.length; i++) {
+      x[i].classList.remove("autocomplete-active");
+    }
+  }
+  function closeAllLists(elmnt) {
+    /*close all autocomplete lists in the document,
+    except the one passed as an argument:*/
+    var x = document.getElementsByClassName("autocomplete-items");
+    for (var i = 0; i < x.length; i++) {
+      if (elmnt != x[i] && elmnt != inp) {
+      x[i].parentNode.removeChild(x[i]);
+    }
+  }
+}
+/*execute a function when someone clicks in the document:*/
+document.addEventListener("click", function (e) {
+    closeAllLists(e.target);
+});
+}
+
+autocomplete(document.getElementById("myInput"), lista1);
+</script>
 {% endblock %}

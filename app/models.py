@@ -28,7 +28,7 @@ class Proizvod(db.Model):
 	__searchable__ = ['name']
 	id = db.Column(db.Integer, primary_key=True)
 	name = db.Column(db.String(64))
-	kolicina = db.Column(db.Integer)
+	kolicina = db.Column(db.Integer, default=0)
 	zemlja_podrijetla = db.Column(db.String(64))
 	opis_proizvoda = db.Column(db.String(300))
 	datum_unosa = db.Column(db.DateTime, default=datetime.utcnow)
