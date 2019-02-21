@@ -43,18 +43,6 @@
 
 <script type="text/javascript">
 
-if (form_error) {
-    console.log("form error " + form_error);
-    $(document).ready(function () {
-   $('#tvrtka-potvrda').click();
-});
-   
-   
-}
-else{
-    console.log("form error " + form_error)
-}
-
 
 function autocomplete(inp, arr) {
   /* text field and array of values */
@@ -152,7 +140,7 @@ document.addEventListener("click", function (e) {
 });
 }
 
-autocomplete(document.getElementById("myInput"), lista1);
+autocomplete(document.getElementById("Tvrtka"), lista1);
 
 </script>
 
