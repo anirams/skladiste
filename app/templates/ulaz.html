@@ -23,6 +23,7 @@
         </form>
      </div>
      <div class="row">
+       <div>
          <table class="table table-striped" id="tablica">
         <tr>
             <th>Proizvod</th>
@@ -30,10 +31,13 @@
             <th>Tvrtka</th>
         </tr>
       
+    
+
     </table>
+       </div>
      </div>
    </div>
-
+  {{form.listaProizvoda(id="tajnaLista")}}
     
 </div>
 
@@ -155,6 +159,7 @@ autocomplete(document.getElementById("myInput"), lista1);
 <script type="text/javascript">
   
 var lista = [];
+var counter=0;
 
     function dodaj() {
       var listaSve = [];
@@ -163,14 +168,42 @@ var lista = [];
       listaSve.push(document.getElementById("Tvrtka").value);
       lista.push(listaSve)
 
-      var tableD = document.createElement("td");
-      var tableDime = document.createTextNode(listaSve[0]);
-      tableD.appendChild(tableDime);
-
-      var tablica = document.getElementById("tablica");
-      tablica.appendChild(tableD);
+      var tableR = document.createElement("tr");
+      for(var k=0; k<3; k++){
+        var tableD = document.createElement("td");
+        var tableDime = document.createTextNode(listaSve[k]);
+        tableD.appendChild(tableDime);
+        tableR.appendChild(tableD)
+      }
+      var button = document.createElement("BUTTON")
+      button.setAttribute('id', counter)
+      tableR.setAttribute('id', counter)
+      button.setAttribute('onclick', 'obrisi(id);')
       
+      counter++;
+      tableR.appendChild(button)
+      var tablica = document.getElementById("tablica");
+      tablica.appendChild(tableR);
+      ispisi();
+
+
+    }
+    function obrisi(id){
+      var elem = document.getElementById(id);
+      elem.parentNode.removeChild(elem);
+      delete lista[id];
     }
 
+    function ispisi(){
+      for(var i=0; i<lista.length; i++){
+        for(var j=0; j<3; j++){
+          if (lista[i]!== null){
+            console.log(lista[i][j]);
+          }
+          
+        }
+      }
+    }
+    
 </script>
 {% endblock %}
