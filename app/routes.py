@@ -141,6 +141,7 @@ def stanje_skladista(page_num, s):
 	form = SearchForm()
 	form2 = UnosProizvodaForm()
 	lista = []
+	lista2 = []
 	proizvodii = Proizvod.query.all()
 	for proizvod in proizvodii:
 		lista.append(proizvod.name)
@@ -156,15 +157,15 @@ def stanje_skladista(page_num, s):
 			return render_template("stanje_skladista.html", title='Stanje skladista', form=form, proizvodi=proizvodi2, search=form.search.data, form2=form2 )
 	if form2.submit2.data:
 		if form2.validate_on_submit():
-			proizvod = Proizvod(name=form2.name.data, zemlja_podrijetla=form2.zemlja_podrijetla.data, opis_proizvoda=form2.opis_proizvoda.data)
+			proizvod = Proizvod(name=form2.name.data, opis_proizvoda=form2.opis_proizvoda.data, zemlja_podrijetla=form2.zemlja_podrijetla.data)
 			db.session.add(proizvod)
 			db.session.commit()
-			proizvod = Proizvod.query.filter_by(name=form2.name.data).first()
-			tvrtka = Tvrtka.query.filter_by(oib=form2.oib.data).first()
-			evidencija = Evidencija(proizvod_id=proizvod.id, promijenjena_kolicina=proizvod.kolicina, tvrtka_id=tvrtka.id, user_id=current_user.id, vrsta_unosa='unos', trenutna_kolicina=proizvod.kolicina)
-			db.session.add(evidencija)
-			db.session.commit()
-			tvrtka = Tvrtka.query.all()
+			#proizvod = Proizvod.query.filter_by(name=form2.name.data).first()
+			#tvrtka = Tvrtka.query.filter_by(oib=form2.oib.data).first()
+			# evidencija = Evidencija(proizvod_id=proizvod.id, user_id=current_user.id, vrsta_unosa='unos')
+			# db.session.add(evidencija)
+			# db.session.commit()
+			# tvrtka = Tvrtka.query.all()
 			flash(f'Dodali ste proizvod {form2.name.data}!', 'success')
 			return redirect(url_for('stanje_skladista1'))
 	return render_template('stanje_skladista.html', title='Stanje skladista', proizvodi=proizvodi, form=form, form2=form2, search=' ', lista=lista)

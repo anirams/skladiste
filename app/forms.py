@@ -38,11 +38,11 @@ class RegistrationForm(FlaskForm):
 
 class UnosProizvodaForm(FlaskForm):
 	name = StringField('Naziv proizvoda', validators=[DataRequired('Unesi Naziv Proizvoda')])
-	promijenjena_kolicina = IntegerField('Kolicina', validators=[DataRequired('Unesi Količinu (broj)')])
+	#promijenjena_kolicina = IntegerField('Kolicina', validators=[DataRequired('Unesi Količinu (broj)')])
 	opis_proizvoda = StringField ('Opis proizvoda')
 	zemlja_podrijetla = StringField('Zemlja podrijetla', validators=[DataRequired('Unesi Zemlju Podrijetla')])
-	oib = IntegerField('OIB', validators=[DataRequired('Unesi OIB Tvrtke (broj)')])
-	dodaj_jos = SubmitField('Dodaj jos')
+	#oib = IntegerField('OIB', validators=[DataRequired('Unesi OIB Tvrtke (broj)')])
+	#dodaj_jos = SubmitField('Dodaj jos')
 	submit2 = SubmitField('Dodaj Proizvod')
 	def validate(self):
 		rv = FlaskForm.validate(self)
@@ -52,10 +52,10 @@ class UnosProizvodaForm(FlaskForm):
 		if proizvod is not None:
 			self.name.errors.append('Proizvod pod tim imenom već postoji')
 			return False
-		tvrtka = Tvrtka.query.filter_by(oib=self.oib.data).first()
-		if tvrtka is None:
-			self.oib.errors.append('Tvrtka ne postoji')
-			return False
+		#tvrtka = Tvrtka.query.filter_by(oib=self.oib.data).first()
+		#if tvrtka is None:
+			#self.oib.errors.append('Tvrtka ne postoji')
+			#return False
 		else:
 			return True
 

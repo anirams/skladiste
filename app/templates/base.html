@@ -67,6 +67,7 @@
                     <a href="{{ url_for('logout') }}" class="btn btn-primary hover-plava">ODJAVI SE</a>
                 </li>
                 {%  if current_user.username == "admin"%}
+                <hr>
                     <li>
                         <a href="{{ url_for('register') }}" class="btn btn-primary hover-plava">Registriraj novog korisnika</a>
                     </li>
