@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, url_for, request, send_file, send_from_directory
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, UlazRobeForm, IzlazRobeForm, UrediProizvodForm, UnosProizvodaForm, SearchForm, EditPasswordForm, UnosTvrtkeForm, SearchFormTvrtka, SearchFormKorisnik
+from app.forms import LoginForm, RegistrationForm, UlazRobeForm, IzlazRobeForm, UrediProizvodForm, UnosProizvodaForm, SearchForm, EditPasswordForm, UnosTvrtkeForm, SearchFormTvrtka, SearchFormKorisnik, ListForm
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Proizvod, Tvrtka, Evidencija
 from werkzeug.urls import url_parse
@@ -373,9 +373,20 @@ def export_proizvod_izlaz(name):
 @login_required
 def ulaz():
 	tvrtke = Tvrtka.query.all()
+	form = ListForm()
 	lista = []
 	sve_tvrtke = Tvrtka.query.all() 
 	for tvrtkaa in sve_tvrtke:
 		lista.append(tvrtkaa.name)
+	if form.validate_on_submit():
+		for x in form.listaProizvoda.data:
+			tvrtka = Tvrtka.query.filter_by(name=x[2]).first_or_404()
+			proizvod = Proizvod.query.filter_by(name=x[0]).first_or_404()
+			proizvod.kolicina += int(x[1])
+			evidencija = Evidencija(proizvod_id=proizvod.id, tvrtka_id=tvrtka.id, promijenjena_kolicina=int(x[1]), user_id=current_user.id, vrsta_unosa='unos', trenutna_kolicina=proizvod.kolicina)
+			db.session.add(evidencija)
+			db.session.commit()
+			
 
-	return render_template("ulaz.html", title='Ulaz', tvrtke=tvrtke, lista=lista)
+
+	return render_template("ulaz.html", title='Ulaz', tvrtke=tvrtke, lista=lista, form=form)

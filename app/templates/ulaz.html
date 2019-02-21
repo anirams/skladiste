@@ -34,10 +34,11 @@
     
 
     </table>
+    
        </div>
      </div>
    </div>
-
+{{ form.submit(type="submit", class="btn btn-primary ml-3") }}
     
 </div>
 
@@ -185,12 +186,14 @@ var counter=0;
       var tablica = document.getElementById("tablica");
       tablica.appendChild(tableR);
       ispisi();
+      {{ form.listaProizvoda(value=lista) }}
 
     }
     function obrisi(id){
       var elem = document.getElementById(id);
       elem.parentNode.removeChild(elem);
       delete lista[id];
+      {{ form.listaProizvoda(value=lista) }}
     }
 
     function ispisi(){
