@@ -38,6 +38,7 @@
      </div>
    </div>
   {{form.listaProizvoda(id="tajnaLista")}}
+  {{ form.submit(type="submit", class="btn btn-primary") }}
     
 </div>
 
@@ -185,13 +186,14 @@ var counter=0;
       var tablica = document.getElementById("tablica");
       tablica.appendChild(tableR);
       ispisi();
-
+      document.getElementById("tajnaLista").value=lista;
 
     }
     function obrisi(id){
       var elem = document.getElementById(id);
       elem.parentNode.removeChild(elem);
       delete lista[id];
+      document.getElementById("tajnaLista").value=lista;
     }
 
     function ispisi(){

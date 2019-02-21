@@ -387,6 +387,4 @@ def ulaz():
 			db.session.add(evidencija)
 			db.session.commit()
 			
-
-
 	return render_template("ulaz.html", title='Ulaz', tvrtke=tvrtke, lista=lista, form=form)
