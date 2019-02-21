@@ -367,3 +367,15 @@ def export_proizvod_izlaz(name):
 		'Korisnik'
 		]
 	return excel.make_response_from_query_sets(query_sets, column_names, 'xls', file_name="Izlazna evidencija "+name)
+
+
+@app.route('/ulaz', methods=['GET', 'POST'])
+@login_required
+def ulaz():
+	tvrtke = Tvrtka.query.all()
+	lista = []
+	sve_tvrtke = Tvrtka.query.all() 
+	for tvrtkaa in sve_tvrtke:
+		lista.append(tvrtkaa.name)
+
+	return render_template("ulaz.html", title='Ulaz', tvrtke=tvrtke, lista=lista)

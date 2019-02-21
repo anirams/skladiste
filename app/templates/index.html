@@ -5,7 +5,18 @@
 
 {% block content %}
 	
-
+<div class="row justify-content-md-cente">
+       <form class="form-inline" action="" novalidate="" autocomplete="off">
+                <div class="form-group autocomplete">
+                    <input size=32, class="form-control", placeholder="Unesi ime proizvoda", type="text", id="Ime"></input>   
+                    <input size=32, class="form-control", placeholder="Unesi količinu", type="text", value=1, name="Kolicina"></input>
+                    <input size=32, class="form-control", placeholder="Unesi tvrtku", type="text", name="Tvrtka"></input>
+                </div>
+                <div class="form-group">
+                    <input size=32, class="form-control", type="button", value="Submit", onclick="dodaj()"></input> 
+                </div>
+        </form>
+     </div>
 	<div class="index">
 		{% with messages = get_flashed_messages(with_categories=true) %}
 		{% if messages %}
@@ -21,4 +32,12 @@
     </div>
 
    
+   <script type="text/javascript">
+   	var lista = [];
+
+   	function dodaj() {
+  lista.push(document.getElementById("Ime").value);
+  console.log(lista[0]);
+}
+   </script>
 {% endblock %}
