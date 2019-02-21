@@ -10,7 +10,7 @@ from sqlalchemy import text
 import pdfkit
 from flask_paginate import Pagination, get_page_parameter, get_page_args
 from sqlalchemy import text
-import os
+import os, json
 
 config = pdfkit.configuration(wkhtmltopdf="C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe")
 
@@ -140,6 +140,10 @@ def proizvod(name):
 def stanje_skladista(page_num, s):
 	form = SearchForm()
 	form2 = UnosProizvodaForm()
+	lista = []
+	proizvodii = Proizvod.query.all()
+	for proizvod in proizvodii:
+		lista.append(proizvod.name)
 	
 	if s == ' ':
 		proizvodi = Proizvod.query.order_by(Proizvod.datum_unosa.desc()).paginate(per_page=8, page=page_num, error_out=True)
@@ -163,7 +167,7 @@ def stanje_skladista(page_num, s):
 			tvrtka = Tvrtka.query.all()
 			flash(f'Dodali ste proizvod {form2.name.data}!', 'success')
 			return redirect(url_for('stanje_skladista1'))
-	return render_template('stanje_skladista.html', title='Stanje skladista', proizvodi=proizvodi, form=form, form2=form2, search=' ')
+	return render_template('stanje_skladista.html', title='Stanje skladista', proizvodi=proizvodi, form=form, form2=form2, search=' ', lista=lista)
 
 @app.route('/stanje_skladista1', methods=['GET', 'POST'])
 @login_required
@@ -178,10 +182,10 @@ def tvrtke(page_num, s):
 	form2 = SearchFormTvrtka()
 	tvrtke = Tvrtka.query.all()
 	lista = []
-	sve_tvrtke = Tvrtka.query.all() #query all devices
+	sve_tvrtke = Tvrtka.query.all() 
 	for tvrtkaa in sve_tvrtke:
 		lista.append(tvrtkaa.name)
-	
+
 	if s == ' ':
 		tvrtke = Tvrtka.query.order_by(Tvrtka.name).paginate(per_page=5, page=page_num, error_out=True)
 		
@@ -214,6 +218,10 @@ def tvrtke1():
 @login_required
 def svi_korisnici(page_num, s):
 	form = SearchFormKorisnik()
+	lista = []
+	sviKorisnici = User.query.all()
+	for korisnik in sviKorisnici:
+		lista.append(korisnik.username)
 	if s == ' ':
 		svi_korisnici = User.query.order_by(User.username.desc()).paginate(per_page=7, page=page_num, error_out=True)
 		
@@ -224,8 +232,8 @@ def svi_korisnici(page_num, s):
 		svi_korisnici2 = User.query.filter(User.username.like("%" + form.search.data + "%")).paginate(per_page=3, page=1, error_out=True)
 		if not svi_korisnici2:
 			flash('Korisnik ne postoji')
-		return render_template("svi_korisnici.html", title='Svi korisnici', form=form, svi_korisnici=svi_korisnici2, search=form.search.data )
-	return render_template('svi_korisnici.html', title='Svi korisnici', svi_korisnici=svi_korisnici, form=form, search=' ')
+		return render_template("svi_korisnici.html", title='Svi korisnici', form=form, svi_korisnici=svi_korisnici2, search=form.search.data, lista=lista )
+	return render_template('svi_korisnici.html', title='Svi korisnici', svi_korisnici=svi_korisnici, form=form, search=' ', lista=lista)
 
 @app.route('/svi_korisnici1', methods=['GET', 'POST'])
 @login_required
