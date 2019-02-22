@@ -13,7 +13,7 @@
      <div class="row justify-content-md-cente">
        <form class="form-inline" action="" novalidate="" autocomplete="off">
                 <div class="form-group autocomplete">
-                    <input size=32, class="form-control", placeholder="Unesi ime proizvoda", type="text", id="Ime"></input>   
+                    <input size=32, class="form-control", placeholder="Unesi ime proizvoda", type="text", id="Ime", autocomplete="off"></input>   
                     <input size=32, class="form-control", placeholder="Unesi količinu", type="text", value=1 , id="Kolicina"></input>
                     <input size=32, class="form-control", placeholder="Unesi tvrtku", type="text", id="Tvrtka"></input>
                 </div>
@@ -23,7 +23,7 @@
         </form>
      </div>
      <div class="row">
-       <div>
+     
          <table class="table table-striped" id="tablica">
         <tr>
             <th>Proizvod</th>
@@ -34,26 +34,15 @@
     
 
     </table>
-       </div>
+      
      </div>
    </div>
   {{form.listaProizvoda(id="tajnaLista")}}
+  {{ form.submit(type="submit", class="btn btn-primary") }}
     
 </div>
 
 <script type="text/javascript">
-
-if (form_error) {
-    console.log("form error " + form_error);
-    $(document).ready(function () {
-   $('#tvrtka-potvrda').click();
-});
-   
-   
-}
-else{
-    console.log("form error " + form_error)
-}
 
 
 function autocomplete(inp, arr) {
@@ -152,7 +141,7 @@ document.addEventListener("click", function (e) {
 });
 }
 
-autocomplete(document.getElementById("myInput"), lista1);
+autocomplete(document.getElementById("Tvrtka"), lista1);
 
 </script>
 
@@ -163,42 +152,46 @@ var counter=0;
 
     function dodaj() {
       var listaSve = [];
-      listaSve.push(document.getElementById("Ime").value);
-      listaSve.push(document.getElementById("Kolicina").value);
-      listaSve.push(document.getElementById("Tvrtka").value);
-      lista.push(listaSve)
+      if (document.getElementById("Ime").value !== "" && document.getElementById("Kolicina").value !== "" && document.getElementById("Tvrtka").value !== "") {
+          listaSve.push(document.getElementById("Ime").value);
+          listaSve.push(document.getElementById("Kolicina").value);
+          listaSve.push(document.getElementById("Tvrtka").value);
+          lista.push(listaSve)
 
-      var tableR = document.createElement("tr");
-      for(var k=0; k<3; k++){
-        var tableD = document.createElement("td");
-        var tableDime = document.createTextNode(listaSve[k]);
-        tableD.appendChild(tableDime);
-        tableR.appendChild(tableD)
+          var tableR = document.createElement("tr");
+          for(var k=0; k<3; k++){
+            var tableD = document.createElement("td");
+            var tableDime = document.createTextNode(listaSve[k]);
+            tableD.appendChild(tableDime);
+            tableR.appendChild(tableD)
+          }
+          var button = document.createElement("BUTTON")
+          button.setAttribute('id', counter)
+          tableR.setAttribute('id', counter)
+          button.setAttribute('onclick', 'obrisi(id);')
+          
+          counter++;
+          tableR.appendChild(button)
+          var tablica = document.getElementById("tablica");
+          tablica.appendChild(tableR);
+          ispisi();
+          document.getElementById("tajnaLista").value=lista;
+
+          $("#Ime").val('');
       }
-      var button = document.createElement("BUTTON")
-      button.setAttribute('id', counter)
-      tableR.setAttribute('id', counter)
-      button.setAttribute('onclick', 'obrisi(id);')
-      
-      counter++;
-      tableR.appendChild(button)
-      var tablica = document.getElementById("tablica");
-      tablica.appendChild(tableR);
-      ispisi();
-
-
     }
     function obrisi(id){
       var elem = document.getElementById(id);
       elem.parentNode.removeChild(elem);
       delete lista[id];
+      document.getElementById("tajnaLista").value=lista;
     }
 
     function ispisi(){
       for(var i=0; i<lista.length; i++){
         for(var j=0; j<3; j++){
           if (lista[i]!== null){
-            console.log(lista[i][j]);
+            console.log(lista[i]);
           }
           
         }
