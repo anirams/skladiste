@@ -1,4 +1,4 @@
-#!"c:\users\uc-m12\documents\marina stvoric\skladiste\venv\scripts\python.exe"
+#!c:\users\uc-m02\documents\github\skladiste\venv\scripts\python.exe
 # EASY-INSTALL-ENTRY-SCRIPT: 'alembic==1.0.7','console_scripts','alembic'
 __requires__ = 'alembic==1.0.7'
 import re

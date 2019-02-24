@@ -3,38 +3,55 @@
 {% block unos_proizvoda %}active{% endblock %}
 
 {% block content %}
-    <h1>Stvori novi proizvod</h1>
-    <form action="" method="post" novalidate="">
-        {{ form.hidden_tag() }}
-        <p>
-            {{ form.name.label }}<br>
-            {{ form.name(size=32) }}
-            {% for error in form.name.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        <p>
-            {{ form.kolicina.label }}<br>
-            {{ form.kolicina(size=32) }}
-            {% for error in form.kolicina.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        <p>
-            {{ form.zemlja_podrijetla.label }}<br>
-            {{ form.zemlja_podrijetla(size=32) }}
-            {% for error in form.zemlja_podrijetla.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
+<div class="unos-p">
+    <div class="row justify-content-md-center">
+        <div class="col col-lg-2"></div>
+        <div class="col-md-auto">
 
-        <p>
+            <form class="form-container pl-5 pr-5" action="" method="post" novalidate="">
+        {{ form.hidden_tag() }}
+        <h3>Stvori novi proizvod</h3>
+        
+            {{ form.name.label }}<br>
+            {{ form.name(size=32, class="form-control") }}
+            {% for error in form.name.errors %}
+            <span style="color: red;">[{{ error }}]</span><br>
+            {% endfor %}<br>
+        
+            {{ form.promijenjena_kolicina.label }}<br>
+            {{ form.promijenjena_kolicina(size=32, class="form-control") }}
+            {% for error in form.promijenjena_kolicina.errors %}
+            <span style="color: red;">[{{ error }}]</span><br>
+            {% endfor %}<br>
+        
+            {{ form.zemlja_podrijetla.label }}<br>
+            {{ form.zemlja_podrijetla(size=32, class="form-control") }}
+            {% for error in form.zemlja_podrijetla.errors %}
+            <span style="color: red;">[{{ error }}]</span><br>
+            {% endfor %}<br>
+        
             {{ form.oib.label }}<br>
-            {{ form.oib(size=32) }}
+            {{ form.oib(size=32, class="form-control") }}
             {% for error in form.oib.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        <p>{{ form.submit() }}</p>
+            <span style="color: red;">[{{ error }}]</span><br>
+            {% endfor %}<br>
+        
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <p>{{ form.dodaj_jos(type="submit", class="btn btn-primary") }}</p>
+        <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
     </form>
+        </div>
+        <div class="col col-lg-2"></div>
+    </div>
+    
+</div>
 {% endblock %}

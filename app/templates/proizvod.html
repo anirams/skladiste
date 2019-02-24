@@ -1,72 +1,45 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container pt-2">
-    <div class="row">
-        <div class="col-md-4">
-            <h5>NAZIV PROIZVODA</h5>
-            <p>{{ proizvod.name }}</p>
-        </div>
-        <div class="col-md-4">
-            <h5>ZEMLJA PODRIJETLA</h5>
-            <p>{{ proizvod.zemlja_podrijetla }}</p>
-        </div>
-        <div class="col-md-4">
-            <h5>KOLICINA</h5>
-            <p>{{ proizvod.kolicina }}</p>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-6">
-            <h5>Unos robe:</h5>
-            <form action="" method="post" novalidate="">
-                {{ form_ulaz.hidden_tag() }}
-                <p>
-                    {{ form_ulaz.promijenjena_kolicina.label }}<br>
-                    {{ form_ulaz.promijenjena_kolicina(size=32) }}
-                    {% for error in form_ulaz.promijenjena_kolicina.errors %}
-                    <span style="color: red;">[{{ error }}]</span>
-                    {% endfor %}
-                </p>
-                <p>
-                    {{ form_ulaz.oib.label }}<br>
-                    {{ form_ulaz.oib(size=32) }}
-                    {% for error in form_ulaz.oib.errors %}
-                    <span style="color: red;">[{{ error }}]</span>
-                    {% endfor %}
-                </p>
-                <p>{{ form_ulaz.submit1() }}</p>
-            </form>
-        </div>
-        <div class="col-md-6">
-            <h5>Izlaz robe:</h5>
-            <form action="" method="post" novalidate="">
-                {{ form_izlaz.csrf_token }}
-                <p>
-                    {{ form_izlaz.promijenjena_kolicina.label }}<br>
-                    {{ form_izlaz.promijenjena_kolicina(size=32) }}
-                    {{ form_izlaz.proizvod_id(value=proizvod.id) }}
-                    {% for error in form_izlaz.promijenjena_kolicina.errors %}
-                    <span style="color: red;">[{{ error }}]</span>
-                    {% endfor %}
-                </p>
-                <p>
-                    {{ form_izlaz.oib.label }}<br>
-                    {{ form_izlaz.oib(size=32) }}
-                    {% for error in form_izlaz.oib.errors %}
-                    <span style="color: red;">[{{ error }}]</span>
-                    {% endfor %}
-                </p>
-                <p>{{ form_izlaz.submit2() }}</p>
-            </form>
-        </div>
-    </div>
+
+<div class="unos-p">
+    <h4><strong>Trenutno na zalihi:</strong></h4>
+    <table class="table table-striped">
+        <tr>
+            <th>Naziv Proizvoda</th>
+            <th>Opis proizvoda</th>
+            <th>Zemlja Podrijetla</th> 
+            <th>Kolicina</th>
+        </tr>
+        <tr>
+            <td>{{ proizvod.name }}</td>
+            <td>{{ proizvod.opis_proizvoda }}</td>
+            <td>{{ proizvod.zemlja_podrijetla }}</td> 
+            <td>{{ proizvod.kolicina }}</td>
+        </tr>     
+    </table>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-success" role="alert">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    
+    <div class="tipke-sredina">
+        <button type="button" class="btn btn-primary m-2" data-toggle="modal" data-target="#exampleModalCenter" id="ulaz-tipka">Ulaz Robe</button>
+        <button type="button" class="btn btn-primary m-2" data-toggle="modal" data-target="#exampleModalCenter2" id="izlaz-tipka">Izlaz Robe</button>
+        <button type="button" class="btn btn-primary m-2" data-toggle="modal" data-target="#exampleModalCenter3" id="uredi-proizvod-tipka">Uredi proizvod</button>
+    </div>  
 
     <hr>
-    <h5>Povijest evidencije:</h5>
+
+    <h4>Povijest evidencije:</h4>
+    <button class="btn btn-primary m-2"><a href="{{ url_for('export_proizvod_unos', name=name) }}" target="blank">Excel - Ulazne evidencije</a></button>
+    <button class="btn btn-primary m-2"><a href="{{ url_for('export_proizvod_izlaz', name=name) }}" target="blank">Excel - Izlazne evidencije</a></button>
     <div class="row">
         <div class="col-xl-6">
-            <h2>Evidencija unosa</h2>
+            <h5>Evidencija unosa</h5>
         <table class="table table-striped">
         <tr>
             <th>Proizvod</th> 
@@ -91,7 +64,7 @@
         </table> 
         </div>
         <div class="col-xl-6">
-            <h2>Evidencija izdavanja</h2>
+            <h5>Evidencija izdavanja</h5>
         <table class="table table-striped">
         <tr>
             <th>Proizvod</th> 
@@ -115,5 +88,196 @@
         </table> 
         </div>
     </div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Unos Robe</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <script>
+        var form_error1 = false;
+      </script>
+      <div class="modal-body">
+        <form action="" method="post" novalidate="">
+        {{ form_ulaz.hidden_tag() }}
+         <p>
+            {{ form_ulaz.promijenjena_kolicina.label }}<br>
+            {{ form_ulaz.promijenjena_kolicina(size=32) }}<br>
+            {% for error in form_ulaz.promijenjena_kolicina.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% if form_ulaz.promijenjena_kolicina.errors %}
+                <script> form_error1 = true; </script><br>
+            {% endif %}
+            {% endfor %}
+        </p>
+         <p>
+            {{ form_ulaz.oib.label }}<br>
+            {{ form_ulaz.oib(size=32) }}<br>
+            {% for error in form_ulaz.oib.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% if form_ulaz.oib.errors %}
+                <script> form_error1 = true; </script><br>
+            {% endif %}
+            {% endfor %}
+        </p>
+        <div class="modal-footer">
+        {{ form_ulaz.submit1(type="submit", class="btn btn-primary") }}
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </form>
+    
+    </div>
+      </div>
+    </div>
+  </div>
+
+  </div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Izlaz Robe</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <script>
+        var form_error2 = false;
+      </script>
+      <div class="modal-body">
+        <form action="" method="post" novalidate="">
+        {{ form_izlaz.csrf_token }}
+         <p>
+            {{ form_izlaz.promijenjena_kolicina.label }}<br>
+            {{ form_izlaz.promijenjena_kolicina(size=32) }}<br>
+            {{ form_izlaz.proizvod_id(value=proizvod.id) }}
+            {% for error in form_izlaz.promijenjena_kolicina.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% if form_izlaz.promijenjena_kolicina.errors %}
+                <script> form_error2 = true; </script><br>
+            {% endif %}
+            {% endfor %}
+        </p>
+         <p>
+            {{ form_izlaz.oib.label }}<br>
+            {{ form_izlaz.oib(size=32) }}<br>
+            {% for error in form_izlaz.oib.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% if form_izlaz.oib.errors %}
+                <script> form_error2 = true; </script><br>
+            {% endif %}
+            {% endfor %}
+        </p>
+        <div class="modal-footer">
+        {{ form_izlaz.submit2(type="submit", class="btn btn-primary") }}
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </form>
+    
+    </div>
+      </div>
+    </div>
+  </div>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter3" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Uredi Proizvod</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <script>
+        var form_error3 = false;
+      </script>
+      <div class="modal-body">
+        <form action="" method="post" novalidate="" class="form-group text-center">
+
+        {{ form_uredi.hidden_tag() }}
+         <p>
+            {{ form_uredi.name.label }}<br>
+            {{ form_uredi.name(size=32, value=proizvod.name, class="form-control") }}<br>
+            {% for error in form_uredi.name.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% if form_uredi.name.errors %}
+                <script> form_error3 = true; </script><br>
+            {% endif %}
+            {% endfor %}
+        </p>
+         <p>
+            {{ form_uredi.zemlja_podrijetla.label }}<br>
+            {{ form_uredi.zemlja_podrijetla(size=32, value=proizvod.zemlja_podrijetla, class="form-control") }}<br>
+            {% for error in form_uredi.zemlja_podrijetla.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% if form_uredi.zemlja_podrijetla.errors %}
+                <script> form_error3 = true; </script><br>
+            {% endif %}
+            {% endfor %}
+        </p>
+         <p>
+        
+            {{ form_uredi.opis_proizvoda.label }}<br>
+            {{ form_uredi.opis_proizvoda(size=300, value=proizvod.opis_proizvoda, class="form-control") }}<br>
+            {% for error in form_uredi.opis_proizvoda.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% if form_uredi.opis_proizvoda.errors %}
+                <script> form_error3 = true; </script><br>
+            {% endif %}
+            {% endfor %}
+        </p>
+        <div class="modal-footer">
+        {{ form_uredi.submit3(type="submit", class="btn btn-primary") }}
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </form>
+    
+    </div>
+      </div>
+    </div>
+  </div>
+
+  </div>
+
+<script type="text/javascript">
+if (form_error1) {
+    console.log("form error" + form_error1);
+    $(document).ready(function () {
+   $('#ulaz-tipka').click();
+});  
+}
+else{
+    console.log("form error" + form_error1)
+}
+
+if (form_error2) {
+    console.log("form error" + form_error2);
+    $(document).ready(function () {
+   $('#izlaz-tipka').click();
+});  
+}
+else{
+    console.log("form error" + form_error2)
+}
+
+if (form_error3) {
+    console.log("form error" + form_error3);
+    $(document).ready(function () {
+   $('#uredi-proizvod-tipka').click();
+});  
+}
+else{
+    console.log("form error" + form_error3)
+}
+
+</script>
 {% endblock %}

@@ -10,7 +10,7 @@ p {
     font-size: 1.1em;
     font-weight: 300;
     line-height: 1.7em;
-    color: #999;
+    color: black;
 }
 
 h4 {
@@ -47,11 +47,16 @@ ul ul a {
     transition: all 0.3s;
 }
 
+#sidebarCollapse {
+    margin-top: 20px;
+    margin-left: 15px;
+}
+
 #sidebar.active {
     margin-left: -250px;
 }
 #sidebar .sidebar-header {
-    padding: 20px;
+    padding: 7.5px 20px;
     background: #477ea5;
     color: #f0fdfe;
 }
@@ -94,8 +99,11 @@ ul.CTAs a {
     margin-bottom: 5px;
 }
 
-/* BODY */
+.hover-plava:hover{
+    background-color: #0069d9!important;
+}
 
+/* BODY */
 
 .tipka{
     background-color: #477ea5;
@@ -118,23 +126,248 @@ ul.CTAs a {
     background-color: #477ea5;
     display: inline-block;
     width: 100%;
-    height: 81.5px;
-
+    height: 84px;
 }
 
+/* INDEX */
 .index{
     padding-top: 30vh;
+    background-image: url('map.jpg');
+    background-size: cover;
+    height: 100vh;
+}
+
+/* STANJE SKLADISTA / PRETRAGA*/
+.tipka-stanje{
+    width: 50%;
+}
+.stanje-s{
+    padding-top: 3vh;
+    padding-left: 5vh;
+    padding-right: 5vh;
+    background-image: url('map.jpg');
+    height: 100vh;
+}
+
+.search-forma {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    max-width: 400px;
+}
+
+/* UNOS PROIZVODA */
+.unos-p {
+    padding-top: 2vh;
+    padding-left: 5vh;
+    padding-right: 5vh;
+    background-image: url('map.jpg');
+    height: 100vh;
+}
+
+.form-container {
+    border: 0px solid white;
+    padding: 15px;
+    border-radius: 3%;
+    -webkit-box-shadow: -1px 4px 26px 11px rgba(0,0,0,0.75);
+    -moz-box-shadow: -1px 4px 26px 11px rgba(0,0,0,0.75);
+    box-shadow: -1px 4px 26px 11px rgba(0,0,0,0.75);       
+}
+
+/* PROIZVOD */
+
+.tipke-sredina {
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+}
+
+/* TVRTKE */
+
+ @media (max-width: 450px)  { 
+    .modal-open {
+        width: 100%;
+    }
+    .#sidebar {
+        margin-left: 0;
+    }
+    .modal-dialog {
+        width: 360px;
+        justify-content: center;
+    }
+}
+
+@media (min-width: $screen-sm-min) { // this is the 768px breakpoint
+    .modal-dialog {
+        max-width: 600px;
+        width: auto;
+    }
+}
+
+@media (min-width: $screen-md-min) { // this is the 992px breakpoint
+    .modal-dialog { 
+        max-width: 800px;
+    }
 }
 
 
 
-
-
-@media (max-width: 768px) {
+@media only screen and (max-width: 768px) {
     #sidebar {
         margin-left: -250px;
     }
     #sidebar.active {
         margin-left: 0;
     }
+}
+.sakrij-tipku:before {
+    content: 'Sakrij';
+}
+
+@media screen and (max-width: 700px) {
+    .sakrij-tipku:before {
+        content: 'Prikazi';
+    }
+}
+.pagination-page-info {
+    padding: .6em;
+    padding-left: 0;
+    width: 40em;
+    margin: .5em;
+    margin-left: 0;
+    font-size: 12px;
+}
+.pagination-page-info b {
+    color: black;
+    background: #6aa6ed;
+    padding-left: 2px;
+    padding: .1em .25em;
+    font-size: 150%;
+}
+
+
+/* SAT */
+
+.clockdate-wrapper {
+    background-color: #242d32;
+    padding:10px;
+    max-width:350px;
+    width:100%;
+    text-align:center;
+    border-radius:5px;
+    margin:0 auto;
+    height: 84px;
+}
+#clock{
+    background-color:#242d32;
+    font-family: sans-serif;
+    font-size:1.8rem;
+    text-shadow:0px 0px 1px #bec9cd;
+    color:#bec9cd;
+}
+#clock span {
+    color:#888;
+    text-shadow:0px 0px 1px #242d32;
+    font-size:0.8rem;
+    position:relative;
+    top:-2px;
+    left:-2px;
+}
+#date {
+    letter-spacing:3px;
+    font-size:0.8rem;
+    font-family:arial,sans-serif;
+    color:#bec9cd;
+}
+
+
+/* FOOTER */
+
+footer {
+   position: fixed;
+   left: 0;
+   bottom: 0;
+   width: 100%;
+   background-color: #477ea5;
+   color: #bec9cd;
+   text-align: center;
+}
+
+/* LINK DECORATION */
+.dekoracija {
+  background:
+     linear-gradient(
+       to right,
+       var(--mainColor) 0%,
+       var(--mainColor) 2px,
+       transparent 2px
+     );
+    background-repeat: repeat-x;
+    background-size: 100%;
+  color: #000;
+  padding-left: 10px;
+  text-decoration: none;
+  padding: 0 10px;
+}
+
+.dekoracija:hover {
+  background:
+     linear-gradient(
+       to right,
+       var(--mainColor) 0%,
+       var(--mainColor) 5px,
+       transparent
+     );
+}
+
+:root {
+  --mainColor: #007bff;
+}
+
+/* AUTOCOMPLETE */
+.autocomplete {
+  /*the container must be positioned relative:*/
+  position: relative;
+  display: inline-block;
+}
+input {
+  border: 1px solid transparent;
+  background-color: #f1f1f1;
+  padding: 10px;
+  font-size: 16px;
+}
+input[type=text] {
+  background-color: #f1f1f1;
+  width: 100%;
+}
+input[type=submit] {
+  background-color: DodgerBlue;
+  color: #fff;
+}
+.autocomplete-items {
+  position: absolute;
+  border: 1px solid #d4d4d4;
+  border-bottom: none;
+  border-top: none;
+  z-index: 99;
+  /*position the autocomplete items to be the same width as the container:*/
+  top: 100%;
+  left: 0;
+  right: 0;
+}
+.autocomplete-items div {
+  padding: 10px;
+  cursor: pointer;
+  background-color: #fff; 
+  border-bottom: 1px solid #d4d4d4; 
+}
+.autocomplete-items div:hover {
+  /*when hovering an item:*/
+  background-color: #e9e9e9; 
+}
+.autocomplete-active {
+  /*when navigating through the items using the arrow keys:*/
+  background-color: DodgerBlue !important; 
+  color: #ffffff; 
 }

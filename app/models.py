@@ -28,12 +28,14 @@ class Proizvod(db.Model):
 	__searchable__ = ['name']
 	id = db.Column(db.Integer, primary_key=True)
 	name = db.Column(db.String(64))
-	kolicina = db.Column(db.Integer)
+	kolicina = db.Column(db.Integer, default=0)
 	zemlja_podrijetla = db.Column(db.String(64))
+	opis_proizvoda = db.Column(db.String(300))
 	datum_unosa = db.Column(db.DateTime, default=datetime.utcnow)
 	evidencija = db.relationship('Evidencija', backref='proizvod', lazy='dynamic')
 
 class Tvrtka(db.Model):
+	__searchable__ = ['name']
 	id = db.Column(db.Integer, primary_key=True)
 	name = db.Column(db.String(64))
 	oib = db.Column(db.Integer, unique=True)
@@ -47,6 +49,13 @@ class Evidencija(db.Model):
 	proizvod_id = db.Column(db.Integer, db.ForeignKey('proizvod.id'))
 	tvrtka_id = db.Column(db.Integer, db.ForeignKey('tvrtka.id'))
 	promijenjena_kolicina = db.Column(db.Integer)
+	trenutna_kolicina = db.Column(db.Integer)
 	datum_unosa = db.Column(db.DateTime, default=datetime.utcnow)
 	vrsta_unosa = db.Column(db.String(64))
 	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+
+#class Receipt(db.Model):
+	#evidencija_id = db.Column(db.Integer, db.ForeignKey('evidencija.id'))
+	#user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+	#receipt_type = db.Column(db.String(64))

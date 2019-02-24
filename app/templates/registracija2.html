@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block unos_proizvoda %}active{% endblock %}
+
+{% block content %}
+<div class="unos-p">
+    <div class="row justify-content-md-center">
+        <div class="col col-lg-2"></div>
+        <div class="col-md-auto mt-5">
+
+            <form class="form-container pl-5 pr-5 pb-5 pt-3" action="" method="post" novalidate="">
+        {{ form.hidden_tag() }}
+        <h3>Registriraj novog korisnika</h3>
+        
+            {{ form.username.label }}<br>
+            {{ form.username(size=32, type="username", class="form-control", placeholder="Unesite Korisničko Ime" ) }}
+            {% for error in form.username.errors %}<br>
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}<br>
+        
+            {{ form.email.label }}<br>
+            {{ form.email(size=32, type="email", class="form-control", placeholder="Unesite Email Adresu" ) }}
+            {% for error in form.email.errors %}
+                <span style="color: red;">[{{ error }}]</span><br>
+            {% endfor %}<br>
+        
+            {{ form.password.label }}<br>
+            {{ form.password(size=32, type="password", class="form-control", placeholder="Unesite Lozinku" ) }}
+            {% for error in form.password.errors %}
+                <span style="color: red;">[{{ error }}]</span><br>
+            {% endfor %}<br>
+        
+            {{ form.password2.label }}<br>
+            {{ form.password2(size=32, type="password", class="form-control", placeholder="Ponovno Unesite Lozinku" ) }}
+            {% for error in form.password2.errors %}
+                <span style="color: red;">[{{ error }}]</span><br>
+            {% endfor %}<br>
+        
+        
+        {{ form.submit(type="submit", class="btn tipka btn-block") }}
+                <div class="container">
+                        {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                        <div>
+                            {% for message in messages %}
+                            <p class="tocno">{{ message }}</p>
+                            {% endfor %}
+                        </div>
+                            {% endif %}
+                            {% endwith %}                       
+                </div>
+    </form>
+        </div>
+        <div class="col col-lg-2"></div>
+    </div>
+    
+</div>
+{% endblock %}

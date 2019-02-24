@@ -1,7 +1,12 @@
 {% extends "base2.html" %}
 
+{% block content3 %}
+    <a href="{{ url_for('index') }}" class="h4"><i class="fas fa-arrow-left fa-lg mr-3"></i>Povratak</a>
+{% endblock content3 %}
+
 {% block content2 %}
-            <form class="form-container" action="" method="post" novalidate="">
+<div class="registracija">
+            <form class="form-container-register" action="" method="post" novalidate="">
                 {{ form.hidden_tag() }}
                 <h1>Registracija</h1>
                 <div class="form-group">
@@ -47,10 +52,13 @@
                             {% endif %}
                             {% endwith %}                       
                 </div>
+                <!--
                 <div class="pt-3">
                     <p>
                         Vec Imas Korisnički račun? <a class="ml-2" href="{{ url_for('login') }}">Klikni za login</a>
                     </p>
-                </div>      
+                </div> 
+                -->     
             </form>
+</div>
 {% endblock content2 %}

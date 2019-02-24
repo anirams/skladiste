@@ -1,30 +1,51 @@
-from flask import render_template, flash, redirect, url_for, request
+from flask import render_template, flash, redirect, url_for, request, send_file, send_from_directory
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, UlazRobeForm, IzlazRobeForm, UnosProizvodaForm, SearchForm, EditPasswordForm, UnosTvrtkeForm
+from app.forms import LoginForm, RegistrationForm, UlazRobeForm, IzlazRobeForm, UrediProizvodForm, UnosProizvodaForm, SearchForm, EditPasswordForm, UnosTvrtkeForm, SearchFormTvrtka, SearchFormKorisnik, ListForm
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Proizvod, Tvrtka, Evidencija
 from werkzeug.urls import url_parse
 from datetime import datetime
+import flask_excel as excel
+from sqlalchemy import text
+import pdfkit
+from flask_paginate import Pagination, get_page_parameter, get_page_args
+from sqlalchemy import text
+import os, json
+
+config = pdfkit.configuration(wkhtmltopdf="C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe")
+
+excel.init_excel(app)
 
 @app.route('/index')
+@login_required
 def index():
+	folder = 'app/Evidencije/'
+	for the_file in os.listdir(folder):
+		file_path = os.path.join(folder, the_file)
+		try:
+			if os.path.isfile(file_path):
+				os.unlink(file_path)
+		except Exception as e:
+			print(e)
 	return render_template('index.html', title='Home')
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/login', methods=['GET', 'POST'])
 def login():
 	if current_user.is_authenticated:
+		#flash(f'Korisnik { form.username.data } je ulogiran!', 'success')
 		return redirect(url_for('index'))
 	form = LoginForm()
 	if form.validate_on_submit():
 		user = User.query.filter_by(username=form.username.data).first()
 		if user is None or not user.check_password(form.password.data):
-			flash('Netočno korisničko ime ili lozinka!')
+			flash(f'Netočno korisničko ime ili lozinka!', 'danger')
 			return redirect(url_for('login'))
 		login_user(user, remember=form.remember_me.data)
 		next_page = request.args.get('next')
 		if not next_page or url_parse(next_page).netloc != '':
 			next_page = url_for('index')
+			flash(f'Korisnik { form.username.data } je ulogiran!', 'success')
 		return redirect(next_page)
 	return render_template('login.html', title='Prijavi se', form=form)
 
@@ -33,7 +54,7 @@ def logout():
 	logout_user()
 	return redirect(url_for('login'))
 
-@app.route('/register', methods=['GET', 'POST'])
+@app.route('/registracija2', methods=['GET', 'POST'])
 def register():
 	if not current_user.is_authenticated:
 		return redirect(url_for('login'))
@@ -45,9 +66,9 @@ def register():
 		user.set_password(form.password.data)
 		db.session.add(user)
 		db.session.commit()
-		flash('Sada ste registrirani korisnik!')
+		flash(f'Registrirali ste korisnika {form.username.data}!', 'success')
 		return redirect(url_for('login'))
-	return render_template('register.html', title='Registriraj se', form=form)
+	return render_template('registracija2.html', title='Registriraj se', form=form)
 
 @app.route('/user/<username>')
 @login_required
@@ -65,17 +86,16 @@ def before_request():
 @login_required
 def unos_proizvoda():
 	form = UnosProizvodaForm()
-	if form.validate_on_submit():
-		proizvod = Proizvod(name=form.name.data, zemlja_podrijetla=form.zemlja_podrijetla.data, kolicina=form.kolicina.data)
-		db.session.add(proizvod)
-		db.session.commit()
-		flash('Dodali ste proizvod!')
+	if form.submit.data:
+		return redirect(url_for('stanje_skladista', page_num=1, s=' '))
+	while form.dodaj_jos.data:
 		proizvod = Proizvod.query.filter_by(name=form.name.data).first()
+		proizvod.kolicina += form.promijenjena_kolicina.data
 		tvrtka = Tvrtka.query.filter_by(oib=form.oib.data).first()
-		evidencija = Evidencija(proizvod_id=proizvod.id, promijenjena_kolicina=proizvod.kolicina, tvrtka_id=tvrtka.id, user_id=current_user.id, vrsta_unosa='unos')
+		evidencija = Evidencija(proizvod_id=proizvod.id, promijenjena_kolicina=form.promijenjena_kolicina.data, tvrtka_id=tvrtka.id, user_id=current_user.id, vrsta_unosa='unos', trenutna_kolicina=proizvod.kolicina)
 		db.session.add(evidencija)
 		db.session.commit()
-		tvrtka = Tvrtka.query.all()
+		flash(f'Dodali ste proizvod {form.name.data}!', 'success')
 		return redirect(url_for('unos_proizvoda'))
 	return render_template('unos_proizvoda.html', title='Dodaj proizvod', form=form)
 
@@ -87,10 +107,11 @@ def proizvod(name):
 	evidencijaIzlaz = Evidencija.query.filter_by(proizvod_id=proizvod.id, vrsta_unosa='izlaz').order_by(Evidencija.datum_unosa.desc()).all()
 	form_ulaz = UlazRobeForm()
 	form_izlaz = IzlazRobeForm()
+	form_uredi = UrediProizvodForm()
 	if form_ulaz.submit1.data and form_ulaz.validate():
 			tvrtka = Tvrtka.query.filter_by(oib=form_ulaz.oib.data).first_or_404()
 			proizvod.kolicina += form_ulaz.promijenjena_kolicina.data
-			evidencija = Evidencija(proizvod_id=proizvod.id, tvrtka_id=tvrtka.id, promijenjena_kolicina=form_ulaz.promijenjena_kolicina.data, user_id=current_user.id, vrsta_unosa='unos')
+			evidencija = Evidencija(proizvod_id=proizvod.id, tvrtka_id=tvrtka.id, promijenjena_kolicina=form_ulaz.promijenjena_kolicina.data, user_id=current_user.id, vrsta_unosa='unos', trenutna_kolicina=proizvod.kolicina)
 			db.session.add(evidencija)
 			db.session.commit()
 			flash('Dodali ste kolicinu na stanje!')
@@ -98,88 +119,326 @@ def proizvod(name):
 	if form_izlaz.submit2.data and form_izlaz.validate():
 			tvrtka = Tvrtka.query.filter_by(oib=form_izlaz.oib.data).first_or_404()
 			proizvod.kolicina -= form_izlaz.promijenjena_kolicina.data
-			evidencija = Evidencija(proizvod_id=proizvod.id, tvrtka_id=tvrtka.id, promijenjena_kolicina=form_izlaz.promijenjena_kolicina.data, user_id=current_user.id, vrsta_unosa='izlaz')
+			evidencija = Evidencija(proizvod_id=proizvod.id, tvrtka_id=tvrtka.id, promijenjena_kolicina=form_izlaz.promijenjena_kolicina.data, user_id=current_user.id, vrsta_unosa='izlaz', trenutna_kolicina=proizvod.kolicina)
 			db.session.add(evidencija)
 			db.session.commit()
 			flash('Oduzeli ste kolicinu sa stanja!')
 			return redirect(url_for('proizvod', name=proizvod.name))
-	return render_template('proizvod.html', title=proizvod.name, proizvod=proizvod, evidencijaUlaz=evidencijaUlaz, evidencijaIzlaz=evidencijaIzlaz, form_ulaz=form_ulaz, form_izlaz=form_izlaz)
+	if form_uredi.submit3.data and form_uredi.validate():
+			proizvod = Proizvod.query.filter_by(name=name).first_or_404()
+			proizvod.name = form_uredi.name.data
+			proizvod.zemlja_podrijetla = form_uredi.zemlja_podrijetla.data
+			proizvod.opis_proizvoda = form_uredi.opis_proizvoda.data
+			db.session.add(proizvod)
+			db.session.commit()
+			flash('Uspjesno ste uredili proizvod!')
+			return redirect(url_for('proizvod', name=proizvod.name))
+	return render_template('proizvod.html', title=proizvod.name, proizvod=proizvod, evidencijaUlaz=evidencijaUlaz, evidencijaIzlaz=evidencijaIzlaz, form_ulaz=form_ulaz, form_izlaz=form_izlaz, form_uredi=form_uredi, name=proizvod.name)
 
-@app.route('/stanje_skladista', methods=['GET', 'POST'])
+@app.route('/stanje_skladista/<int:page_num>+<s>', methods=['GET', 'POST'])
 @login_required
-def stanje_skladista():
-	
-	page = request.args.get('page', 1, type=int)
-	proizvodi = Proizvod.query.order_by(Proizvod.datum_unosa.desc()).paginate(page, app.config['POSTS_PER_PAGE'], False)
-	next_url = url_for('stanje_skladista', page=proizvodi.next_num) \
-		if proizvodi.has_next else None
-	prev_url = url_for('stanje_skladista', page=proizvodi.prev_num) \
-		if proizvodi.has_prev else None
+def stanje_skladista(page_num, s):
 	form = SearchForm()
-	if form.validate_on_submit():
-		page2 = request.args.get('page2', 1, type=int)
-		proizvodi2 = Proizvod.query.filter(Proizvod.name.like("%" + form.search.data + "%")).paginate(page2, app.config['POSTS_PER_PAGE'], False)
-		next_url2 = url_for('stanje_skladista', page=proizvodi2.next_num) \
-			if proizvodi2.has_next else None
-		prev_url2 = url_for('stanje_skladista', page=proizvodi2.prev_num) \
-			if proizvodi2.has_prev else None
-		return render_template("stanje_skladista.html", title='sssasas', form=form, proizvodi=proizvodi2.items, next_url=next_url2, prev_url=prev_url2)
-	else:
-		return render_template('stanje_skladista.html', title='Stanje skladista', proizvodi=proizvodi.items, form=form, next_url=next_url, prev_url=prev_url)
+	form2 = UnosProizvodaForm()
+	lista = []
+	lista2 = []
+	proizvodii = Proizvod.query.all()
+	for proizvod in proizvodii:
+		lista.append(proizvod.name)
+	
+	if s == ' ':
+		proizvodi = Proizvod.query.order_by(Proizvod.datum_unosa.desc()).paginate(per_page=8, page=page_num, error_out=True)
+	elif not form.submit.data:
+		proizvodi2 = Proizvod.query.filter(Proizvod.name.like("%" + s + "%")).paginate(per_page=3, page=page_num, error_out=True)
+		return render_template("stanje_skladista.html", title='Stanje skladista', form=form, proizvodi=proizvodi2, search=s, form2=form2, lista=lista )
+	if form.submit.data:
+		if form.validate_on_submit():
+			proizvodi2 = Proizvod.query.filter(Proizvod.name.like("%" + form.search.data + "%")).paginate(per_page=3, page=1, error_out=True)
+			return render_template("stanje_skladista.html", title='Stanje skladista', form=form, proizvodi=proizvodi2, search=form.search.data, form2=form2, lista=lista )
+	if form2.submit2.data:
+		if form2.validate_on_submit():
+			proizvod = Proizvod(name=form2.name.data, opis_proizvoda=form2.opis_proizvoda.data, zemlja_podrijetla=form2.zemlja_podrijetla.data)
+			db.session.add(proizvod)
+			db.session.commit()
+			#proizvod = Proizvod.query.filter_by(name=form2.name.data).first()
+			#tvrtka = Tvrtka.query.filter_by(oib=form2.oib.data).first()
+			# evidencija = Evidencija(proizvod_id=proizvod.id, user_id=current_user.id, vrsta_unosa='unos')
+			# db.session.add(evidencija)
+			# db.session.commit()
+			# tvrtka = Tvrtka.query.all()
+			flash(f'Dodali ste proizvod {form2.name.data}!', 'success')
+			return redirect(url_for('stanje_skladista1'))
+	return render_template('stanje_skladista.html', title='Stanje skladista', proizvodi=proizvodi, form=form, form2=form2, search=' ', lista=lista)
 
-@app.route('/tvrtke', methods=['GET', 'POST'])
+@app.route('/stanje_skladista1', methods=['GET', 'POST'])
 @login_required
-def tvrtke():
+def stanje_skladista1():
+	return redirect(url_for('stanje_skladista', page_num=1, s=' '))
+
+
+@app.route('/tvrtke/<int:page_num>+<s>', methods=['GET', 'POST'])
+@login_required
+def tvrtke(page_num, s):
 	form = UnosTvrtkeForm()
+	form2 = SearchFormTvrtka()
 	tvrtke = Tvrtka.query.all()
-	#dob = Dobavljac.query.all()
-	if form.validate_on_submit():
-		tvrtka = Tvrtka(name=form.name.data, oib=form.oib.data, grad=form.grad.data, 
-			p_broj=form.p_broj.data, drzava=form.drzava.data)
-		db.session.add(tvrtka)
-		db.session.commit()
-		flash('Uspješno ste unijeli tvrtku!')
-		return redirect(url_for('tvrtke'))
-	return render_template('tvrtke.html', title='Dodaj tvrtku', form=form, tvrtke=tvrtke)
+	lista = []
+	sve_tvrtke = Tvrtka.query.all() 
+	for tvrtkaa in sve_tvrtke:
+		lista.append(tvrtkaa.name)
 
-@app.route('/evidencija_unosa')
+	if s == ' ':
+		tvrtke = Tvrtka.query.order_by(Tvrtka.name).paginate(per_page=5, page=page_num, error_out=True)
+		
+	elif not form2.submit2.data:
+		tvrtke2 = Tvrtka.query.filter(Tvrtka.name.like("%" + s + "%")).paginate(per_page=3, page=page_num, error_out=True)
+		return render_template("tvrtke.html", title='Tvrtke', form=form, form2=form2, tvrtke=tvrtke2, search=s , lista=lista)
+	if  form2.submit2.data:
+		if form2.validate_on_submit():
+			tvrtke2 = Tvrtka.query.filter(Tvrtka.name.like("%" + form2.search.data + "%")).paginate(per_page=3, page=1, error_out=True)
+			tvrtke_lista=Tvrtka.query.filter(Tvrtka.name.like("%" + form2.search.data + "%"))
+			return render_template("tvrtke.html", title='Tvrtke', form=form, form2=form2, tvrtke=tvrtke2, search=form2.search.data, tvrtke_lista=tvrtke_lista, lista=lista)
+	
+	if form.submit.data:
+		if form.validate_on_submit():
+			tvrtka = Tvrtka(name=form.name.data, oib=form.oib.data, grad=form.grad.data, 
+				p_broj=form.p_broj.data, drzava=form.drzava.data)
+			db.session.add(tvrtka)
+			db.session.commit()
+			flash(f'Uspješno ste unijeli tvrtku {form.name.data}!')
+			tvrtke = Tvrtka.query.order_by(Tvrtka.name.desc()).paginate(per_page=5, page=page_num, error_out=True)
+			#return render_template('tvrtke.html', title='Dodaj tvrtku', form=form, form2=form2, tvrtke=tvrtke, search=' ')
+	return render_template('tvrtke.html', title='Tvrtke', tvrtke=tvrtke, form=form, form2= form2, search=' ', lista=lista)
+
+@app.route('/tvrtke1', methods=['GET', 'POST'])
 @login_required
-def evidencija_unosa():
-	evidencija = Evidencija.query.filter_by(vrsta_unosa='unos').order_by(Evidencija.datum_unosa.desc()).all()
+def tvrtke1():
+	return redirect(url_for('tvrtke', page_num=1, s=' '))
+
+@app.route('/svi_korisnici/<int:page_num>+<s>', methods=['GET', 'POST'])
+@login_required
+def svi_korisnici(page_num, s):
+	form = SearchFormKorisnik()
+	lista = []
+	sviKorisnici = User.query.all()
+	for korisnik in sviKorisnici:
+		lista.append(korisnik.username)
+	if s == ' ':
+		svi_korisnici = User.query.order_by(User.username.desc()).paginate(per_page=7, page=page_num, error_out=True)
+		
+	else:
+		svi_korisnici2 = User.query.filter(User.username.like("%" + s + "%")).paginate(per_page=3, page=page_num, error_out=True)
+		return render_template("svi_korisnici.html", title='Svi korisnici', form=form, svi_korisnici=svi_korisnici2, search=s )
+	if form.validate_on_submit():
+		svi_korisnici2 = User.query.filter(User.username.like("%" + form.search.data + "%")).paginate(per_page=3, page=1, error_out=True)
+		if not svi_korisnici2:
+			flash('Korisnik ne postoji')
+		return render_template("svi_korisnici.html", title='Svi korisnici', form=form, svi_korisnici=svi_korisnici2, search=form.search.data, lista=lista )
+	return render_template('svi_korisnici.html', title='Svi korisnici', svi_korisnici=svi_korisnici, form=form, search=' ', lista=lista)
+
+@app.route('/svi_korisnici1', methods=['GET', 'POST'])
+@login_required
+def svi_korisnici1():
+	return redirect(url_for('svi_korisnici', page_num=1, s=' '))
+
+@app.route('/evidencija_unosa/<int:page_num>')
+@login_required
+def evidencija_unosa(page_num):
+	evidencija = Evidencija.query.filter_by(vrsta_unosa='unos').order_by(Evidencija.datum_unosa.desc()).paginate(per_page=7, page=page_num, error_out=True)
 	return render_template('evidencija_unosa.html', title='Evidencija unosa', evidencija=evidencija)
 
-@app.route('/evidencija_izdavanja')
+@app.route('/evidencija_unosa1', methods=['GET', 'POST'])
 @login_required
-def evidencija_izdavanja():
-	evidencija = Evidencija.query.filter_by(vrsta_unosa='izlaz').order_by(Evidencija.datum_unosa.desc()).all()
+def evidencija_unosa1():
+	return redirect(url_for('evidencija_unosa', page_num=1))
+
+@app.route('/evidencija_izdavanja/<int:page_num>')
+@login_required
+def evidencija_izdavanja(page_num):
+	evidencija = Evidencija.query.filter_by(vrsta_unosa='izlaz').order_by(Evidencija.datum_unosa.desc()).paginate(per_page=7, page=page_num, error_out=True)
 	return render_template('evidencija_izdavanja.html', title='Evidencija izdavanja', evidencija=evidencija)
 
-@app.route('/search', methods=['GET', 'POST'])
+@app.route('/evidencija_izdavanja1', methods=['GET', 'POST'])
 @login_required
-def search():
-	proizvodi = Proizvod.query.all()
-	form = SearchForm()
-	if form.validate_on_submit():
-		search = form.search.data
-		proizvodi = Proizvod.query.filter(Proizvod.name.like("%" + search + "%")).all()
-		return render_template("search.html", form=form, proizvodi=proizvodi)
-	
-	return render_template("search.html", form=form, proizvodi=proizvodi)
+def evidencija_izdavanja1():
+	return redirect(url_for('evidencija_izdavanja', page_num=1))
+
+
 
 @app.route('/evidencija/<id>')
 @login_required
 def evidencija(id):
 	evidencija = Evidencija.query.filter_by(id=id).first_or_404()
+	if os.path.exists('app/Evidencije/evidencija '+id +'.pdf'):
+		os.remove('app/Evidencije/evidencija '+id +'.pdf')
 	return render_template('evidencija.html', id=id, evidencija=evidencija)
 
-@app.route('/edit_password', methods=['GET', 'POST'])
+@app.route('/evidencija_pdf/<id>')
 @login_required
-def edit_password():
+def evidencija_pdf(id):
+	evidencija = Evidencija.query.filter_by(id=id).first_or_404()
+	html = render_template('evidencija_pdf.html', id=id, evidencija=evidencija)
+	pdfkit.from_string(html, 'app/Evidencije/evidencija '+id +'.pdf', configuration=config)
+	return send_file('Evidencije/evidencija '+id +'.pdf')
+	
+
+@app.route('/edit_password/<username>', methods=['GET', 'POST'])
+@login_required
+def edit_password(username):
+	if current_user.username != "admin":
+		return redirect(url_for('index'))
+	user=User.query.filter_by(username=username).first_or_404()
 	form = EditPasswordForm()
 	if form.validate_on_submit():
-		current_user.set_password(form.password.data)
+		user.set_password(form.password.data)
 		db.session.commit()
-		flash('Vaše promjene su spremljene')
-		return redirect(url_for('edit_password'))
-	return render_template('edit_password.html', title='Edit Profile', form=form)
+		flash('Vaša lozinka je promijenjena!')
+		#return redirect(url_for('edit_password'))
+	return render_template('edit_password.html', title='Edit Profile', form=form, user=user)
 
+
+@app.route('/export_stanje_skladista')
+@login_required
+def export_stanje_skladista():
+	sql= text('SELECT proizvod.name AS Proizvod, proizvod.kolicina AS Kolicina FROM proizvod')
+	result= db.engine.execute(sql)
+	query_sets = []
+	for r in result:
+		query_sets.append(r)
+	column_names = [
+		'Proizvod',
+		'Kolicina'
+		]
+	return excel.make_response_from_query_sets(query_sets, column_names, 'xls')
+
+@app.route('/export_proizvod_unos/<name>')
+@login_required
+def export_proizvod_unos(name):
+	ovaj_proizvod = Proizvod.query.filter_by(name=name).first_or_404()
+	ovaj_proizvod_name = ovaj_proizvod.name
+	sql= text('SELECT evidencija.datum_unosa AS "Datum Unosa", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvoda, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id WHERE proizvod.name= "{}" AND evidencija.vrsta_unosa="unos"'.format(ovaj_proizvod.name))
+	result= db.engine.execute(sql)
+	query_sets = []
+	for r in result:
+		query_sets.append(r)
+	column_names = [
+		'Datum Unosa',
+		'Promijenjena Kolicina',
+		'Proizvoda',
+		'ID Proizvoda',
+		'Tvrtka',
+		'Korisnik'
+		]
+	return excel.make_response_from_query_sets(query_sets, column_names, 'xls', file_name="Ulazna evidencija "+name)
+
+@app.route('/export_proizvod_izlaz/<name>')
+@login_required
+def export_proizvod_izlaz(name):
+	ovaj_proizvod = Proizvod.query.filter_by(name=name).first_or_404()
+	ovaj_proizvod_name = ovaj_proizvod.name
+	sql= ('SELECT evidencija.datum_unosa AS "Datum Unosa", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvoda, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id WHERE proizvod.name= "{}" AND evidencija.vrsta_unosa="izlaz"'.format(ovaj_proizvod.name))
+	result= db.engine.execute(sql)
+	query_sets = []
+	for r in result:
+		query_sets.append(r)
+	column_names = [
+		'Datum Unosa',
+		'Promijenjena Kolicina',
+		'Proizvoda',
+		'ID Proizvoda',
+		'Tvrtka',
+		'Korisnik'
+		]
+	return excel.make_response_from_query_sets(query_sets, column_names, 'xls', file_name="Izlazna evidencija "+name)
+
+
+@app.route('/ulaz', methods=['GET', 'POST'])
+@login_required
+def ulaz():
+	tvrtke = Tvrtka.query.all()
+	form = ListForm()
+	lista = []
+	sve_tvrtke = Tvrtka.query.all() 
+	error=False
+	products=[]
+	companies=[]
+	amounts=[]
+	for tvrtkaa in sve_tvrtke:
+		lista.append(tvrtkaa.name)
+	if form.submit.data:
+		if form.validate_on_submit():
+			productList= json.loads(form.listaProizvoda.data)
+			for productData in productList:
+				if productData is not None:
+					proizvod = Proizvod.query.filter_by(name=productData[0]).first()
+					if proizvod is None:
+						flash(f'Proizvod '+productData[0]+ ' ne postoji!', 'danger')
+						error=True
+						#return redirect(url_for('ulaz'))
+					tvrtka = Tvrtka.query.filter_by(name=productData[2]).first()
+					if tvrtka is None:
+						flash(f'Tvrtka '+ productData[2]+' ne postoji!', 'danger')
+						error=True
+					if (int(productData[1])<1): 
+						flash(f'Pogresna kolicina za proizvod '+productData[0]+'!', 'danger')
+						error=True
+					if error is False:
+						products.append(proizvod)
+						companies.append(tvrtka)
+						amounts.append(int(productData[1]))
+			if error is False:
+				for i in range(0, len(products)):
+					products[i].kolicina+= amounts[i]
+					evidencija = Evidencija(proizvod_id=products[i].id, tvrtka_id=companies[i].id, promijenjena_kolicina=amounts[i], user_id=current_user.id, vrsta_unosa='unos', trenutna_kolicina=products[i].kolicina)
+					db.session.add(evidencija)
+					db.session.commit()
+			return redirect(url_for('ulaz'))
+	return render_template("ulaz.html", title='Ulaz', tvrtke=tvrtke, lista=lista, form=form)
+
+
+@app.route('/izlaz', methods=['GET', 'POST'])
+@login_required
+def izlaz():
+	tvrtke = Tvrtka.query.all()
+	form = ListForm()
+	lista = []
+	sve_tvrtke = Tvrtka.query.all() 
+	error=False
+	products=[]
+	companies=[]
+	amounts=[]
+	for tvrtkaa in sve_tvrtke:
+		lista.append(tvrtkaa.name)
+	if form.submit.data:
+		if form.validate_on_submit():
+			productList= json.loads(form.listaProizvoda.data)
+			for productData in productList:
+				if productData is not None:
+					proizvod = Proizvod.query.filter_by(name=productData[0]).first()
+					if proizvod is None:
+						flash(f'Proizvod '+productData[0]+ ' ne postoji!', 'danger')
+						error=True
+						#return redirect(url_for('izlaz'))
+					tvrtka = Tvrtka.query.filter_by(name=productData[2]).first()
+					if tvrtka is None:
+						flash(f'Tvrtka '+ productData[2]+' ne postoji!', 'danger')
+						error=True
+					if (int(productData[1])<1): 
+						flash(f'Pogresna kolicina za proizvod '+productData[0]+'!', 'danger')
+						error=True
+					if proizvod is not None:
+						if (int(productData[1])>proizvod.kolicina): 
+							flash(f'Nema dovoljno kolicine na stanju za proizvod '+productData[0]+'!', 'danger')
+							error=True
+					if error is False:
+						products.append(proizvod)
+						companies.append(tvrtka)
+						amounts.append(int(productData[1]))
+			if error is False:
+				for i in range(0, len(products)):
+					products[i].kolicina-= amounts[i]
+					evidencija = Evidencija(proizvod_id=products[i].id, tvrtka_id=companies[i].id, promijenjena_kolicina=amounts[i], user_id=current_user.id, vrsta_unosa='izlaz', trenutna_kolicina=products[i].kolicina)
+					db.session.add(evidencija)
+					db.session.commit()
+			return redirect(url_for('izlaz'))
+	return render_template("izlaz.html", title='Izlaz', tvrtke=tvrtke, lista=lista, form=form)
