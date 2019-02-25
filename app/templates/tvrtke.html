@@ -23,13 +23,6 @@
         {% for error in form2.search.errors %}
             <div class="alert-danger p-1">{{ error }}</div>
         {% endfor %}
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="alert-danger p-1 mt-1">{{ message }}</div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
     </div>
     {% with messages = get_flashed_messages() %}
     {% if messages %}
@@ -42,14 +35,16 @@
         <tr>
             <th>Naziv tvrtke</th>
             <th>OIB</th> 
+            <th>ADRESA</th> 
             <th>GRAD</th>
             <th>POŠTANSKI BROJ</th>
             <th>DRŽAVA</th>
         </tr>
     {% for tvrtka in tvrtke.items %}
         <tr>
-            <td>{{ tvrtka.name }}</td>
+            <td><a href="../tvrtka/{{tvrtka.name}}" class="dekoracija">{{ tvrtka.name }}</a></td>
             <td>{{ tvrtka.oib }}</td> 
+            <td>{{ tvrtka.adresa }}</td> 
             <td>{{ tvrtka.grad }}</td>
             <td>{{ tvrtka.p_broj }}</td>
             <td>{{ tvrtka.drzava }}</td>
@@ -120,6 +115,15 @@
             {% for error in form.oib.errors %}
             <span style="color: red;">[{{ error }}]</span>
             {% if form.oib.errors %}
+                <script> form_error = true; </script><br>
+            {% endif %}
+            {% endfor %}
+
+            {{ form.adresa.label }}<br>
+            {{ form.adresa(size=32) }}<br>
+            {% for error in form.adresa.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% if form.adresa.errors %}
                 <script> form_error = true; </script><br>
             {% endif %}
             {% endfor %}

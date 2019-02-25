@@ -77,7 +77,7 @@
         </tr>
         {% for evidencija in evidencijaIzlaz %}
         <tr>
-            <td><a href="{{ url_for('evidencija', id=evidencija.id) }}">{{ evidencija.proizvod.name }}</a></td>
+            <td><a href="{{ url_for('evidencija', id=evidencija.id) }}" class="dekoracija">{{ evidencija.proizvod.name }}</a></td>
             <td>{{ evidencija.promijenjena_kolicina }}</td>
             <td>{{ evidencija.tvrtka.name }}</td>
             <td>{{ evidencija.tvrtka.oib }}</td>
@@ -247,6 +247,7 @@
   </div>
 
   </div>
+
 
 <script type="text/javascript">
 if (form_error1) {
