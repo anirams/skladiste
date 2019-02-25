@@ -42,8 +42,7 @@ class UnosProizvodaForm(FlaskForm):
 	opis_proizvoda = StringField ('Opis proizvoda')
 	zemlja_podrijetla = StringField('Zemlja podrijetla', validators=[DataRequired('Unesi Zemlju Podrijetla')])
 	oib = IntegerField('OIB', validators=[DataRequired('Unesi OIB Tvrtke (broj)')])
-	dodaj_jos = SubmitField('Dodaj jos')
-	submit = SubmitField('Gotovo')
+	submit = SubmitField('Dodaj')
 	def validate(self):
 		rv = FlaskForm.validate(self)
 		if not rv:
