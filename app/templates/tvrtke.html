@@ -35,6 +35,7 @@
         <tr>
             <th>Naziv tvrtke</th>
             <th>OIB</th> 
+            <th>ADRESA</th> 
             <th>GRAD</th>
             <th>POŠTANSKI BROJ</th>
             <th>DRŽAVA</th>
@@ -43,6 +44,7 @@
         <tr>
             <td><a href="../tvrtka/{{tvrtka.name}}" class="dekoracija">{{ tvrtka.name }}</a></td>
             <td>{{ tvrtka.oib }}</td> 
+            <td>{{ tvrtka.adresa }}</td> 
             <td>{{ tvrtka.grad }}</td>
             <td>{{ tvrtka.p_broj }}</td>
             <td>{{ tvrtka.drzava }}</td>
@@ -113,6 +115,15 @@
             {% for error in form.oib.errors %}
             <span style="color: red;">[{{ error }}]</span>
             {% if form.oib.errors %}
+                <script> form_error = true; </script><br>
+            {% endif %}
+            {% endfor %}
+
+            {{ form.adresa.label }}<br>
+            {{ form.adresa(size=32) }}<br>
+            {% for error in form.adresa.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% if form.adresa.errors %}
                 <script> form_error = true; </script><br>
             {% endif %}
             {% endfor %}

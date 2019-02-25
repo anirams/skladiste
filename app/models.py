@@ -39,6 +39,7 @@ class Tvrtka(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	name = db.Column(db.String(64))
 	oib = db.Column(db.Integer, unique=True)
+	adresa = db.Column(db.String(200))
 	grad = db.Column(db.String(64))
 	p_broj = db.Column(db.Integer)
 	drzava = db.Column(db.String(64))

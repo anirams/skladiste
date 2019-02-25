@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, url_for, request, send_file, send_from_directory
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, UlazRobeForm, IzlazRobeForm, UrediProizvodForm, UnosProizvodaForm, SearchForm, EditPasswordForm, UnosTvrtkeForm, SearchFormTvrtka, SearchFormKorisnik, ListForm
+from app.forms import LoginForm, RegistrationForm, UlazRobeForm, IzlazRobeForm, UrediProizvodForm, UnosProizvodaForm, SearchForm, EditPasswordForm, UnosTvrtkeForm, SearchFormTvrtka, SearchFormKorisnik, ListForm, UrediTvrtkuForm
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Proizvod, Tvrtka, Evidencija
 from werkzeug.urls import url_parse
@@ -201,7 +201,7 @@ def tvrtke(page_num, s):
 	
 	if form.submit.data:
 		if form.validate_on_submit():
-			tvrtka = Tvrtka(name=form.name.data, oib=form.oib.data, grad=form.grad.data, 
+			tvrtka = Tvrtka(name=form.name.data, oib=form.oib.data, adresa=form.adresa.data, grad=form.grad.data, 
 				p_broj=form.p_broj.data, drzava=form.drzava.data)
 			db.session.add(tvrtka)
 			db.session.commit()
@@ -213,8 +213,9 @@ def tvrtke(page_num, s):
 @app.route('/tvrtka/<name>')
 @login_required
 def tvrtka(name):
+	form_uredi = UrediTvrtkuForm()
 	tvrtka = Tvrtka.query.filter_by(name=name).first_or_404()
-	return render_template('tvrtka.html', user=user, tvrtka=tvrtka)
+	return render_template('tvrtka.html', user=user, tvrtka=tvrtka, form_uredi=form_uredi)
 
 @app.route('/tvrtke1', methods=['GET', 'POST'])
 @login_required
