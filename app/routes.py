@@ -210,7 +210,7 @@ def tvrtke(page_num, s):
 			#return render_template('tvrtke.html', title='Dodaj tvrtku', form=form, form2=form2, tvrtke=tvrtke, search=' ')
 	return render_template('tvrtke.html', title='Tvrtke', tvrtke=tvrtke, form=form, form2= form2, search=' ', lista=lista)
 
-@app.route('/tvrtka/<name>')
+@app.route('/tvrtka/<name>', methods=['GET', 'POST'])
 @login_required
 def tvrtka(name):
 	form_uredi = UrediTvrtkuForm()

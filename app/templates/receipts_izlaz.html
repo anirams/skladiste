@@ -7,9 +7,11 @@
     <table class="table table-striped">
     {% for receipt in receipts.items %}
         <tr <a href="" class="dekoracija">
+            <a href="/receipt/{{receipt.id}}" class="dekoracija">
             <td>{{ receipt.id }}</td>
             <td>{{ receipt.evidencija.first().user.username }}</td>
             <td>{{ receipt.date }}</td>
+        </a>
         </tr>
     {% endfor %}  
     </table>
