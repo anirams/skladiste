@@ -141,12 +141,13 @@ class SearchFormTvrtka(FlaskForm):
 
 class EditPasswordForm(FlaskForm):
 	old_password = PasswordField('Stara Lozinka', validators=[DataRequired()])
+	username = HiddenField()
 	password = PasswordField('Lozinka', validators=[DataRequired()])
 	password2 = PasswordField(
 		'Ponovite lozinku', validators=[DataRequired(), EqualTo('password')])
 	
 	def validate(self):
-		user1 = User.query.get(current_user.id)
+		user1 = User.query.filter_by(username=self.username.data).first()
 		rv = FlaskForm.validate(self)
 		if not rv:
 			return False
@@ -158,5 +159,5 @@ class EditPasswordForm(FlaskForm):
 	submit = SubmitField()
 
 class ListForm(FlaskForm):
-	listaProizvoda=HiddenField()
+	listaProizvoda=HiddenField(validators=[DataRequired()])
 	submit = SubmitField()
