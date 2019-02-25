@@ -157,6 +157,10 @@ ul.CTAs a {
     max-width: 400px;
 }
 
+.tipka-margin {
+    margin-right: 8rem;
+}
+
 /* UNOS PROIZVODA */
 .unos-p {
     padding-top: 2vh;

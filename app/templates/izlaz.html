@@ -5,11 +5,10 @@
 {% block content %}
 <script type="text/javascript">  
     var lista1 = {{ lista|safe }};
-    var lista2 = {{ lista2|safe }};
 </script>
 
 <div class="unos-p">
-   <h2 class="mb-4">Ulaz Robe</h2>
+   <h2 class="mb-4">Izlaz Robe</h2>
    <div class="container">
      <div class="row justify-content-md-cente">
        <form class="form-inline" action="" novalidate="" autocomplete="off">
@@ -162,7 +161,6 @@ document.addEventListener("click", function (e) {
 }
 
 autocomplete(document.getElementById("Tvrtka"), lista1);
-autocomplete(document.getElementById("Proizvod"), lista2);
 
 </script>
 

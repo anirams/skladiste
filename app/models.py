@@ -53,3 +53,9 @@ class Evidencija(db.Model):
 	datum_unosa = db.Column(db.DateTime, default=datetime.utcnow)
 	vrsta_unosa = db.Column(db.String(64))
 	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+
+#class Receipt(db.Model):
+	#evidencija_id = db.Column(db.Integer, db.ForeignKey('evidencija.id'))
+	#user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+	#receipt_type = db.Column(db.String(64))
