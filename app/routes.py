@@ -218,7 +218,7 @@ def tvrtka(name):
 			tvrtka.drzava = form_uredi.drzava.data
 			db.session.add(tvrtka)
 			db.session.commit()
-			flash(f'Uspješno ste izmijenili podatke {form_uredi.name.data}!')
+			flash(f'Uspješno ste izmijenili podatke tvrtke {form_uredi.name.data}!')
 			return redirect(url_for('tvrtka', name=tvrtka.name))		
 	return render_template('tvrtka.html', user=user, tvrtka=tvrtka, form_uredi=form_uredi)
 

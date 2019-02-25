@@ -4,6 +4,7 @@
 <div class="stanje-s">
     <h1>Tvrtka: {{ tvrtka.name }}</h1><br>
     <hr>
+
     <table class="table table-striped">
         <tr>
             <th>Naziv tvrtke</th>
@@ -25,6 +26,13 @@
     
 
     </table>
+    {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert-success p-1 mt-1">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
     <button type="button" class="btn btn-primary m-2" data-toggle="modal" data-target="#exampleModalCenter3" id="uredi-proizvod-tipka">Uredi tvrtku</button>
 </div>
 
