@@ -24,7 +24,13 @@
             <div class="alert-danger p-1">{{ error }}</div>
             {% endfor %}
         </div>
-        
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert-success p-1 mt-1">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
             <table class="table table-striped mt-2">
                 <tr>
                     <th>Proizvod</th> 
@@ -39,7 +45,7 @@
                 </tr>
                 {% endfor %}
             </table> 
-
+            
             <div class="d-flex justify-content-between">
                 <div></div>
                 <div>
@@ -75,7 +81,7 @@
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle"></h5>
+        <h5 class="modal-title" id="exampleModalLongTitle">Dodaj novi proizvod</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -84,7 +90,6 @@
         var form_error = false;
       </script>
       <div class="modal-body">
-        <h5>Dodaj Novu Tvrtku</h5>
         <form action="" method="post" novalidate="">
         <div>
         {{ form2.hidden_tag() }}

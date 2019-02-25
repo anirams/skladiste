@@ -23,13 +23,6 @@
         {% for error in form2.search.errors %}
             <div class="alert-danger p-1">{{ error }}</div>
         {% endfor %}
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="alert-danger p-1 mt-1">{{ message }}</div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
     </div>
     {% with messages = get_flashed_messages() %}
     {% if messages %}
