@@ -210,11 +210,11 @@ def tvrtke(page_num, s):
 			#return render_template('tvrtke.html', title='Dodaj tvrtku', form=form, form2=form2, tvrtke=tvrtke, search=' ')
 	return render_template('tvrtke.html', title='Tvrtke', tvrtke=tvrtke, form=form, form2= form2, search=' ', lista=lista)
 
-@app.route('/tvrtke/<name>')
+@app.route('/tvrtka/<name>')
 @login_required
 def tvrtka(name):
 	tvrtka = Tvrtka.query.filter_by(name=name).first_or_404()
-	return render_template('tvrtke1.html', user=user)
+	return render_template('tvrtke1.html', user=user, tvrtka=tvrta)
 
 @app.route('/tvrtke1', methods=['GET', 'POST'])
 @login_required
