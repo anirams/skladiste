@@ -19,14 +19,6 @@ excel.init_excel(app)
 @app.route('/index')
 @login_required
 def index():
-	folder = 'app/Evidencije/'
-	for the_file in os.listdir(folder):
-		file_path = os.path.join(folder, the_file)
-		try:
-			if os.path.isfile(file_path):
-				os.unlink(file_path)
-		except Exception as e:
-			print(e)
 	return render_template('index.html', title='Home')
 
 @app.route('/', methods=['GET', 'POST'])
@@ -294,6 +286,14 @@ def evidencija(id):
 @app.route('/evidencija_pdf/<id>')
 @login_required
 def evidencija_pdf(id):
+	folder = 'app/Evidencije/'
+	for the_file in os.listdir(folder):
+		file_path = os.path.join(folder, the_file)
+		try:
+			if os.path.isfile(file_path):
+				os.unlink(file_path)
+		except Exception as e:
+			print(e)
 	evidencija = Evidencija.query.filter_by(id=id).first_or_404()
 	html = render_template('evidencija_pdf.html', id=id, evidencija=evidencija)
 	pdfkit.from_string(html, 'app/Evidencije/evidencija '+id +'.pdf', configuration=config)
@@ -507,3 +507,20 @@ def receipt(id):
 	evidencije = Evidencija.query.filter_by(receipt_id=id)
 	evidencija = Evidencija.query.filter_by(receipt_id=id).first()
 	return render_template('receipt.html', id=id, evidencije=evidencije, evidencija=evidencija)
+
+@app.route('/receipt_pdf/<id>')
+@login_required
+def receipt_pdf(id):
+	folder = 'app/Receipts/'
+	for the_file in os.listdir(folder):
+		file_path = os.path.join(folder, the_file)
+		try:
+			if os.path.isfile(file_path):
+				os.unlink(file_path)
+		except Exception as e:
+			print(e)
+	evidencije = Evidencija.query.filter_by(receipt_id=id)
+	evidencija = Evidencija.query.filter_by(receipt_id=id).first()
+	html = render_template('receipt_pdf.html', id=id, evidencije=evidencije, evidencija=evidencija)
+	pdfkit.from_string(html, 'app/Receipts/receipt '+id +'.pdf', configuration=config)
+	return send_file('Receipts/receipt '+id +'.pdf')
