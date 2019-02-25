@@ -6,12 +6,12 @@
     <h4><strong>Izdavanje</strong></h4>
     <table class="table table-striped">
     {% for receipt in receipts.items %}
-        <tr <a href="" class="dekoracija">
-            <a href="/receipt/{{receipt.id}}" class="dekoracija">
-            <td>{{ receipt.id }}</td>
+        <tr> 
+            
+            <td><a href="/receipt/{{receipt.id}}" class="dekoracija">{{ receipt.id }}</a></td>
             <td>{{ receipt.evidencija.first().user.username }}</td>
             <td>{{ receipt.date }}</td>
-        </a>
+            </a>
         </tr>
     {% endfor %}  
     </table>

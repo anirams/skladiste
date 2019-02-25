@@ -184,8 +184,8 @@ def tvrtke(page_num, s):
 	tvrtke = Tvrtka.query.all()
 	lista = []
 	sve_tvrtke = Tvrtka.query.all() 
-	for tvrtkaa in sve_tvrtke:
-		lista.append(tvrtkaa.name)
+	for tvrtka in sve_tvrtke:
+		lista.append(tvrtka.name)
 
 	if s == ' ':
 		tvrtke = Tvrtka.query.order_by(Tvrtka.name).paginate(per_page=5, page=page_num, error_out=True)
