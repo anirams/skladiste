@@ -275,8 +275,6 @@ def evidencija_izdavanja1():
 @login_required
 def evidencija(id):
 	evidencija = Evidencija.query.filter_by(id=id).first_or_404()
-	if os.path.exists('app/Evidencije/evidencija '+id +'.pdf'):
-		os.remove('app/Evidencije/evidencija '+id +'.pdf')
 	return render_template('evidencija.html', id=id, evidencija=evidencija)
 
 @app.route('/evidencija_pdf/<id>')
@@ -416,13 +414,17 @@ def izlaz():
 	tvrtke = Tvrtka.query.all()
 	form = ListForm()
 	lista = []
+	lista2 = []
 	sve_tvrtke = Tvrtka.query.all() 
+	svi_proizvodi = Proizvod.query.all()
 	error=False
 	products=[]
 	companies=[]
 	amounts=[]
-	for tvrtkaa in sve_tvrtke:
-		lista.append(tvrtkaa.name)
+	for tvrtka in sve_tvrtke:
+		lista.append(tvrtka.name)
+	for proizvodi in svi_proizvodi:
+		lista2.append(proizvodi.name)
 	if form.submit.data:
 		if form.validate_on_submit():
 			productList= json.loads(form.listaProizvoda.data)
@@ -449,22 +451,45 @@ def izlaz():
 						companies.append(tvrtka)
 						amounts.append(int(productData[1]))
 			if error is False:
+				receipt = Receipt(status="active", receipt_type="izlaz")
+				db.session.add(receipt)
+				db.session.commit()
 				for i in range(0, len(products)):
 					products[i].kolicina-= amounts[i]
-					evidencija = Evidencija(proizvod_id=products[i].id, tvrtka_id=companies[i].id, promijenjena_kolicina=amounts[i], user_id=current_user.id, vrsta_unosa='izlaz', trenutna_kolicina=products[i].kolicina)
+					evidencija = Evidencija(proizvod_id=products[i].id, tvrtka_id=companies[i].id, promijenjena_kolicina=amounts[i], user_id=current_user.id, vrsta_unosa='izlaz', trenutna_kolicina=products[i].kolicina, receipt_id=receipt.id)
 					db.session.add(evidencija)
 					db.session.commit()
 			return redirect(url_for('izlaz'))
-	return render_template("izlaz.html", title='Izlaz', tvrtke=tvrtke, lista=lista, form=form)
+	return render_template("izlaz.html", title='Izlaz', tvrtke=tvrtke, lista=lista, lista2=lista2, form=form)
 
 
-@app.route('/receipt/<int:page_num>')
+@app.route('/receipts_unosa/<int:page_num>')
 @login_required
-def receipt(page_num):
-	receipts = Receipt.query.all().paginate(per_page=7, page=page_num, error_out=True)
-	return render_template('receipt.html', title='Racuni', receipts=receipts)
+def receipts_unosa(page_num):
+	receipts = Receipt.query.filter_by(receipt_type="unos", status="active").paginate(per_page=7, page=page_num, error_out=True)
+	return render_template('receipts_unosa.html', title='Racuni', receipts=receipts)
 
-@app.route('/receipt1', methods=['GET', 'POST'])
+@app.route('/receipts_unosa1', methods=['GET', 'POST'])
 @login_required
-def receipt1():
-	return redirect(url_for('receipt', page_num=1))
+def receipts_unosa1():
+	return redirect(url_for('receipts_unosa', page_num=1))
+
+
+@app.route('/receipts_izlaz/<int:page_num>')
+@login_required
+def receipts_izlaz(page_num):
+	receipts = Receipt.query.filter_by(receipt_type="izlaz", status="active").paginate(per_page=7, page=page_num, error_out=True)
+	#import pdb; pdb.set_trace();
+	return render_template('receipts_izlaz.html', title='Racuni', receipts=receipts)
+
+@app.route('/receipts_izlaz1', methods=['GET', 'POST'])
+@login_required
+def receipts_izlaz1():
+	return redirect(url_for('receipts_izlaz', page_num=1))
+
+@app.route('/receipt/<id>')
+@login_required
+def receipt(id):
+	evidencije = Evidencija.query.filter_by(receipt_id=id)
+	evidencija = Evidencija.query.filter_by(receipt_id=id).first()
+	return render_template('receipt.html', id=id, evidencije=evidencije, evidencija=evidencija)
