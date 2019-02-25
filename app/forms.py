@@ -89,10 +89,6 @@ class UrediTvrtkuForm(FlaskForm):
 	def validate(self):
 		rv = FlaskForm.validate(self)
 		if not rv:
-			return False
-		tvrtka = Tvrtka.query.filter_by(name=self.name.data).first()
-		if tvrtka is not None:
-			self.name.errors.append('Tvrtka pod tim imenom već postoji')
 			return False		
 		return True
 
