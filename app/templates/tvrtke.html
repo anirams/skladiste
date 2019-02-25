@@ -48,7 +48,7 @@
         </tr>
     {% for tvrtka in tvrtke.items %}
         <tr>
-            <td>{{ tvrtka.name }}</td>
+            <td><a href="../tvrtka/{{tvrtka.name}}" class="dekoracija">{{ tvrtka.name }}</a></td>
             <td>{{ tvrtka.oib }}</td> 
             <td>{{ tvrtka.grad }}</td>
             <td>{{ tvrtka.p_broj }}</td>

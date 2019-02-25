@@ -214,7 +214,7 @@ def tvrtke(page_num, s):
 @login_required
 def tvrtka(name):
 	tvrtka = Tvrtka.query.filter_by(name=name).first_or_404()
-	return render_template('tvrtke1.html', user=user, tvrtka=tvrta)
+	return render_template('tvrtka.html', user=user, tvrtka=tvrtka)
 
 @app.route('/tvrtke1', methods=['GET', 'POST'])
 @login_required
