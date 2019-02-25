@@ -54,9 +54,12 @@ class Evidencija(db.Model):
 	datum_unosa = db.Column(db.DateTime, default=datetime.utcnow)
 	vrsta_unosa = db.Column(db.String(64))
 	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+	receipt_id = db.Column(db.Integer, db.ForeignKey('receipt.id'))
 
 
-#class Receipt(db.Model):
-	#evidencija_id = db.Column(db.Integer, db.ForeignKey('evidencija.id'))
-	#user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-	#receipt_type = db.Column(db.String(64))
+class Receipt(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	status = db.Column(db.String(64))
+	date = db.Column(db.DateTime, default=datetime.utcnow)
+	receipt_type = db.Column(db.String(64))
+	evidencija = db.relationship('Evidencija', backref='receipt', lazy='dynamic')
