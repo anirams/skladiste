@@ -210,6 +210,12 @@ def tvrtke(page_num, s):
 			#return render_template('tvrtke.html', title='Dodaj tvrtku', form=form, form2=form2, tvrtke=tvrtke, search=' ')
 	return render_template('tvrtke.html', title='Tvrtke', tvrtke=tvrtke, form=form, form2= form2, search=' ', lista=lista)
 
+@app.route('/tvrtka/<name>')
+@login_required
+def tvrtka(name):
+	tvrtka = Tvrtka.query.filter_by(name=name).first_or_404()
+	return render_template('tvrtke1.html', user=user, tvrtka=tvrta)
+
 @app.route('/tvrtke1', methods=['GET', 'POST'])
 @login_required
 def tvrtke1():
@@ -401,6 +407,7 @@ def ulaz():
 					db.session.commit()
 			return redirect(url_for('ulaz'))
 	return render_template("ulaz.html", title='Ulaz', tvrtke=tvrtke, lista=lista, lista2=lista2, form=form)
+
 
 
 @app.route('/izlaz', methods=['GET', 'POST'])
