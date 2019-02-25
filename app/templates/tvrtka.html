@@ -4,6 +4,120 @@
 <div class="stanje-s">
     <h1>Tvrtka: {{ tvrtka.name }}</h1><br>
     <hr>
+
+    <table class="table table-striped">
+        <tr>
+            <th>Naziv tvrtke</th>
+            <th>OIB</th> 
+            <th>ADRESA</th> 
+            <th>GRAD</th>
+            <th>POŠTANSKI BROJ</th>
+            <th>DRŽAVA</th>
+        </tr>
     
+        <tr>
+            <td>{{ tvrtka.name }}</td>
+            <td>{{ tvrtka.oib }}</td> 
+            <td>{{ tvrtka.adresa }}</td> 
+            <td>{{ tvrtka.grad }}</td>
+            <td>{{ tvrtka.p_broj }}</td>
+            <td>{{ tvrtka.drzava }}</td>
+        </tr>     
+    
+
+    </table>
+    {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert-success p-1 mt-1">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    <button type="button" class="btn btn-primary m-2" data-toggle="modal" data-target="#exampleModalCenter3" id="uredi-proizvod-tipka">Uredi tvrtku</button>
 </div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter3" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Uredi Tvrtku</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <script>
+        var form_error3 = false;
+      </script>
+      <div class="modal-body">
+        <form action="" method="post" novalidate="" class="form-group text-center">
+
+        {{ form_uredi.hidden_tag() }}
+            {{ form_uredi.name.label }}<br>
+            {{ form_uredi.name(size=32, value=tvrtka.name, class="form-control") }}<br>
+            {% for error in form_uredi.name.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% if form_uredi.name.errors %}
+                <script> form_error3 = true; </script><br>
+            {% endif %}
+            {% endfor %}
+
+            {{ form_uredi.oib.label }}<br>
+            {{ form_uredi.oib(size=32, value=tvrtka.oib, class="form-control") }}<br>
+            {% for error in form_uredi.oib.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% if form_uredi.oib.errors %}
+                <script> form_error3 = true; </script><br>
+            {% endif %}
+            {% endfor %}
+        
+            {{ form_uredi.adresa.label }}<br>
+            {{ form_uredi.adresa(size=300, value=tvrtka.adresa, class="form-control") }}<br>
+            {% for error in form_uredi.adresa.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% if form_uredi.adresa.errors %}
+                <script> form_error3 = true; </script><br>
+            {% endif %}
+            {% endfor %}
+        
+            {{ form_uredi.grad.label }}<br>
+            {{ form_uredi.grad(size=300, value=tvrtka.grad, class="form-control") }}<br>
+            {% for error in form_uredi.grad.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% if form_uredi.grad.errors %}
+                <script> form_error3 = true; </script><br>
+            {% endif %}
+            {% endfor %}
+        
+            {{ form_uredi.p_broj.label }}<br>
+            {{ form_uredi.p_broj(size=300, value=tvrtka.p_broj, class="form-control") }}<br>
+            {% for error in form_uredi.p_broj.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% if form_uredi.p_broj.errors %}
+                <script> form_error3 = true; </script><br>
+            {% endif %}
+            {% endfor %}
+
+            {{ form_uredi.drzava.label }}<br>
+            {{ form_uredi.drzava(size=300, value=tvrtka.drzava, class="form-control") }}<br>
+            {% for error in form_uredi.drzava.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% if form_uredi.drzava.errors %}
+                <script> form_error3 = true; </script><br>
+            {% endif %}
+            {% endfor %}
+        <div class="modal-footer">
+        {{ form_uredi.submit3(type="submit", class="btn btn-primary") }}
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </form>
+    
+    </div>
+      </div>
+    </div>
+  </div>
+
+  </div>
+
 {% endblock %}

@@ -62,6 +62,7 @@ class UnosProizvodaForm(FlaskForm):
 class UnosTvrtkeForm(FlaskForm):
 	name = StringField('Naziv tvrtke', validators=[DataRequired('Unesi ime tvrtke')])
 	oib = IntegerField('OIB', validators=[DataRequired('Unesi OIB tvrtke'), NumberRange(min=10000000000, max=99999999999, message='Invalid length')])
+	adresa = StringField('Adresa', validators=[DataRequired('Unesi adresu')])
 	grad = StringField('Grad', validators=[DataRequired('Unesi grad')])
 	p_broj = IntegerField('Poštanski broj', validators=[DataRequired('Unesi poštanski broj')])
 	drzava = StringField('Država', validators=[DataRequired('Unesi državu')])
@@ -76,6 +77,20 @@ class UnosTvrtkeForm(FlaskForm):
 			return False
 		else:
 			return True
+
+class UrediTvrtkuForm(FlaskForm):
+	name = StringField('Naziv tvrtke', validators=[DataRequired('Unesi ime tvrtke')])
+	oib = IntegerField('OIB', validators=[DataRequired('Unesi OIB tvrtke'), NumberRange(min=10000000000, max=99999999999, message='Invalid length')])
+	adresa = StringField('Adresa', validators=[DataRequired('Unesi adresu')])
+	grad = StringField('Grad', validators=[DataRequired('Unesi grad')])
+	p_broj = IntegerField('Poštanski broj', validators=[DataRequired('Unesi poštanski broj')])
+	drzava = StringField('Država', validators=[DataRequired('Unesi državu')])
+	submit3 = SubmitField('Uredi')
+	def validate(self):
+		rv = FlaskForm.validate(self)
+		if not rv:
+			return False		
+		return True
 
 class UlazRobeForm(FlaskForm):
 	promijenjena_kolicina = IntegerField('Kolicina', validators=[DataRequired('Unesi količinu')])

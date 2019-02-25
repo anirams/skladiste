@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="unos-p">
+    <h4><strong>Primke</strong></h4>
+    <table class="table table-striped">
+    {% for receipt in receipts.items %}
+        <tr>
+            <td><a href="/receipt/{{receipt.id}}" class="dekoracija">{{ receipt.id }}</a></td>
+            <td>{{ receipt.evidencija.first().user.username }}</td>
+            <td>{{ receipt.date.strftime('%d %m %Y - %H:%M:%S') }}</td>
+        </tr></a>
+    {% endfor %}  
+    </table>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-success" role="alert">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    
+ 
+
+
+
+
+
+{% endblock %}

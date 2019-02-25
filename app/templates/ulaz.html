@@ -14,7 +14,7 @@
      <div class="row justify-content-md-cente">
        <form class="form-inline" action="" novalidate="" autocomplete="off">
                 <div class="form-group autocomplete">
-                    <input size=32, class="form-control", placeholder="Unesi ime proizvoda", type="text", id="Ime", autocomplete="off"></input>   
+                    <input size=32, class="form-control", placeholder="Unesi ime proizvoda", type="text", id="Ime", ></input>   
                     <input size=32, class="form-control", placeholder="Unesi količinu", type="text", value=1 , id="Kolicina"></input>
                     <input size=32, class="form-control", placeholder="Unesi tvrtku", type="text", id="Tvrtka"></input>
                 </div>
@@ -162,7 +162,8 @@ document.addEventListener("click", function (e) {
 }
 
 autocomplete(document.getElementById("Tvrtka"), lista1);
-autocomplete(document.getElementById("Proizvod"), lista2);
+autocomplete(document.getElementById("Ime"), lista2);
+
 
 </script>
 
@@ -190,7 +191,8 @@ var counter=0;
           button.setAttribute('id', counter)
           tableR.setAttribute('id', counter)
           button.setAttribute('onclick', 'obrisi(id);')
-          
+          button.setAttribute('value', 'button;')
+
           counter++;
           tableR.appendChild(button)
           var tablica = document.getElementById("tablica");

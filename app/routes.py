@@ -1,8 +1,8 @@
 from flask import render_template, flash, redirect, url_for, request, send_file, send_from_directory
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, UlazRobeForm, IzlazRobeForm, UrediProizvodForm, UnosProizvodaForm, SearchForm, EditPasswordForm, UnosTvrtkeForm, SearchFormTvrtka, SearchFormKorisnik, ListForm
+from app.forms import LoginForm, RegistrationForm, UlazRobeForm, IzlazRobeForm, UrediProizvodForm, UnosProizvodaForm, SearchForm, EditPasswordForm, UnosTvrtkeForm, SearchFormTvrtka, SearchFormKorisnik, ListForm, UrediTvrtkuForm
 from flask_login import current_user, login_user, logout_user, login_required
-from app.models import User, Proizvod, Tvrtka, Evidencija
+from app.models import User, Proizvod, Tvrtka, Evidencija, Receipt
 from werkzeug.urls import url_parse
 from datetime import datetime
 import flask_excel as excel
@@ -19,14 +19,6 @@ excel.init_excel(app)
 @app.route('/index')
 @login_required
 def index():
-	folder = 'app/Evidencije/'
-	for the_file in os.listdir(folder):
-		file_path = os.path.join(folder, the_file)
-		try:
-			if os.path.isfile(file_path):
-				os.unlink(file_path)
-		except Exception as e:
-			print(e)
 	return render_template('index.html', title='Home')
 
 @app.route('/', methods=['GET', 'POST'])
@@ -184,8 +176,8 @@ def tvrtke(page_num, s):
 	tvrtke = Tvrtka.query.all()
 	lista = []
 	sve_tvrtke = Tvrtka.query.all() 
-	for tvrtkaa in sve_tvrtke:
-		lista.append(tvrtkaa.name)
+	for tvrtka in sve_tvrtke:
+		lista.append(tvrtka.name)
 
 	if s == ' ':
 		tvrtke = Tvrtka.query.order_by(Tvrtka.name).paginate(per_page=5, page=page_num, error_out=True)
@@ -201,7 +193,7 @@ def tvrtke(page_num, s):
 	
 	if form.submit.data:
 		if form.validate_on_submit():
-			tvrtka = Tvrtka(name=form.name.data, oib=form.oib.data, grad=form.grad.data, 
+			tvrtka = Tvrtka(name=form.name.data, oib=form.oib.data, adresa=form.adresa.data, grad=form.grad.data, 
 				p_broj=form.p_broj.data, drzava=form.drzava.data)
 			db.session.add(tvrtka)
 			db.session.commit()
@@ -210,11 +202,25 @@ def tvrtke(page_num, s):
 			#return render_template('tvrtke.html', title='Dodaj tvrtku', form=form, form2=form2, tvrtke=tvrtke, search=' ')
 	return render_template('tvrtke.html', title='Tvrtke', tvrtke=tvrtke, form=form, form2= form2, search=' ', lista=lista)
 
-@app.route('/tvrtka/<name>')
+@app.route('/tvrtka/<name>', methods=['GET', 'POST'])
 @login_required
 def tvrtka(name):
+	form_uredi = UrediTvrtkuForm()
 	tvrtka = Tvrtka.query.filter_by(name=name).first_or_404()
-	return render_template('tvrtke1.html', user=user, tvrtka=tvrta)
+	if form_uredi.submit3.data:
+		if form_uredi.validate_on_submit():
+			tvrtka = Tvrtka.query.filter_by(name=name).first_or_404()
+			tvrtka.name = form_uredi.name.data
+			tvrtka.oib = form_uredi.oib.data
+			tvrtka.adresa = form_uredi.adresa.data
+			tvrtka.grad = form_uredi.grad.data
+			tvrtka.p_broj = form_uredi.p_broj.data
+			tvrtka.drzava = form_uredi.drzava.data
+			db.session.add(tvrtka)
+			db.session.commit()
+			flash(f'Uspješno ste izmijenili podatke tvrtke {form_uredi.name.data}!')
+			return redirect(url_for('tvrtka', name=tvrtka.name))		
+	return render_template('tvrtka.html', user=user, tvrtka=tvrtka, form_uredi=form_uredi)
 
 @app.route('/tvrtke1', methods=['GET', 'POST'])
 @login_required
@@ -275,13 +281,19 @@ def evidencija_izdavanja1():
 @login_required
 def evidencija(id):
 	evidencija = Evidencija.query.filter_by(id=id).first_or_404()
-	if os.path.exists('app/Evidencije/evidencija '+id +'.pdf'):
-		os.remove('app/Evidencije/evidencija '+id +'.pdf')
 	return render_template('evidencija.html', id=id, evidencija=evidencija)
 
 @app.route('/evidencija_pdf/<id>')
 @login_required
 def evidencija_pdf(id):
+	folder = 'app/Evidencije/'
+	for the_file in os.listdir(folder):
+		file_path = os.path.join(folder, the_file)
+		try:
+			if os.path.isfile(file_path):
+				os.unlink(file_path)
+		except Exception as e:
+			print(e)
 	evidencija = Evidencija.query.filter_by(id=id).first_or_404()
 	html = render_template('evidencija_pdf.html', id=id, evidencija=evidencija)
 	pdfkit.from_string(html, 'app/Evidencije/evidencija '+id +'.pdf', configuration=config)
@@ -364,17 +376,17 @@ def ulaz():
 	tvrtke = Tvrtka.query.all()
 	form = ListForm()
 	lista = []
+	lista2 = []
 	sve_tvrtke = Tvrtka.query.all() 
+	svi_proizvodi = Proizvod.query.all()
 	error=False
 	products=[]
 	companies=[]
 	amounts=[]
-	for tvrtkaa in sve_tvrtke:
-		lista.append(tvrtkaa.name)
-	lista2 = []
-	proizvodii = Proizvod.query.all()
-	for proizvod in proizvodii:
-		lista2.append(proizvod.name)
+	for tvrtka in sve_tvrtke:
+		lista.append(tvrtka.name)
+	for proizvodi in svi_proizvodi:
+		lista2.append(proizvodi.name)
 	if form.submit.data:
 		if form.validate_on_submit():
 			productList= json.loads(form.listaProizvoda.data)
@@ -397,13 +409,17 @@ def ulaz():
 						companies.append(tvrtka)
 						amounts.append(int(productData[1]))
 			if error is False:
+				receipt = Receipt(status="active", receipt_type="unos")
+				db.session.add(receipt)
+				db.session.commit()
 				for i in range(0, len(products)):
 					products[i].kolicina+= amounts[i]
-					evidencija = Evidencija(proizvod_id=products[i].id, tvrtka_id=companies[i].id, promijenjena_kolicina=amounts[i], user_id=current_user.id, vrsta_unosa='unos', trenutna_kolicina=products[i].kolicina)
+					evidencija = Evidencija(proizvod_id=products[i].id, tvrtka_id=companies[i].id, promijenjena_kolicina=amounts[i], user_id=current_user.id, vrsta_unosa='unos', trenutna_kolicina=products[i].kolicina, receipt_id=receipt.id)
 					db.session.add(evidencija)
 					db.session.commit()
 			return redirect(url_for('ulaz'))
-	return render_template("ulaz.html", title='Ulaz', tvrtke=tvrtke, lista=lista,lista2=lista2, form=form)
+	return render_template("ulaz.html", title='Ulaz', tvrtke=tvrtke, lista=lista, lista2=lista2, form=form)
+
 
 
 @app.route('/izlaz', methods=['GET', 'POST'])
@@ -412,13 +428,17 @@ def izlaz():
 	tvrtke = Tvrtka.query.all()
 	form = ListForm()
 	lista = []
+	lista2 = []
 	sve_tvrtke = Tvrtka.query.all() 
+	svi_proizvodi = Proizvod.query.all()
 	error=False
 	products=[]
 	companies=[]
 	amounts=[]
-	for tvrtkaa in sve_tvrtke:
-		lista.append(tvrtkaa.name)
+	for tvrtka in sve_tvrtke:
+		lista.append(tvrtka.name)
+	for proizvodi in svi_proizvodi:
+		lista2.append(proizvodi.name)
 	if form.submit.data:
 		if form.validate_on_submit():
 			productList= json.loads(form.listaProizvoda.data)
@@ -445,10 +465,62 @@ def izlaz():
 						companies.append(tvrtka)
 						amounts.append(int(productData[1]))
 			if error is False:
+				receipt = Receipt(status="active", receipt_type="izlaz")
+				db.session.add(receipt)
+				db.session.commit()
 				for i in range(0, len(products)):
 					products[i].kolicina-= amounts[i]
-					evidencija = Evidencija(proizvod_id=products[i].id, tvrtka_id=companies[i].id, promijenjena_kolicina=amounts[i], user_id=current_user.id, vrsta_unosa='izlaz', trenutna_kolicina=products[i].kolicina)
+					evidencija = Evidencija(proizvod_id=products[i].id, tvrtka_id=companies[i].id, promijenjena_kolicina=amounts[i], user_id=current_user.id, vrsta_unosa='izlaz', trenutna_kolicina=products[i].kolicina, receipt_id=receipt.id)
 					db.session.add(evidencija)
 					db.session.commit()
 			return redirect(url_for('izlaz'))
-	return render_template("izlaz.html", title='Izlaz', tvrtke=tvrtke, lista=lista, form=form)
+	return render_template("izlaz.html", title='Izlaz', tvrtke=tvrtke, lista=lista, lista2=lista2, form=form)
+
+
+@app.route('/receipts_unosa/<int:page_num>')
+@login_required
+def receipts_unosa(page_num):
+	receipts = Receipt.query.filter_by(receipt_type="unos", status="active").paginate(per_page=7, page=page_num, error_out=True)
+	return render_template('receipts_unosa.html', title='Racuni', receipts=receipts)
+
+@app.route('/receipts_unosa1', methods=['GET', 'POST'])
+@login_required
+def receipts_unosa1():
+	return redirect(url_for('receipts_unosa', page_num=1))
+
+
+@app.route('/receipts_izlaz/<int:page_num>')
+@login_required
+def receipts_izlaz(page_num):
+	receipts = Receipt.query.filter_by(receipt_type="izlaz", status="active").paginate(per_page=7, page=page_num, error_out=True)
+	#import pdb; pdb.set_trace();
+	return render_template('receipts_izlaz.html', title='Racuni', receipts=receipts)
+
+@app.route('/receipts_izlaz1', methods=['GET', 'POST'])
+@login_required
+def receipts_izlaz1():
+	return redirect(url_for('receipts_izlaz', page_num=1))
+
+@app.route('/receipt/<id>')
+@login_required
+def receipt(id):
+	evidencije = Evidencija.query.filter_by(receipt_id=id)
+	evidencija = Evidencija.query.filter_by(receipt_id=id).first()
+	return render_template('receipt.html', id=id, evidencije=evidencije, evidencija=evidencija)
+
+@app.route('/receipt_pdf/<id>')
+@login_required
+def receipt_pdf(id):
+	folder = 'app/Receipts/'
+	for the_file in os.listdir(folder):
+		file_path = os.path.join(folder, the_file)
+		try:
+			if os.path.isfile(file_path):
+				os.unlink(file_path)
+		except Exception as e:
+			print(e)
+	evidencije = Evidencija.query.filter_by(receipt_id=id)
+	evidencija = Evidencija.query.filter_by(receipt_id=id).first()
+	html = render_template('receipt_pdf.html', id=id, evidencije=evidencije, evidencija=evidencija)
+	pdfkit.from_string(html, 'app/Receipts/receipt '+id +'.pdf', configuration=config)
+	return send_file('Receipts/receipt '+id +'.pdf')

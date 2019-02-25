@@ -5,6 +5,7 @@
 {% block content %}
 <script type="text/javascript">  
     var lista1 = {{ lista|safe }};
+    var lista2 = {{ lista2|safe }};
 </script>
 
 <div class="unos-p">
@@ -161,6 +162,7 @@ document.addEventListener("click", function (e) {
 }
 
 autocomplete(document.getElementById("Tvrtka"), lista1);
+autocomplete(document.getElementById("Ime"), lista2);
 
 </script>
 
