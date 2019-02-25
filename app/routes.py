@@ -210,11 +210,18 @@ def tvrtke(page_num, s):
 			#return render_template('tvrtke.html', title='Dodaj tvrtku', form=form, form2=form2, tvrtke=tvrtke, search=' ')
 	return render_template('tvrtke.html', title='Tvrtke', tvrtke=tvrtke, form=form, form2= form2, search=' ', lista=lista)
 
-@app.route('/tvrtka/<name>')
+@app.route('/tvrtka/<name>', methods=['GET', 'POST'])
 @login_required
 def tvrtka(name):
 	form_uredi = UrediTvrtkuForm()
 	tvrtka = Tvrtka.query.filter_by(name=name).first_or_404()
+	if form_uredi.submit3.data:
+		if form_uredi.validate_on_submit():
+			tvrtka = Tvrtka(name=form_uredi.name.data, oib=form_uredi.oib.data, adresa=form_uredi.adresa.data, grad=form_uredi.grad.data, 
+				p_broj=form_uredi.p_broj.data, drzava=form_uredi.drzava.data)
+			db.session.add(tvrtka)
+			db.session.commit()
+			flash(f'Uspješno ste izmijenili podatke {form_uredi.name.data}!')
 	return render_template('tvrtka.html', user=user, tvrtka=tvrtka, form_uredi=form_uredi)
 
 @app.route('/tvrtke1', methods=['GET', 'POST'])
