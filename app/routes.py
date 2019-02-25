@@ -2,7 +2,7 @@ from flask import render_template, flash, redirect, url_for, request, send_file,
 from app import app, db
 from app.forms import LoginForm, RegistrationForm, UlazRobeForm, IzlazRobeForm, UrediProizvodForm, UnosProizvodaForm, SearchForm, EditPasswordForm, UnosTvrtkeForm, SearchFormTvrtka, SearchFormKorisnik, ListForm
 from flask_login import current_user, login_user, logout_user, login_required
-from app.models import User, Proizvod, Tvrtka, Evidencija
+from app.models import User, Proizvod, Tvrtka, Evidencija, Receipt
 from werkzeug.urls import url_parse
 from datetime import datetime
 import flask_excel as excel
@@ -358,13 +358,17 @@ def ulaz():
 	tvrtke = Tvrtka.query.all()
 	form = ListForm()
 	lista = []
+	lista2 = []
 	sve_tvrtke = Tvrtka.query.all() 
+	svi_proizvodi = Proizvod.query.all()
 	error=False
 	products=[]
 	companies=[]
 	amounts=[]
-	for tvrtkaa in sve_tvrtke:
-		lista.append(tvrtkaa.name)
+	for tvrtka in sve_tvrtke:
+		lista.append(tvrtka.name)
+	for proizvodi in svi_proizvodi:
+		lista2.append(proizvodi.name)
 	if form.submit.data:
 		if form.validate_on_submit():
 			productList= json.loads(form.listaProizvoda.data)
@@ -387,13 +391,16 @@ def ulaz():
 						companies.append(tvrtka)
 						amounts.append(int(productData[1]))
 			if error is False:
+				receipt = Receipt(status="active", receipt_type="unos")
+				db.session.add(receipt)
+				db.session.commit()
 				for i in range(0, len(products)):
 					products[i].kolicina+= amounts[i]
-					evidencija = Evidencija(proizvod_id=products[i].id, tvrtka_id=companies[i].id, promijenjena_kolicina=amounts[i], user_id=current_user.id, vrsta_unosa='unos', trenutna_kolicina=products[i].kolicina)
+					evidencija = Evidencija(proizvod_id=products[i].id, tvrtka_id=companies[i].id, promijenjena_kolicina=amounts[i], user_id=current_user.id, vrsta_unosa='unos', trenutna_kolicina=products[i].kolicina, receipt_id=receipt.id)
 					db.session.add(evidencija)
 					db.session.commit()
 			return redirect(url_for('ulaz'))
-	return render_template("ulaz.html", title='Ulaz', tvrtke=tvrtke, lista=lista, form=form)
+	return render_template("ulaz.html", title='Ulaz', tvrtke=tvrtke, lista=lista, lista2=lista2, form=form)
 
 
 @app.route('/izlaz', methods=['GET', 'POST'])
@@ -442,3 +449,15 @@ def izlaz():
 					db.session.commit()
 			return redirect(url_for('izlaz'))
 	return render_template("izlaz.html", title='Izlaz', tvrtke=tvrtke, lista=lista, form=form)
+
+
+@app.route('/receipt/<int:page_num>')
+@login_required
+def receipt(page_num):
+	receipts = Receipt.query.all().paginate(per_page=7, page=page_num, error_out=True)
+	return render_template('receipt.html', title='Racuni', receipts=receipts)
+
+@app.route('/receipt1', methods=['GET', 'POST'])
+@login_required
+def receipt1():
+	return redirect(url_for('receipt', page_num=1))
