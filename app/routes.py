@@ -365,6 +365,10 @@ def ulaz():
 	amounts=[]
 	for tvrtkaa in sve_tvrtke:
 		lista.append(tvrtkaa.name)
+	lista2 = []
+	proizvodii = Proizvod.query.all()
+	for proizvod in proizvodii:
+		lista2.append(proizvod.name)
 	if form.submit.data:
 		if form.validate_on_submit():
 			productList= json.loads(form.listaProizvoda.data)
@@ -393,7 +397,7 @@ def ulaz():
 					db.session.add(evidencija)
 					db.session.commit()
 			return redirect(url_for('ulaz'))
-	return render_template("ulaz.html", title='Ulaz', tvrtke=tvrtke, lista=lista, form=form)
+	return render_template("ulaz.html", title='Ulaz', tvrtke=tvrtke, lista=lista,lista2=lista2, form=form)
 
 
 @app.route('/izlaz', methods=['GET', 'POST'])
