@@ -4,6 +4,27 @@
 <div class="stanje-s">
     <h1>Tvrtka: {{ tvrtka.name }}</h1><br>
     <hr>
+    <table class="table table-striped">
+        <tr>
+            <th>Naziv tvrtke</th>
+            <th>OIB</th> 
+            <th>ADRESA</th> 
+            <th>GRAD</th>
+            <th>POŠTANSKI BROJ</th>
+            <th>DRŽAVA</th>
+        </tr>
+    
+        <tr>
+            <td>{{ tvrtka.name }}</td>
+            <td>{{ tvrtka.oib }}</td> 
+            <td>{{ tvrtka.adresa }}</td> 
+            <td>{{ tvrtka.grad }}</td>
+            <td>{{ tvrtka.p_broj }}</td>
+            <td>{{ tvrtka.drzava }}</td>
+        </tr>     
+    
+
+    </table>
     <button type="button" class="btn btn-primary m-2" data-toggle="modal" data-target="#exampleModalCenter3" id="uredi-proizvod-tipka">Uredi tvrtku</button>
 </div>
 
