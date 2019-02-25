@@ -43,18 +43,26 @@
 			<li class="{% block dobavljaci %}{% endblock %}">
 				<a href="{{ url_for('tvrtke1') }}"><i class="fas fa-handshake mr-2"></i>Tvrtke</a>
 			</li>
-			<li class="{% block pretraga %}{% endblock %}">
-                <a href="{{ url_for('search1') }}"><i class="fas fa-search mr-2"></i>Pretraga</a>
-            </li>
-
+			
+			<li>
+				<a href="#pageSubmenu2" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fas fa-box-open mr-2"></i>Ulaz/Izlaz Robe</a>
+				<ul class="collapse list-unstyled" id="pageSubmenu2">
+					<li>
+						<a class="link-dropdown" href="{{ url_for('ulaz') }}">Ulaz Robe</a>
+					</li>
+					<li>
+						<a class="link-dropdown" href="{{ url_for('izlaz' )}}">Izlaz Robe</a>
+					</li>
+				</ul>
+			</li> 
 			<li>
 				<a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fas fa-book-open mr-2"></i>Evidencije</a>
 				<ul class="collapse list-unstyled" id="pageSubmenu">
 					<li>
-						<a class="link-dropdown" href="{{ url_for('evidencija_unosa1') }}">Evidencija unosa</a>
+						<a class="link-dropdown" href="{{ url_for('evidencija_unosa1') }}">Ulazna Evidencija</a>
 					</li>
 					<li>
-						<a class="link-dropdown" href="{{ url_for('evidencija_izdavanja1' )}}">Evidencija izdavanja</a>
+						<a class="link-dropdown" href="{{ url_for('evidencija_izdavanja1' )}}">Izlazna Evidencija</a>
 					</li>
 				</ul>
 			</li> 
@@ -67,6 +75,7 @@
                     <a href="{{ url_for('logout') }}" class="btn btn-primary hover-plava">ODJAVI SE</a>
                 </li>
                 {%  if current_user.username == "admin"%}
+                <hr>
                     <li>
                         <a href="{{ url_for('register') }}" class="btn btn-primary hover-plava">Registriraj novog korisnika</a>
                     </li>

@@ -38,11 +38,12 @@ class RegistrationForm(FlaskForm):
 
 class UnosProizvodaForm(FlaskForm):
 	name = StringField('Naziv proizvoda', validators=[DataRequired('Unesi Naziv Proizvoda')])
-	promijenjena_kolicina = IntegerField('Kolicina', validators=[DataRequired('Unesi Količinu (broj)')])
+	#promijenjena_kolicina = IntegerField('Kolicina', validators=[DataRequired('Unesi Količinu (broj)')])
 	opis_proizvoda = StringField ('Opis proizvoda')
 	zemlja_podrijetla = StringField('Zemlja podrijetla', validators=[DataRequired('Unesi Zemlju Podrijetla')])
-	oib = IntegerField('OIB', validators=[DataRequired('Unesi OIB Tvrtke (broj)')])
-	submit = SubmitField('Dodaj')
+	#oib = IntegerField('OIB', validators=[DataRequired('Unesi OIB Tvrtke (broj)')])
+	#dodaj_jos = SubmitField('Dodaj jos')
+	submit2 = SubmitField('Dodaj Proizvod')
 	def validate(self):
 		rv = FlaskForm.validate(self)
 		if not rv:
@@ -51,10 +52,10 @@ class UnosProizvodaForm(FlaskForm):
 		if proizvod is not None:
 			self.name.errors.append('Proizvod pod tim imenom već postoji')
 			return False
-		tvrtka = Tvrtka.query.filter_by(oib=self.oib.data).first()
-		if tvrtka is None:
-			self.oib.errors.append('Tvrtka ne postoji')
-			return False
+		#tvrtka = Tvrtka.query.filter_by(oib=self.oib.data).first()
+		#if tvrtka is None:
+			#self.oib.errors.append('Tvrtka ne postoji')
+			#return False
 		else:
 			return True
 
@@ -140,12 +141,13 @@ class SearchFormTvrtka(FlaskForm):
 
 class EditPasswordForm(FlaskForm):
 	old_password = PasswordField('Stara Lozinka', validators=[DataRequired()])
+	username = HiddenField()
 	password = PasswordField('Lozinka', validators=[DataRequired()])
 	password2 = PasswordField(
 		'Ponovite lozinku', validators=[DataRequired(), EqualTo('password')])
 	
 	def validate(self):
-		user1 = User.query.get(current_user.id)
+		user1 = User.query.filter_by(username=self.username.data).first()
 		rv = FlaskForm.validate(self)
 		if not rv:
 			return False
@@ -155,3 +157,7 @@ class EditPasswordForm(FlaskForm):
 		else:
 			return True
 	submit = SubmitField()
+
+class ListForm(FlaskForm):
+	listaProizvoda=HiddenField(validators=[DataRequired()])
+	submit = SubmitField('Potvrdi')
