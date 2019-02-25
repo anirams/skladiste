@@ -9,7 +9,7 @@
         <tr>
             <td><a href="/receipt/{{receipt.id}}" class="dekoracija">{{ receipt.id }}</a></td>
             <td>{{ receipt.evidencija.first().user.username }}</td>
-            <td>{{ receipt.date }}</td>
+            <td>{{ receipt.date.strftime('%d %m %Y - %H:%M:%S') }}</td>
         </tr></a>
     {% endfor %}  
     </table>
