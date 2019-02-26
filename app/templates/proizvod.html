@@ -220,6 +220,16 @@
             {% endif %}
             {% endfor %}
         </p>
+        <p>
+            {{ form_uredi.bar_kod.label }}<br>
+            {{ form_uredi.bar_kod(size=32, value=proizvod.bar_kod, class="form-control") }}<br>
+            {% for error in form_uredi.bar_kod.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% if form_uredi.bar_kod.errors %}
+                <script> form_error3 = true; </script><br>
+            {% endif %}
+            {% endfor %}
+        </p>
          <p>
         
             {{ form_uredi.opis_proizvoda.label }}<br>
