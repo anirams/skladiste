@@ -175,6 +175,12 @@ var counter=0;
     function dodaj() {
       var listaSve = [];
       if (document.getElementById("Ime").value !== "" && document.getElementById("Kolicina").value !== "" && document.getElementById("Tvrtka").value !== "") {
+          nameOrBarcode=document.getElementById("Ime").value;
+          try{
+            x= int(nameOrBarcode)
+            y= {{kodovi.get(nameOrBarcode)}}
+            listaSve.push(kodovi.get(nameOrBarcode));
+          }
           listaSve.push(document.getElementById("Ime").value);
           listaSve.push(document.getElementById("Kolicina").value);
           listaSve.push(document.getElementById("Tvrtka").value);
