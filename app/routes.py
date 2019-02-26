@@ -627,10 +627,14 @@ def receipt(id):
 						proizvod.kolicina -= e.promijenjena_kolicina
 						db.session.add(proizvod)
 						db.session.commit()
+						receipt.storno_date=datetime.utcnow
+						receipt.storno_user=current_user.username
 				elif e.vrsta_unosa == 'izlaz':
 					proizvod.kolicina += e.promijenjena_kolicina
 					db.session.add(proizvod)
 					db.session.commit()
+					receipt.storno_date=datetime.utcnow
+					receipt.storno_user=current_user.username
 
 	return render_template('receipt.html', id=id, evidencije=evidencije, evidencija=evidencija, receipt=receipt, form=form)
 

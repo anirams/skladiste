@@ -63,4 +63,6 @@ class Receipt(db.Model):
 	status = db.Column(db.String(64))
 	date = db.Column(db.DateTime, default=datetime.utcnow)
 	receipt_type = db.Column(db.String(64))
-	evidencija = db.relationship('Evidencija', backref='receipt', lazy='dynamic') 
+	evidencija = db.relationship('Evidencija', backref='receipt', lazy='dynamic')
+	storno_date = db.Column(db.DateTime, nullable=True)
+	storno_user = db.Column(db.String(64), nullable=True)
