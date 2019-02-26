@@ -6,6 +6,7 @@
 <script type="text/javascript">  
     var lista1 = {{ lista|safe }};
     var lista2 = {{ lista2|safe }};
+    var kodovi1 = {{kodovi|safe}};
 </script>
 
 <div class="unos-p">
@@ -167,7 +168,21 @@ var counter=0;
     function dodaj() {
       var listaSve = [];
       if (document.getElementById("Ime").value !== "" && document.getElementById("Kolicina").value !== "" && document.getElementById("Tvrtka").value !== "") {
-          listaSve.push(document.getElementById("Ime").value);
+          var nameOrBarcode=document.getElementById("Ime").value;
+          console.log(nameOrBarcode);
+            console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            
+            if(!isNaN(nameOrBarcode)){
+              var x= parseInt(nameOrBarcode);
+              console.log(x);
+              var y= kodovi1[nameOrBarcode];
+              console.log(y);
+              console.log("AAAAAAAAAAAAAAAAAAAAAAAAa")
+              listaSve.push(y);
+            } else{
+              listaSve.push(nameOrBarcode);
+            }
+            
           listaSve.push(document.getElementById("Kolicina").value);
           listaSve.push(document.getElementById("Tvrtka").value);
           lista.push(listaSve)
