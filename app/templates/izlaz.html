@@ -4,7 +4,7 @@
 
 {% block content %}
 <script type="text/javascript">  
-    var lista1 = {{ lista|safe }};
+    var lista1 = {{ lista1|safe }};
     var lista2 = {{ lista2|safe }};
     var kodovi1 = {{kodovi|safe}};
 </script>
@@ -15,7 +15,7 @@
     <div class="row justify-content-md-cente">
       <form class="form-inline" action="" novalidate="" autocomplete="off">
         <div class="form-group autocomplete">
-          <input size=32, class="form-control", placeholder="Unesi ime proizvoda", type="text", id="Ime", autocomplete="off"></input>   
+          <input size=32, class="form-control", placeholder="Unesi ime proizvoda", type="text", id="Ime"></input>   
           <input size=32, class="form-control", placeholder="Unesi količinu", type="text", value=1 , id="Kolicina"></input>
           <input size=32, class="form-control", placeholder="Unesi tvrtku", type="text", id="Tvrtka"></input>
         </div>
@@ -169,15 +169,12 @@ var counter=0;
       var listaSve = [];
       if (document.getElementById("Ime").value !== "" && document.getElementById("Kolicina").value !== "" && document.getElementById("Tvrtka").value !== "") {
           var nameOrBarcode=document.getElementById("Ime").value;
-          console.log(nameOrBarcode);
-            console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+
             
             if(!isNaN(nameOrBarcode)){
               var x= parseInt(nameOrBarcode);
               console.log(x);
               var y= kodovi1[nameOrBarcode];
-              console.log(y);
-              console.log("AAAAAAAAAAAAAAAAAAAAAAAAa")
               listaSve.push(y);
             } else{
               listaSve.push(nameOrBarcode);
@@ -201,7 +198,7 @@ var counter=0;
           button.setAttribute('type', 'button;')
           button.setAttribute('class', 'btn btn-secondary iks;')
           button.innerHTML = "X";
-          
+
           counter++;
           tableR.appendChild(button)
           var tablica = document.getElementById("tablica");
@@ -234,11 +231,13 @@ var counter=0;
     }
     
 
-    // ENTER CLICK ON DODAJ
+// ENTER CLICK ON DODAJ
 $('#Ime').bind('keyup', function(e) {
     if ( e.keyCode === 13 ) { // 13 is enter key
         dodaj();
     }
 });
+
+
 </script>
 {% endblock %}

@@ -447,7 +447,7 @@ def ulaz():
 def izlaz():
 	tvrtke = Tvrtka.query.all()
 	form = ListForm()
-	lista = []
+	lista1 = []
 	lista2 = []
 	sve_tvrtke = Tvrtka.query.all() 
 	svi_proizvodi = Proizvod.query.all()
@@ -497,6 +497,7 @@ def izlaz():
 					db.session.commit()
 				return redirect(url_for('receipt', id=receipt.id))
 	return render_template("izlaz.html", title='Izlaz', tvrtke=tvrtke, lista=lista, lista2=lista2, form=form, kodovi=kodovi)
+
 
 
 @app.route('/receipts_unosa/<int:page_num>')
