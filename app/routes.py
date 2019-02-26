@@ -397,14 +397,16 @@ def ulaz():
 	lista2 = []
 	sve_tvrtke = Tvrtka.query.all() 
 	svi_proizvodi = Proizvod.query.all()
+	kodovi  = {}
+	for proizvod in svi_proizvodi:
+		kodovi[str(proizvod.bar_kod)]= proizvod.name
+		lista2.append(proizvod.name)
+	for tvrtka in sve_tvrtke:
+		lista.append(tvrtka.name)
 	error=False
 	products=[]
 	companies=[]
 	amounts=[]
-	for tvrtka in sve_tvrtke:
-		lista.append(tvrtka.name)
-	for proizvodi in svi_proizvodi:
-		lista2.append(proizvodi.name)
 	if form.submit.data:
 		if form.validate_on_submit():
 			productList= json.loads(form.listaProizvoda.data)
@@ -436,7 +438,7 @@ def ulaz():
 					db.session.add(evidencija)
 					db.session.commit()
 				return redirect(url_for('receipt', id=receipt.id))
-	return render_template("ulaz.html", title='Ulaz', tvrtke=tvrtke, lista=lista, lista2=lista2, form=form)
+	return render_template("ulaz.html", title='Ulaz', tvrtke=tvrtke, lista=lista, lista2=lista2, form=form, kodovi=kodovi)
 
 
 
