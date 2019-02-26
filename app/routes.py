@@ -406,7 +406,7 @@ def export_proizvod_izlaz(name):
 @app.route('/export_receipt_unos/<id>')
 @login_required
 def export_receipt_unos(id):
-	sql= text('SELECT evidencija.datum_unosa AS "Datum Unosa", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvoda, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id WHERE evidencija.receipt_id = "{}" AND evidencija.vrsta_unosa="unos"'.format(id))
+	sql= text('SELECT evidencija.datum_unosa AS "Datum Unosa", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvoda, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id WHERE evidencija.receipt_id = "{}"'.format(id))
 	result= db.engine.execute(sql)
 	query_sets = []
 	for r in result:
@@ -424,7 +424,7 @@ def export_receipt_unos(id):
 @app.route('/export_receipt_izlaz/<id>')
 @login_required
 def export_receipt_izlaz(id):
-	sql= text('SELECT evidencija.datum_unosa AS "Datum Unosa", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvoda, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id WHERE evidencija.receipt_id = "{}" AND evidencija.vrsta_unosa="izlaz"'.format(id))
+	sql= text('SELECT evidencija.datum_unosa AS "Datum Unosa", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvoda, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id WHERE evidencija.receipt_id = "{}"'.format(id))
 	result= db.engine.execute(sql)
 	query_sets = []
 	for r in result:
@@ -590,7 +590,7 @@ def receipts_izlaz1():
 @login_required
 def receipts_unosa_storno(page_num):
 	receipts = Receipt.query.filter_by(receipt_type="unos", status="storno").paginate(per_page=7, page=page_num, error_out=True)
-	return render_template('receipts_unosa.html', title='Racuni', receipts=receipts)
+	return render_template('receipts_unosa_storno.html', title='Racuni', receipts=receipts)
 
 @app.route('/receipts_unosa_storno1', methods=['GET', 'POST'])
 @login_required
@@ -601,7 +601,7 @@ def receipts_unosa_storno1():
 @login_required
 def receipts_izlaz_storno(page_num):
 	receipts = Receipt.query.filter_by(receipt_type="izlaz", status="storno").paginate(per_page=7, page=page_num, error_out=True)
-	return render_template('receipts_izlaz.html', title='Racuni', receipts=receipts)
+	return render_template('receipts_izlaz_storno.html', title='Racuni', receipts=receipts)
 
 @app.route('/receipts_izlaz_storno1', methods=['GET', 'POST'])
 @login_required
@@ -625,16 +625,18 @@ def receipt(id):
 						flash(f'Nema dovoljno kolicine na stanju za stornirati proizvod '+proizvod.name+'!', 'danger')
 					else:
 						proizvod.kolicina -= e.promijenjena_kolicina
-						db.session.add(proizvod)
-						db.session.commit()
-						receipt.storno_date=datetime.utcnow
+						receipt.storno_date=datetime.utcnow()
 						receipt.storno_user=current_user.username
+						db.session.add(proizvod)
+						db.session.add(receipt)
+						db.session.commit()
 				elif e.vrsta_unosa == 'izlaz':
 					proizvod.kolicina += e.promijenjena_kolicina
-					db.session.add(proizvod)
-					db.session.commit()
-					receipt.storno_date=datetime.utcnow
+					receipt.storno_date=datetime.utcnow()
 					receipt.storno_user=current_user.username
+					db.session.add(proizvod)
+					db.session.add(receipt)
+					db.session.commit()
 
 	return render_template('receipt.html', id=id, evidencije=evidencije, evidencija=evidencija, receipt=receipt, form=form)
 
