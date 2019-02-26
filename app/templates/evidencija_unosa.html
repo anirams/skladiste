@@ -26,29 +26,29 @@
 
 
     <h3 class="mb-4">Unos robe</h3>
-<table class="table table-striped">
-	<tr>
-        <th>Proizvod</th> 
-        <th>Kolicina</th>
-        <th>Naziv tvrtke</th>
-        <th>OIB</th>
-        <th>Datum unosa</th>
-        <th>Korisnik</th>
-        <th></th>
-    </tr>
-    {% for e in evidencija.items %}
-    <tr>
-    	<td><a href="/proizvod/{{e.proizvod.name}}" class="dekoracija">{{ e.proizvod.name }}</a></td>
-    	<td>{{ e.promijenjena_kolicina }}</td>
-    	<td>{{ e.tvrtka.name }}</td>
-    	<td>{{ e.tvrtka.oib }}</td>
-    	<td>{{ e.datum_unosa.strftime('%B %d %Y - %H:%M:%S') }}</td>
-        <td>{{ e.user.username }}</td>
-        <td><button class="btn btn-primary"><a href="../evidencija/{{e.id}}">PDF</a></button></td>
-    </tr>
-    {% endfor %}
-</table> 
-<div class="d-flex justify-content-between">
+    <table class="table table-striped">
+    	<tr>
+            <th>Proizvod</th> 
+            <th>Kolicina</th>
+            <th>Naziv tvrtke</th>
+            <th>OIB</th>
+            <th>Datum unosa</th>
+            <th>Korisnik</th>
+            <th></th>
+        </tr>
+        {% for e in evidencija.items %}
+        <tr>
+        	<td><a href="/proizvod/{{e.proizvod.name}}" class="dekoracija">{{ e.proizvod.name }}</a></td>
+        	<td>{{ e.promijenjena_kolicina }}</td>
+        	<td>{{ e.tvrtka.name }}</td>
+        	<td>{{ e.tvrtka.oib }}</td>
+        	<td>{{ e.datum_unosa.strftime('%B %d %Y - %H:%M:%S') }}</td>
+            <td>{{ e.user.username }}</td>
+            <td><button class="btn btn-primary"><a href="../evidencija/{{e.id}}">PDF</a></button></td>
+        </tr>
+        {% endfor %}
+    </table> 
+    <div class="d-flex justify-content-between">
         <div></div>
         <div>
             <h6>Evidencija unosa</h6>
@@ -74,6 +74,7 @@
             <button class="btn btn-primary m-2"><a href="/export_stanje_skladista" target="blank">Excel - Stanje</a></button>
         {% endif %}
        
+
     </div>
 </div>
 

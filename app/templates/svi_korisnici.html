@@ -41,7 +41,7 @@
         <tr>
            <td><a href="../user/{{user.username}}" class="dekoracija">{{ user.username }}</a></td>
            <td>{{ user.email }}</td>
-           <td>{{ user.last_seen.strftime('%B %d %Y - %H:%M:%S')  }}</td>
+           <td>{{ user.last_seen.strftime('%d %m %Y - %H:%M:%S')  }}</td>
         </tr>
         {% endfor %}
     </table> 

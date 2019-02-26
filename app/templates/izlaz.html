@@ -9,61 +9,54 @@
 </script>
 
 <div class="unos-p">
-   <h2 class="mb-4">Izlaz Robe</h2>
-   <div class="container">
-     <div class="row justify-content-md-cente">
-       <form class="form-inline" action="" novalidate="" autocomplete="off">
-                <div class="form-group autocomplete">
-                    <input size=32, class="form-control", placeholder="Unesi ime proizvoda", type="text", id="Ime", autocomplete="off"></input>   
-                    <input size=32, class="form-control", placeholder="Unesi količinu", type="text", value=1 , id="Kolicina"></input>
-                    <input size=32, class="form-control", placeholder="Unesi tvrtku", type="text", id="Tvrtka"></input>
-                </div>
-                <div class="form-group">
-                    <input size=32, class="form-control btn btn-primary", type="button", value="Dodaj Proizvod", onclick="dodaj()"></input> 
-                </div>
-        </form>
-     </div>
-     <div class="row">
-     
-         <table class="table table-striped" id="tablica">
-        <tr>
-            <th>Proizvod</th>
-            <th>Količina</th> 
-            <th>Tvrtka</th>
-        </tr>
-      
-    
-
-    </table>
-      {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-      {% for category, message in messages %}
-        <div class="alert alert-{{ category }}">
-          {{ message }}
+  <h2 class="mb-4">Izlaz Robe</h2>
+  <div class="container">
+    <div class="row justify-content-md-cente">
+      <form class="form-inline" action="" novalidate="" autocomplete="off">
+        <div class="form-group autocomplete">
+          <input size=32, class="form-control", placeholder="Unesi ime proizvoda", type="text", id="Ime", autocomplete="off"></input>   
+          <input size=32, class="form-control", placeholder="Unesi količinu", type="text", value=1 , id="Kolicina"></input>
+          <input size=32, class="form-control", placeholder="Unesi tvrtku", type="text", id="Tvrtka"></input>
         </div>
-      {% endfor %}
-    {% endif %}
-  {% endwith %}
-     </div>
-   </div>
+        <div class="form-group">
+          <input size=32, class="form-control btn btn-primary", type="button", value="Dodaj Proizvod", onclick="dodaj()"></input> 
+        </div>
+      </form>
+    </div>
+    <div class="row">
+      <table class="table table-striped" id="tablica">
+        <tr>
+          <th>Proizvod</th>
+          <th>Količina</th> 
+          <th>Tvrtka</th>
+        </tr>
+      </table>
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">
+              {{ message }}
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+    </div>
+  </div>
   
-  <form  action="" method="post" novalidate="">
-          {{ form.csrf_token }}
-          {{form.listaProizvoda(id="tajnaLista")}}
-          {% for error in form.listaProizvoda.errors %}
-                    <span style="color: red;">[{{ error }}]</span><br>
-          {% endfor %}<br> 
-          {{ form.submit(type="submit", class="btn btn-primary") }}  
-          {% for error in form.submit.errors %}
-                    <span style="color: red;">[{{ error }}]</span><br>
-          {% endfor %}<br>   
-  </form>
-  
-    
+  <form action="" method="post" novalidate="">
+    {{ form.csrf_token }}
+    {{form.listaProizvoda(id="tajnaLista")}}
+      {% for error in form.listaProizvoda.errors %}
+                <span style="color: red;">[{{ error }}]</span><br>
+      {% endfor %}<br> 
+      {{ form.submit(type="submit", class="btn btn-primary") }}  
+      {% for error in form.submit.errors %}
+                <span style="color: red;">[{{ error }}]</span><br>
+      {% endfor %}<br>   
+  </form>   
 </div>
 
 <script type="text/javascript">
-
 
 function autocomplete(inp, arr) {
   /* text field and array of values */
@@ -186,10 +179,13 @@ var counter=0;
             tableD.appendChild(tableDime);
             tableR.appendChild(tableD)
           }
-          var button = document.createElement("BUTTON")
+          var button = document.createElement("button")
           button.setAttribute('id', counter)
           tableR.setAttribute('id', counter)
           button.setAttribute('onclick', 'obrisi(id);')
+          button.setAttribute('type', 'button;')
+          button.setAttribute('class', 'btn btn-secondary iks;')
+          button.innerHTML = "X";
           
           counter++;
           tableR.appendChild(button)
@@ -222,5 +218,12 @@ var counter=0;
       }
     }
     
+
+    // ENTER CLICK ON DODAJ
+$('#Ime').bind('keyup', function(e) {
+    if ( e.keyCode === 13 ) { // 13 is enter key
+        dodaj();
+    }
+});
 </script>
 {% endblock %}

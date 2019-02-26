@@ -100,60 +100,54 @@
 		<div class="tijelo">
 	        <div class="plava-pozadina">
 	        	<div class="d-flex bd-highlight">
-  				<div class="bd-highlight">
-	            	<button type="button" id="sidebarCollapse" class="btn btn-primary">
-	                	<i class="fas fa-align-left"></i>
-	                <span class="sakrij-tipku"></span>
-	           </div>
-  				<div class="ml-auto bd-highlight">
-  					<div id="clockdate">
-  					<div class="clockdate-wrapper">
-    					<div id="clock"></div>
-    					<div id="date"></div>
-  					</div>
+	  				<div class="bd-highlight">
+		            	<button type="button" id="sidebarCollapse" class="btn btn-primary">
+			                <i class="fas fa-align-left"></i>
+			                <span class="sakrij-tipku"></span>
+		            	</button>
+		            </div>
+	  				<div class="ml-auto bd-highlight">
+	  					<div id="clockdate">
+		  					<div class="clockdate-wrapper">
+		    					<div id="clock"></div>
+		    					<div id="date"></div>
+		  					</div>
+						</div>
+					</div>
 				</div>
-			</div>
-			</div>
-	            
-				
-	            </button> <br>
 			
-	    		</div>
-				<div class="plavo">
-				
-				{% block content %}
-				{% endblock %}
-				</div>
+	    	</div>
+			<div class="plavo">
+			{% block content %}
+			{% endblock %}
+			</div>
 		</div>
-
 
 <footer>Copyright © 2019 Teletubbies Inc. All rights reserved.</footer>
 
 	
 
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
-	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
 
 
-	<!-- SAKRIJ MENU -->
-	<script type="text/javascript">
-        $(document).ready(function () {
-            $('#sidebarCollapse').on('click', function () {
-                $('#sidebar').toggleClass('active');
-            });
+	
+<script type="text/javascript">
+	/* SAKRIJ MENU */
+    $(document).ready(function () {
+        $('#sidebarCollapse').on('click', function () {
+            $('#sidebar').toggleClass('active');
         });
-
-        /* IZBRISI STARE PODATKE IZ MODALA */
-        /*$(".sakrij-podatke input").val("")*/
+    });
 
 
-        /* MODAL RESPONSIVE */
+    /* MODAL RESPONSIVE */
 
-    	$('#exampleModalCenter').on('show.bs.modal', function() {
-      	$(this).find('.modal-body').css({
-        	'max-height': '100%'
-        });
-        });
+	$('#exampleModalCenter').on('show.bs.modal', function() {
+  	$(this).find('.modal-body').css({
+    	'max-height': '100%'
+    });
+    });
 
 
         /* VRIJEME */
@@ -181,16 +175,13 @@
     document.getElementById("date").innerHTML = date;
     
     var time = setTimeout(function(){ startTime() }, 500);
-}
-function checkTime(i) {
-    if (i < 10) {
-        i = "0" + i;
-    }
-    return i;
-}
-
-
-
-    </script>
+	}
+	function checkTime(i) {
+	    if (i < 10) {
+	        i = "0" + i;
+	    }
+	    return i;
+	}
+</script>
 </body>
 </html>

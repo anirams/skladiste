@@ -19,7 +19,7 @@
                     <input size=32, class="form-control", placeholder="Unesi tvrtku", type="text", id="Tvrtka"></input>
                 </div>
                 <div class="form-group">
-                    <input size=32, class="form-control btn btn-primary", type="button", value="Dodaj Proizvod", onclick="dodaj()"></input> 
+                    <input size=32, class="form-control btn btn-primary", type="button", value="Dodaj Proizvod", onclick="dodaj()", id="klikFunkcija"></input> 
                 </div>
         </form>
      </div>
@@ -187,11 +187,14 @@ var counter=0;
             tableD.appendChild(tableDime);
             tableR.appendChild(tableD)
           }
-          var button = document.createElement("BUTTON")
+          var button = document.createElement("button")
           button.setAttribute('id', counter)
           tableR.setAttribute('id', counter)
           button.setAttribute('onclick', 'obrisi(id);')
-          
+          button.setAttribute('type', 'button;')
+          button.setAttribute('class', 'btn btn-secondary iks;')
+          button.innerHTML = "X";
+
           counter++;
           tableR.appendChild(button)
           var tablica = document.getElementById("tablica");
@@ -223,5 +226,14 @@ var counter=0;
       }
     }
     
+
+// ENTER CLICK ON DODAJ
+$('#Ime').bind('keyup', function(e) {
+    if ( e.keyCode === 13 ) { // 13 is enter key
+        dodaj();
+    }
+});
+
+
 </script>
 {% endblock %}

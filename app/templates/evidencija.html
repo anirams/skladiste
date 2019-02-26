@@ -10,6 +10,7 @@
 
 
 <div id="contentToPdf" class="unos-p">
+
 	
 <div class="container">
 	
@@ -28,63 +29,55 @@
 					<h6 class="mb-3">Tvrtka:</h6>
 					<div>
 					<div>Ime: <strong>{{ evidencija.tvrtka.name }}</strong></div>
+
 					</div>
-					<div>OIB: {{ evidencija.tvrtka.oib }}</div>
-					<div>Grad: {{ evidencija.tvrtka.grad }}</div>
-					<div>Poštanski broj: {{ evidencija.tvrtka.p_broj }}</div>
-					<div>Država: {{ evidencija.tvrtka.drzava }}</div>
+
+					<div class="col-sm-6">
+						<h6 class="mb-3">Skladište:</h6>
+						<div>
+						<div>Ime: <strong>Marina Rijeka</strong></div>
+						</div>
+						<div>OIB: 0000000000</div>
+						<div>Grad: Rijeka</div>
+						<div>Poštanski broj: 51000</div>
+						<div>Država: Hrvatska</div>
+					</div>
 				</div>
 
-				<div class="col-sm-6">
-					<h6 class="mb-3">Skladište:</h6>
-					<div>
-					<div>Ime: <strong>Marina Rijeka</strong></div>
-					</div>
-					<div>OIB: 0000000000</div>
-					<div>Grad: Rijeka</div>
-					<div>Poštanski broj: 51000</div>
-					<div>Država: Hrvatska</div>
+				<div class="table-responsive-sm">
+					<table class="table table-striped">
+						<thead>
+							<tr>
+								<th class="center">#</th>
+								<th>Proizvod</th>
+								<th>Opis</th>
+								<th class="right">Količina</th>
+								<th class="center">Vrsta eviden.</th>
+								<th class="right">Novo stanje</th>
+							</tr>
+						</thead>
+
+						<tbody>						
+
+							<tr>
+								<td class="center">1</td>
+								<td class="left">{{ evidencija.proizvod.name }}</td>
+								<td class="left">{{ evidencija.proizvod.opis_proizvoda }}</td>
+
+								<td class="right">{{ evidencija.promijenjena_kolicina }}</td>
+								<td class="center">{{ evidencija.vrsta_unosa }}</td>
+								<td class="right">{{ evidencija.trenutna_kolicina }}</td>
+							</tr>
+
+						</tbody>
+					</table>
 				</div>
-			</div>
-
-			<div class="table-responsive-sm">
-				<table class="table table-striped">
-					<thead>
-						<tr>
-							<th class="center">#</th>
-							<th>Proizvod</th>
-							<th>Opis</th>
-							<th class="right">Količina</th>
-							<th class="center">Vrsta eviden.</th>
-							<th class="right">Novo stanje</th>
-						</tr>
-					</thead>
-
-					<tbody>						
-
-						<tr>
-							<td class="center">1</td>
-							<td class="left">{{ evidencija.proizvod.name }}</td>
-							<td class="left">{{ evidencija.proizvod.opis_proizvoda }}</td>
-
-							<td class="right">{{ evidencija.promijenjena_kolicina }}</td>
-							<td class="center">{{ evidencija.vrsta_unosa }}</td>
-							<td class="right">{{ evidencija.trenutna_kolicina }}</td>
-						</tr>
-
-					</tbody>
-				</table>
-			</div>
-
-			<div class="row">
-				<div class="col-lg-4 col-sm-5">
-
-				</div>				
+				<div class="row">
+					<div class="col-lg-4 col-sm-5"></div>				
+				</div>
 			</div>
 		</div>
-	</div>
 </div>
-
 
 <div id="editor"></div>
 
