@@ -135,7 +135,7 @@ class UrediProizvodForm(FlaskForm):
 	name = StringField('Naziv proizvoda', validators=[DataRequired('Unesi Naziv Proizvoda')])
 	zemlja_podrijetla = StringField('Zemlja podrijetla')
 	opis_proizvoda = TextAreaField('Opis proizvoda')
-	bar_kod = IntegerField('Bar kod')
+	barkod = IntegerField('Bar kod')
 	submit3 = SubmitField('Uredi')
 	def validate(self):
 		rv = FlaskForm.validate(self)

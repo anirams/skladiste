@@ -221,11 +221,11 @@
             {% endfor %}
         </p>
         <p>
-            {{ form_uredi.bar_kod.label }}<br>
-            {{ form_uredi.bar_kod(size=32, value=proizvod.bar_kod, class="form-control") }}<br>
-            {% for error in form_uredi.bar_kod.errors %}
+            {{ form_uredi.barkod.label }}<br>
+            {{ form_uredi.barkod(size=32, value=proizvod.barkod, class="form-control") }}<br>
+            {% for error in form_uredi.barkod.errors %}
             <span style="color: red;">[{{ error }}]</span>
-            {% if form_uredi.bar_kod.errors %}
+            {% if form_uredi.barkod.errors %}
                 <script> form_error3 = true; </script><br>
             {% endif %}
             {% endfor %}

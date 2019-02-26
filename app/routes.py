@@ -121,7 +121,7 @@ def proizvod(name):
 			proizvod.name = form_uredi.name.data
 			proizvod.zemlja_podrijetla = form_uredi.zemlja_podrijetla.data
 			proizvod.opis_proizvoda = form_uredi.opis_proizvoda.data
-			proizvod.bar_kod = form_uredi.bar_kod.data
+			proizvod.bar_kod = form_uredi.barkod.data
 			db.session.add(proizvod)
 			db.session.commit()
 			flash('Uspjesno ste uredili proizvod!')
