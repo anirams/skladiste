@@ -56,7 +56,7 @@
             <td>{{ evidencija.promijenjena_kolicina }}</td>
             <td>{{ evidencija.tvrtka.name }}</td>
             <td>{{ evidencija.tvrtka.oib }}</td>
-            <td>{{ evidencija.datum_unosa.strftime('%B %d %Y - %H:%M:%S') }}</td>
+            <td>{{ evidencija.datum_unosa.strftime('%d %m %Y - %H:%M:%S') }}</td>
             <td>{{ evidencija.user.username }}</td>
         </tr>
 
@@ -81,7 +81,7 @@
             <td>{{ evidencija.promijenjena_kolicina }}</td>
             <td>{{ evidencija.tvrtka.name }}</td>
             <td>{{ evidencija.tvrtka.oib }}</td>
-            <td>{{ evidencija.datum_unosa.strftime('%B %d %Y - %H:%M:%S') }}</td>
+            <td>{{ evidencija.datum_unosa.strftime('%d %m %Y - %H:%M:%S') }}</td>
             <td>{{ evidencija.user.username }}</td>
         </tr>
         {% endfor %}

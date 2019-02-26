@@ -187,11 +187,13 @@ var counter=0;
             tableD.appendChild(tableDime);
             tableR.appendChild(tableD)
           }
-          var button = document.createElement("BUTTON")
+          var button = document.createElement("button")
           button.setAttribute('id', counter)
           tableR.setAttribute('id', counter)
           button.setAttribute('onclick', 'obrisi(id);')
-          button.setAttribute('value', 'button;')
+          button.setAttribute('type', 'button;')
+          button.setAttribute('class', 'btn btn-secondary iks;')
+          button.innerHTML = "X";
 
           counter++;
           tableR.appendChild(button)
