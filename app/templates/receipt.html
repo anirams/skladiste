@@ -89,5 +89,12 @@
 <div id="editor"></div>
 
 <button class="btn btn-primary m-2"><a href="../receipt_pdf/{{id}}">PDF</a></button>
+{% if evidencija.vrsta_unosa =='unos' %}
+            <button class="btn btn-primary m-2"><a href="{{ url_for('export_receipt_unos', id=id) }}" target="blank">Excel - Ulazni račun</a></button>
+{% else %}
+			<button class="btn btn-primary m-2"><a href="{{ url_for('export_receipt_izlaz', id=id) }}" target="blank">Excel - Izlazni račun</a></button>
+{% endif %}
+
+
 
 {% endblock %}

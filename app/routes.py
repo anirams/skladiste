@@ -282,17 +282,33 @@ def evidencija_unosa(page_num, s):
 def evidencija_unosa1():
 	return redirect(url_for('evidencija_unosa', page_num=1, s=' '))
 
-@app.route('/evidencija_izdavanja/<int:page_num>')
+@app.route('/evidencija_izdavanja/<int:page_num>+<s>', methods=['GET', 'POST'])
 @login_required
-def evidencija_izdavanja(page_num):
+def evidencija_izdavanja(page_num, s):
+	form = SearchForm()
+	lista = []
 	evidencija = Evidencija.query.filter_by(vrsta_unosa='izlaz').order_by(Evidencija.datum_unosa.desc()).paginate(per_page=7, page=page_num, error_out=True)
-	return render_template('evidencija_izdavanja.html', title='Evidencija izdavanja', evidencija=evidencija)
+	proizvodii = Proizvod.query.all()
+	for proizvod in proizvodii:
+		lista.append(proizvod.name)
+	if s == ' ':
+		evidencija = Evidencija.query.filter_by(vrsta_unosa='izlaz').order_by(Evidencija.datum_unosa.desc()).paginate(per_page=7, page=page_num, error_out=True)
+	elif not form.submit.data:
+		proizvod = Proizvod.query.filter(Proizvod.name.like("%" + s + "%")).first()
+		evidencija = Evidencija.query.filter_by(proizvod_id=proizvod.id, vrsta_unosa="izlaz").paginate(per_page=3, page=page_num, error_out=True)
+		return render_template('evidencija_izdavanja.html', title='Evidencija izdavanja', form=form, evidencija=evidencija, search=s, lista=lista)
+	if form.submit.data:
+		if form.validate_on_submit():
+			proizvod = Proizvod.query.filter(Proizvod.name.like("%" + form.search.data + "%")).first()
+			evidencija = Evidencija.query.filter_by(proizvod_id=proizvod.id, vrsta_unosa="izlaz").paginate(per_page=3, page=1, error_out=True)
+			return render_template('evidencija_izdavanja.html', title='Evidencija izdavanja', form=form, evidencija=evidencija, search=form.search.data, lista=lista, page=1)
+		return redirect(url_for('evidencija_izdavanja1'))
+	return render_template('evidencija_izdavanja.html', title='Evidencija izdavanja', form=form, evidencija=evidencija, search=' ', lista=lista)
 
 @app.route('/evidencija_izdavanja1', methods=['GET', 'POST'])
 @login_required
 def evidencija_izdavanja1():
-	return redirect(url_for('evidencija_izdavanja', page_num=1))
-
+	return redirect(url_for('evidencija_izdavanja', page_num=1, s=' '))
 
 
 @app.route('/evidencija/<id>')
@@ -387,6 +403,41 @@ def export_proizvod_izlaz(name):
 		]
 	return excel.make_response_from_query_sets(query_sets, column_names, 'xls', file_name="Izlazna evidencija "+name)
 
+@app.route('/export_receipt_unos/<id>')
+@login_required
+def export_receipt_unos(id):
+	sql= text('SELECT evidencija.datum_unosa AS "Datum Unosa", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvoda, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id WHERE evidencija.receipt_id = "{}" AND evidencija.vrsta_unosa="unos"'.format(id))
+	result= db.engine.execute(sql)
+	query_sets = []
+	for r in result:
+		query_sets.append(r)
+	column_names = [
+		'Datum Unosa',
+		'Promijenjena Kolicina',
+		'Proizvoda',
+		'ID Proizvoda',
+		'Tvrtka',
+		'Korisnik'
+		]
+	return excel.make_response_from_query_sets(query_sets, column_names, 'xls', file_name="Ulazni racun "+str(id))
+
+@app.route('/export_receipt_izlaz/<id>')
+@login_required
+def export_receipt_izlaz(id):
+	sql= text('SELECT evidencija.datum_unosa AS "Datum Unosa", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvoda, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id WHERE evidencija.receipt_id = "{}" AND evidencija.vrsta_unosa="izlaz"'.format(id))
+	result= db.engine.execute(sql)
+	query_sets = []
+	for r in result:
+		query_sets.append(r)
+	column_names = [
+		'Datum Unosa',
+		'Promijenjena Kolicina',
+		'Proizvoda',
+		'ID Proizvoda',
+		'Tvrtka',
+		'Korisnik'
+		]
+	return excel.make_response_from_query_sets(query_sets, column_names, 'xls', file_name="Izlazni racun "+str(id))
 
 @app.route('/ulaz', methods=['GET', 'POST'])
 @login_required
@@ -425,9 +476,14 @@ def ulaz():
 						flash(f'Pogresna kolicina za proizvod '+productData[0]+'!', 'danger')
 						error=True
 					if error is False:
-						products.append(proizvod)
-						companies.append(tvrtka)
-						amounts.append(int(productData[1]))
+						if proizvod in products:
+							index = products.index(proizvod)
+							amounts[index]+=int(productData[1]);
+						else:
+							products.append(proizvod)
+							companies.append(tvrtka)
+							amounts.append(int(productData[1]))
+
 			if error is False:
 				receipt = Receipt(status="active", receipt_type="unos")
 				db.session.add(receipt)
@@ -447,7 +503,7 @@ def ulaz():
 def izlaz():
 	tvrtke = Tvrtka.query.all()
 	form = ListForm()
-	lista1 = []
+	lista = []
 	lista2 = []
 	sve_tvrtke = Tvrtka.query.all() 
 	svi_proizvodi = Proizvod.query.all()
@@ -483,9 +539,16 @@ def izlaz():
 							flash(f'Nema dovoljno kolicine na stanju za proizvod '+productData[0]+'!', 'danger')
 							error=True
 					if error is False:
-						products.append(proizvod)
-						companies.append(tvrtka)
-						amounts.append(int(productData[1]))
+						if proizvod in products:
+							index = products.index(proizvod)
+							amounts[index]+=int(productData[1]);
+							if amounts[index]>proizvod.kolicina:
+								error=True
+								flash(f'Nema dovoljno kolicine na stanju za proizvod '+productData[0]+'!', 'danger')
+						else:
+							products.append(proizvod)
+							companies.append(tvrtka)
+							amounts.append(int(productData[1]))
 			if error is False:
 				receipt = Receipt(status="active", receipt_type="izlaz")
 				db.session.add(receipt)
