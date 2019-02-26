@@ -40,102 +40,98 @@
     <div class="row">
         <div class="col-xl-6">
             <h5>Evidencija unosa</h5>
-        <table class="table table-striped">
-        <tr>
-            <th>Proizvod</th> 
-            <th>Kolicina</th>
-            <th>Naziv tvrtke</th>
-            <th>OIB</th>
-            <th>Datum unosa</th>
-            <th>Korisnik</th>
-        </tr>
-        {% for evidencija in evidencijaUlaz %}
-        
-        <tr>
-            <td><a href="{{ url_for('evidencija', id=evidencija.id) }}">{{ evidencija.proizvod.name }}</a></td>
-            <td>{{ evidencija.promijenjena_kolicina }}</td>
-            <td>{{ evidencija.tvrtka.name }}</td>
-            <td>{{ evidencija.tvrtka.oib }}</td>
-            <td>{{ evidencija.datum_unosa.strftime('%d %m %Y - %H:%M:%S') }}</td>
-            <td>{{ evidencija.user.username }}</td>
-        </tr>
-
-        {% endfor %}
-        </table> 
+            <table class="table table-striped">
+                <tr>
+                    <th>Proizvod</th> 
+                    <th>Kolicina</th>
+                    <th>Naziv tvrtke</th>
+                    <th>OIB</th>
+                    <th>Datum unosa</th>
+                    <th>Korisnik</th>
+                </tr>
+                {% for evidencija in evidencijaUlaz %}
+                <tr>
+                    <td><a href="{{ url_for('evidencija', id=evidencija.id) }}">{{ evidencija.proizvod.name }}</a></td>
+                    <td>{{ evidencija.promijenjena_kolicina }}</td>
+                    <td>{{ evidencija.tvrtka.name }}</td>
+                    <td>{{ evidencija.tvrtka.oib }}</td>
+                    <td>{{ evidencija.datum_unosa.strftime('%d %m %Y - %H:%M:%S') }}</td>
+                    <td>{{ evidencija.user.username }}</td>
+                </tr>
+                {% endfor %}
+            </table> 
         </div>
         <div class="col-xl-6">
             <h5>Evidencija izdavanja</h5>
-        <table class="table table-striped">
-        <tr>
-            <th>Proizvod</th> 
-            <th>Kolicina</th>
-            <th>Naziv tvrtke</th>
-            <th>OIB</th>
-            <th>Datum unosa</th>
-            <th>Korisnik</th>
-            <th></th>
-        </tr>
-        {% for evidencija in evidencijaIzlaz %}
-        <tr>
-            <td><a href="{{ url_for('evidencija', id=evidencija.id) }}" class="dekoracija">{{ evidencija.proizvod.name }}</a></td>
-            <td>{{ evidencija.promijenjena_kolicina }}</td>
-            <td>{{ evidencija.tvrtka.name }}</td>
-            <td>{{ evidencija.tvrtka.oib }}</td>
-            <td>{{ evidencija.datum_unosa.strftime('%d %m %Y - %H:%M:%S') }}</td>
-            <td>{{ evidencija.user.username }}</td>
-        </tr>
-        {% endfor %}
-        </table> 
+            <table class="table table-striped">
+            <tr>
+                <th>Proizvod</th> 
+                <th>Kolicina</th>
+                <th>Naziv tvrtke</th>
+                <th>OIB</th>
+                <th>Datum unosa</th>
+                <th>Korisnik</th>
+                <th></th>
+            </tr>
+            {% for evidencija in evidencijaIzlaz %}
+            <tr>
+                <td><a href="{{ url_for('evidencija', id=evidencija.id) }}" class="dekoracija">{{ evidencija.proizvod.name }}</a></td>
+                <td>{{ evidencija.promijenjena_kolicina }}</td>
+                <td>{{ evidencija.tvrtka.name }}</td>
+                <td>{{ evidencija.tvrtka.oib }}</td>
+                <td>{{ evidencija.datum_unosa.strftime('%d %m %Y - %H:%M:%S') }}</td>
+                <td>{{ evidencija.user.username }}</td>
+            </tr>
+            {% endfor %}
+            </table> 
         </div>
     </div>
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle">Unos Robe</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <script>
-        var form_error1 = false;
-      </script>
-      <div class="modal-body">
-        <form action="" method="post" novalidate="">
-        {{ form_ulaz.hidden_tag() }}
-         <p>
-            {{ form_ulaz.promijenjena_kolicina.label }}<br>
-            {{ form_ulaz.promijenjena_kolicina(size=32) }}<br>
-            {% for error in form_ulaz.promijenjena_kolicina.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% if form_ulaz.promijenjena_kolicina.errors %}
-                <script> form_error1 = true; </script><br>
-            {% endif %}
-            {% endfor %}
-        </p>
-         <p>
-            {{ form_ulaz.oib.label }}<br>
-            {{ form_ulaz.oib(size=32) }}<br>
-            {% for error in form_ulaz.oib.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% if form_ulaz.oib.errors %}
-                <script> form_error1 = true; </script><br>
-            {% endif %}
-            {% endfor %}
-        </p>
-        <div class="modal-footer">
-        {{ form_ulaz.submit1(type="submit", class="btn btn-primary") }}
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-      </div>
-    </form>
-    
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Unos Robe</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+                <script>
+                    var form_error1 = false;
+                </script>
+              <div class="modal-body">
+                <form action="" method="post" novalidate="">
+                    {{ form_ulaz.hidden_tag() }}
+                     <p>
+                        {{ form_ulaz.promijenjena_kolicina.label }}<br>
+                        {{ form_ulaz.promijenjena_kolicina(size=32) }}<br>
+                        {% for error in form_ulaz.promijenjena_kolicina.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                        {% if form_ulaz.promijenjena_kolicina.errors %}
+                            <script> form_error1 = true; </script><br>
+                        {% endif %}
+                        {% endfor %}
+                    </p>
+                     <p>
+                        {{ form_ulaz.oib.label }}<br>
+                        {{ form_ulaz.oib(size=32) }}<br>
+                        {% for error in form_ulaz.oib.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                        {% if form_ulaz.oib.errors %}
+                            <script> form_error1 = true; </script><br>
+                        {% endif %}
+                        {% endfor %}
+                    </p>
+                    <div class="modal-footer">
+                        {{ form_ulaz.submit1(type="submit", class="btn btn-primary") }}
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  </div>
+                </form>
+            </div>
+            </div>
+        </div>
     </div>
-      </div>
-    </div>
-  </div>
-
   </div>
 
 <!-- Modal -->

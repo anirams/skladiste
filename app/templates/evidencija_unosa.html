@@ -5,29 +5,29 @@
 {% block content %}
 <div class="stanje-s">
     <h3 class="mb-4">Unos robe</h3>
-<table class="table table-striped">
-	<tr>
-        <th>Proizvod</th> 
-        <th>Kolicina</th>
-        <th>Naziv tvrtke</th>
-        <th>OIB</th>
-        <th>Datum unosa</th>
-        <th>Korisnik</th>
-        <th></th>
-    </tr>
-    {% for e in evidencija.items %}
-    <tr>
-    	<td><a href="/proizvod/{{e.proizvod.name}}" class="dekoracija">{{ e.proizvod.name }}</a></td>
-    	<td>{{ e.promijenjena_kolicina }}</td>
-    	<td>{{ e.tvrtka.name }}</td>
-    	<td>{{ e.tvrtka.oib }}</td>
-    	<td>{{ e.datum_unosa.strftime('%B %d %Y - %H:%M:%S') }}</td>
-        <td>{{ e.user.username }}</td>
-        <td><button class="btn btn-primary"><a href="../evidencija/{{e.id}}">PDF</a></button></td>
-    </tr>
-    {% endfor %}
-</table> 
-<div class="d-flex justify-content-between">
+    <table class="table table-striped">
+    	<tr>
+            <th>Proizvod</th> 
+            <th>Kolicina</th>
+            <th>Naziv tvrtke</th>
+            <th>OIB</th>
+            <th>Datum unosa</th>
+            <th>Korisnik</th>
+            <th></th>
+        </tr>
+        {% for e in evidencija.items %}
+        <tr>
+        	<td><a href="/proizvod/{{e.proizvod.name}}" class="dekoracija">{{ e.proizvod.name }}</a></td>
+        	<td>{{ e.promijenjena_kolicina }}</td>
+        	<td>{{ e.tvrtka.name }}</td>
+        	<td>{{ e.tvrtka.oib }}</td>
+        	<td>{{ e.datum_unosa.strftime('%B %d %Y - %H:%M:%S') }}</td>
+            <td>{{ e.user.username }}</td>
+            <td><button class="btn btn-primary"><a href="../evidencija/{{e.id}}">PDF</a></button></td>
+        </tr>
+        {% endfor %}
+    </table> 
+    <div class="d-flex justify-content-between">
         <div></div>
         <div>
             <h6>Evidencije unosa</h6>
@@ -43,7 +43,6 @@
                 {% endif %}
             {% endfor %}
         </div>
-       
     </div>
 </div>
 {% endblock %}
