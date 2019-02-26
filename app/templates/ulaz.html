@@ -177,15 +177,11 @@ var counter=0;
       var listaSve = [];
       if (document.getElementById("Ime").value !== "" && document.getElementById("Kolicina").value !== "" && document.getElementById("Tvrtka").value !== "") {
           var nameOrBarcode=document.getElementById("Ime").value;
-          console.log(nameOrBarcode);
-            console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!")
             
             if(!isNaN(nameOrBarcode)){
               var x= parseInt(nameOrBarcode);
               console.log(x);
               var y= kodovi1[nameOrBarcode];
-              console.log(y);
-              console.log("AAAAAAAAAAAAAAAAAAAAAAAAa")
               listaSve.push(y);
             } else{
               listaSve.push(nameOrBarcode);

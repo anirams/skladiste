@@ -447,7 +447,7 @@ def ulaz():
 def izlaz():
 	tvrtke = Tvrtka.query.all()
 	form = ListForm()
-	lista = []
+	lista1 = []
 	lista2 = []
 	sve_tvrtke = Tvrtka.query.all() 
 	svi_proizvodi = Proizvod.query.all()
@@ -455,10 +455,12 @@ def izlaz():
 	products=[]
 	companies=[]
 	amounts=[]
+	kodovi  = {}
 	for tvrtka in sve_tvrtke:
-		lista.append(tvrtka.name)
-	for proizvodi in svi_proizvodi:
-		lista2.append(proizvodi.name)
+		lista1.append(tvrtka.name)
+	for proizvod in svi_proizvodi:
+		kodovi[str(proizvod.bar_kod)]= proizvod.name
+		lista2.append(proizvod.name)
 	if form.submit.data:
 		if form.validate_on_submit():
 			productList= json.loads(form.listaProizvoda.data)
@@ -494,7 +496,7 @@ def izlaz():
 					db.session.add(evidencija)
 					db.session.commit()
 			return redirect(url_for('receipt', id=receipt.id))
-	return render_template("izlaz.html", title='Izlaz', tvrtke=tvrtke, lista=lista, lista2=lista2, form=form)
+	return render_template("izlaz.html", title='Izlaz', tvrtke=tvrtke, lista1=lista1, lista2=lista2, form=form, kodovi=kodovi)
 
 
 @app.route('/receipts_unosa/<int:page_num>')

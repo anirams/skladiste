@@ -15,3 +15,5 @@
 *.db
 app.db
 app.db
+*.pyc
+*.db
