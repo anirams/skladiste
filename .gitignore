@@ -11,3 +11,5 @@
 *.pyc
 *.db
 *.db
+*.pyc
+*.db
