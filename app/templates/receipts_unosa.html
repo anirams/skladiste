@@ -5,7 +5,13 @@
 <div class="unos-p">
     <h4><strong>Primke</strong></h4>
     <table class="table table-striped">
+        <tr>
+            <th>Broj dokumenta</th>
+            <th>Ime korisnika</th> 
+            <th>Datum</th> 
+        </tr>
     {% for receipt in receipts.items %}
+    
         <tr>
             <td><a href="/receipt/{{receipt.id}}" class="dekoracija">{{ receipt.id }}</a></td>
             <td>{{ receipt.evidencija.first().user.username }}</td>
