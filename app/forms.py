@@ -178,3 +178,6 @@ class EditPasswordForm(FlaskForm):
 class ListForm(FlaskForm):
 	listaProizvoda=HiddenField(validators=[DataRequired()])
 	submit = SubmitField('Potvrdi')
+
+class Storno(FlaskForm):
+	submit= SubmitField('Storniraj')

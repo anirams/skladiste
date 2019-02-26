@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, url_for, request, send_file, send_from_directory
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, UlazRobeForm, IzlazRobeForm, UrediProizvodForm, UnosProizvodaForm, SearchForm, EditPasswordForm, UnosTvrtkeForm, SearchFormTvrtka, SearchFormKorisnik, ListForm, UrediTvrtkuForm
+from app.forms import LoginForm, RegistrationForm, UlazRobeForm, IzlazRobeForm, UrediProizvodForm, UnosProizvodaForm, SearchForm, EditPasswordForm, UnosTvrtkeForm, SearchFormTvrtka, SearchFormKorisnik, ListForm, UrediTvrtkuForm, Storno
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Proizvod, Tvrtka, Evidencija, Receipt
 from werkzeug.urls import url_parse
@@ -579,7 +579,6 @@ def receipts_unosa1():
 @login_required
 def receipts_izlaz(page_num):
 	receipts = Receipt.query.filter_by(receipt_type="izlaz", status="active").paginate(per_page=7, page=page_num, error_out=True)
-	#import pdb; pdb.set_trace();
 	return render_template('receipts_izlaz.html', title='Racuni', receipts=receipts)
 
 @app.route('/receipts_izlaz1', methods=['GET', 'POST'])
@@ -587,12 +586,53 @@ def receipts_izlaz(page_num):
 def receipts_izlaz1():
 	return redirect(url_for('receipts_izlaz', page_num=1))
 
-@app.route('/receipt/<id>')
+@app.route('/receipts_unosa_storno/<int:page_num>')
+@login_required
+def receipts_unosa_storno(page_num):
+	receipts = Receipt.query.filter_by(receipt_type="unos", status="storno").paginate(per_page=7, page=page_num, error_out=True)
+	return render_template('receipts_unosa.html', title='Racuni', receipts=receipts)
+
+@app.route('/receipts_unosa_storno1', methods=['GET', 'POST'])
+@login_required
+def receipts_unosa_storno1():
+	return redirect(url_for('receipts_unosa_storno', page_num=1))
+
+@app.route('/receipts_izlaz_storno/<int:page_num>')
+@login_required
+def receipts_izlaz_storno(page_num):
+	receipts = Receipt.query.filter_by(receipt_type="izlaz", status="storno").paginate(per_page=7, page=page_num, error_out=True)
+	return render_template('receipts_izlaz.html', title='Racuni', receipts=receipts)
+
+@app.route('/receipts_izlaz_storno1', methods=['GET', 'POST'])
+@login_required
+def receipts_izlaz_storno1():
+	return redirect(url_for('receipts_izlaz_storno', page_num=1))
+
+@app.route('/receipt/<id>', methods=['GET', 'POST'])
 @login_required
 def receipt(id):
+	form = Storno()
 	evidencije = Evidencija.query.filter_by(receipt_id=id)
 	evidencija = Evidencija.query.filter_by(receipt_id=id).first()
-	return render_template('receipt.html', id=id, evidencije=evidencije, evidencija=evidencija)
+	receipt = Receipt.query.get(id)
+	if form.submit.data:
+		if form.validate_on_submit():
+			receipt.status="storno"
+			for e in evidencije:
+				proizvod= Proizvod.query.get(e.proizvod_id)
+				if e.vrsta_unosa == 'unos':
+					if proizvod.kolicina<e.promijenjena_kolicina:
+						flash(f'Nema dovoljno kolicine na stanju za stornirati proizvod '+proizvod.name+'!', 'danger')
+					else:
+						proizvod.kolicina -= e.promijenjena_kolicina
+						db.session.add(proizvod)
+						db.session.commit()
+				elif e.vrsta_unosa == 'izlaz':
+					proizvod.kolicina += e.promijenjena_kolicina
+					db.session.add(proizvod)
+					db.session.commit()
+
+	return render_template('receipt.html', id=id, evidencije=evidencije, evidencija=evidencija, receipt=receipt, form=form)
 
 @app.route('/receipt_pdf/<id>')
 @login_required
