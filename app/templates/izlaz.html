@@ -218,5 +218,12 @@ var counter=0;
       }
     }
     
+
+    // ENTER CLICK ON DODAJ
+$('#Ime').bind('keyup', function(e) {
+    if ( e.keyCode === 13 ) { // 13 is enter key
+        dodaj();
+    }
+});
 </script>
 {% endblock %}
