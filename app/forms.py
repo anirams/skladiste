@@ -89,23 +89,25 @@ class UrediTvrtkuForm(FlaskForm):
 
 class UlazRobeForm(FlaskForm):
 	promijenjena_kolicina = IntegerField('Kolicina', validators=[DataRequired('Unesi količinu')])
-	oib = IntegerField('Tvrtka', validators=[DataRequired('Unesi OIB tvrtke')])
+	#oib = IntegerField('Tvrtka', validators=[DataRequired('Unesi OIB tvrtke')])
+	name = StringField('Naziv tvrtke', validators=[DataRequired('Unesi ime tvrtke')])
 	submit1 = SubmitField('Dodaj')
 	def validate(self):
 		rv = FlaskForm.validate(self)
 		if not rv:
 			return False
 		tvrtka = Tvrtka.query.filter_by(
-			oib=self.oib.data).first()
+			name=self.name.data).first()
 		if tvrtka is None:
-			self.oib.errors.append('Tvrtka ne postoji')
+			self.name.errors.append('Tvrtka ne postoji')
 			return False
 		else:
 			return True
 
 class IzlazRobeForm(FlaskForm):
 	promijenjena_kolicina = IntegerField('Kolicina', validators=[DataRequired('Unesi količinu')])
-	oib = IntegerField('Tvrtka', validators=[DataRequired('Unesi OIB tvrtke')])
+	#oib = IntegerField('Tvrtka', validators=[DataRequired('Unesi OIB tvrtke')])
+	name = StringField('Naziv tvrtke', validators=[DataRequired('Unesi ime tvrtke')])
 	proizvod_id = HiddenField()
 	submit2 = SubmitField('Oduzmi')
 	def validate(self):
@@ -118,9 +120,9 @@ class IzlazRobeForm(FlaskForm):
 			self.promijenjena_kolicina.errors.append('Nema dovoljno artikla na stanju')
 			return False
 
-		tvrtka = Tvrtka.query.filter_by(oib=self.oib.data).first()
+		tvrtka = Tvrtka.query.filter_by(name=self.name.data).first()
 		if tvrtka is None:
-			self.oib.errors.append('Tvrtka ne postoji')
+			self.name.errors.append('Tvrtka ne postoji')
 			return False
 		else:
 			return True
