@@ -30,6 +30,19 @@
             {% endfor %}
         {% endif %}
     {% endwith %}
-    
+    <h6>Stornirane Otpremnice</h6>
+            {% for page in receipts.iter_pages(left_edge=3, right_edge=3, left_current=3, right_current=3) %}
+                {% if page %}
+                    {% if page != receipts.page %}
+
+                            <a href="{{ url_for('receipts_izlaz_storno', page_num=page) }}">{{ page }}</a>
+      
+                    {% else %}
+                        <strong>{{ page }}</strong>
+                    {% endif %}
+                {% else %}
+                    <span class=ellipsis>…</span>
+                {% endif %}
+            {% endfor %}
  
 {% endblock %}

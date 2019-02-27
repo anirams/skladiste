@@ -46,7 +46,7 @@
         	<td>{{ e.datum_unosa.strftime('%B %d %Y - %H:%M:%S') }}</td>
           <td>{{ e.receipt.status }}</td>
             <td>{{ e.user.username }}</td>
-            <td><button class="btn btn-primary"><a href="../evidencija/{{e.id}}">PDF</a></button></td>
+            <td><button class="btn btn-primary"><a href="../evidencija_pdf/{{e.id}}">PDF</a></button></td>
         </tr>
         {% endfor %}
     </table> 
