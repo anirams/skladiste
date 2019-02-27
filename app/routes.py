@@ -95,13 +95,18 @@ def unos_proizvoda():
 @login_required
 def proizvod(name):
 	proizvod = Proizvod.query.filter_by(name=name).first_or_404()
+	lista = []
+	sveTvrtke=Tvrtka.query.all()
+	for tvrtka in sveTvrtke:
+		lista.append(tvrtka.name)
 	evidencijaUlaz = Evidencija.query.filter_by(proizvod_id=proizvod.id, vrsta_unosa='unos').order_by(Evidencija.datum_unosa.desc()).all()
 	evidencijaIzlaz = Evidencija.query.filter_by(proizvod_id=proizvod.id, vrsta_unosa='izlaz').order_by(Evidencija.datum_unosa.desc()).all()
 	form_ulaz = UlazRobeForm()
 	form_izlaz = IzlazRobeForm()
 	form_uredi = UrediProizvodForm()
 	if form_ulaz.submit1.data and form_ulaz.validate():
-			tvrtka = Tvrtka.query.filter_by(oib=form_ulaz.oib.data).first_or_404()
+			#tvrtka = Tvrtka.query.filter_by(oib=form_ulaz.oib.data).first_or_404()
+			tvrtka = Tvrtka.query.filter_by(name=form_ulaz.name.data).first()
 			proizvod.kolicina += form_ulaz.promijenjena_kolicina.data
 			evidencija = Evidencija(proizvod_id=proizvod.id, tvrtka_id=tvrtka.id, promijenjena_kolicina=form_ulaz.promijenjena_kolicina.data, user_id=current_user.id, vrsta_unosa='unos', trenutna_kolicina=proizvod.kolicina)
 			db.session.add(evidencija)
@@ -109,12 +114,13 @@ def proizvod(name):
 			flash('Dodali ste kolicinu na stanje!')
 			return redirect(url_for('proizvod', name=proizvod.name))
 	if form_izlaz.submit2.data and form_izlaz.validate():
-			tvrtka = Tvrtka.query.filter_by(oib=form_izlaz.oib.data).first_or_404()
-			proizvod.kolicina -= form_izlaz.promijenjena_kolicina.data
-			evidencija = Evidencija(proizvod_id=proizvod.id, tvrtka_id=tvrtka.id, promijenjena_kolicina=form_izlaz.promijenjena_kolicina.data, user_id=current_user.id, vrsta_unosa='izlaz', trenutna_kolicina=proizvod.kolicina)
+			#tvrtka = Tvrtka.query.filter_by(oib=form_izlaz.oib.data).first_or_404()
+			tvrtka = Tvrtka.query.filter_by(name=form_ulaz.name.data).first()
+			proizvod.kolicina -= form_ulaz.promijenjena_kolicina.data
+			evidencija = Evidencija(proizvod_id=proizvod.id, tvrtka_id=tvrtka.id, promijenjena_kolicina=form_ulaz.promijenjena_kolicina.data, user_id=current_user.id, vrsta_unosa='izlaz', trenutna_kolicina=proizvod.kolicina)
 			db.session.add(evidencija)
 			db.session.commit()
-			flash('Oduzeli ste kolicinu sa stanja!')
+			flash('Dodali ste kolicinu na stanje!')
 			return redirect(url_for('proizvod', name=proizvod.name))
 	if form_uredi.submit3.data and form_uredi.validate():
 			proizvod = Proizvod.query.filter_by(name=name).first_or_404()
@@ -126,7 +132,7 @@ def proizvod(name):
 			db.session.commit()
 			flash('Uspjesno ste uredili proizvod!')
 			return redirect(url_for('proizvod', name=proizvod.name))
-	return render_template('proizvod.html', title=proizvod.name, proizvod=proizvod, evidencijaUlaz=evidencijaUlaz, evidencijaIzlaz=evidencijaIzlaz, form_ulaz=form_ulaz, form_izlaz=form_izlaz, form_uredi=form_uredi, name=proizvod.name)
+	return render_template('proizvod.html', title=proizvod.name, proizvod=proizvod, evidencijaUlaz=evidencijaUlaz, evidencijaIzlaz=evidencijaIzlaz, form_ulaz=form_ulaz, form_izlaz=form_izlaz, form_uredi=form_uredi, name=proizvod.name, lista=lista)
 
 @app.route('/stanje_skladista/<int:page_num>+<s>', methods=['GET', 'POST'])
 @login_required
@@ -135,8 +141,8 @@ def stanje_skladista(page_num, s):
 	form2 = UnosProizvodaForm()
 	lista = []
 	lista2 = []
-	proizvodii = Proizvod.query.all()
-	for proizvod in proizvodii:
+	sviProizvodi = Proizvod.query.all()
+	for proizvod in sviProizvodi:
 		lista.append(proizvod.name)
 	
 	if s == ' ':
@@ -153,12 +159,6 @@ def stanje_skladista(page_num, s):
 			proizvod = Proizvod(name=form2.name.data, opis_proizvoda=form2.opis_proizvoda.data, zemlja_podrijetla=form2.zemlja_podrijetla.data, bar_kod=form2.barkod.data)
 			db.session.add(proizvod)
 			db.session.commit()
-			#proizvod = Proizvod.query.filter_by(name=form2.name.data).first()
-			#tvrtka = Tvrtka.query.filter_by(oib=form2.oib.data).first()
-			# evidencija = Evidencija(proizvod_id=proizvod.id, user_id=current_user.id, vrsta_unosa='unos')
-			# db.session.add(evidencija)
-			# db.session.commit()
-			# tvrtka = Tvrtka.query.all()
 			flash(f'Dodali ste proizvod {form2.name.data}!', 'success')
 			return redirect(url_for('stanje_skladista1'))
 	return render_template('stanje_skladista.html', title='Stanje skladista', proizvodi=proizvodi, form=form, form2=form2, search=' ', lista=lista)
@@ -344,8 +344,7 @@ def edit_password(username):
 	if form.validate_on_submit():
 		user.set_password(form.password.data)
 		db.session.commit()
-		flash('Vaša lozinka je promijenjena!')
-		#return redirect(url_for('edit_password'))
+		flash('Lozinka je promijenjena!')
 	return render_template('edit_password.html', title='Edit Profile', form=form, user=user)
 
 
