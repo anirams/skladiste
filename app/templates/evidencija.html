@@ -2,11 +2,7 @@
 
 {% block content %}
 
-<!--
-<style>
-	@media (min-width: 768px) { .container { max-width: 700px; } }	
-</style>
--->
+
 
 
 <div id="contentToPdf" class="unos-p">
@@ -26,11 +22,16 @@
 
 			<div class="row mb-4">
 				<div class="col-sm-6">
-					<h6 class="mb-3">Tvrtka:</h6>
-					<div>
-					<div>Ime: <strong>{{ evidencija.tvrtka.name }}</strong></div>
-
+						<h6 class="mb-3">Tvrtka:</h6>
+						<div>
+						<div>Ime: <strong>{{ evidencija.tvrtka.name }}</strong></div>
+						</div>
+						<div>OIB: {{ evidencija.tvrtka.oib }}</div>
+						<div>Grad: {{ evidencija.tvrtka.grad }}</div>
+						<div>Poštanski broj: {{ evidencija.tvrtka.p_broj }}</div>
+						<div>Država: {{ evidencija.tvrtka.drzava }}</div>
 					</div>
+
 
 					<div class="col-sm-6">
 						<h6 class="mb-3">Skladište:</h6>

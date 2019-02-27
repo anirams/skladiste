@@ -222,7 +222,7 @@
         </p>
         <p>
             {{ form_uredi.barkod.label }}<br>
-            {{ form_uredi.barkod(size=32, value=proizvod.barkod, class="form-control") }}<br>
+            {{ form_uredi.barkod(size=32, value=proizvod.bar_kod, class="form-control") }}<br>
             {% for error in form_uredi.barkod.errors %}
             <span style="color: red;">[{{ error }}]</span>
             {% if form_uredi.barkod.errors %}
