@@ -61,7 +61,7 @@ ul ul a {
     color: #f0fdfe;
 }
 #sidebar ul.components {
-    padding: 20px 0;
+    padding: 5px 0;
     border-bottom: 1px solid #47748b;
 }
 #sidebar ul p {
@@ -248,6 +248,18 @@ ul.CTAs a {
     padding-left: 2px;
     padding: .1em .25em;
     font-size: 150%;
+}
+
+.iks{
+    background: #f90;
+  color: #fff;
+  font-family: 'Helvetica', 'Arial', sans-serif;
+  font-size: 2em;
+  font-weight: bold;
+  text-align: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 5px;
 }
 
 

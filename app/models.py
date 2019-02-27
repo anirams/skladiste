@@ -33,6 +33,7 @@ class Proizvod(db.Model):
 	opis_proizvoda = db.Column(db.String(300))
 	datum_unosa = db.Column(db.DateTime, default=datetime.utcnow)
 	evidencija = db.relationship('Evidencija', backref='proizvod', lazy='dynamic')
+	bar_kod = db.Column(db.Integer)
 
 class Tvrtka(db.Model):
 	__searchable__ = ['name']
@@ -63,3 +64,5 @@ class Receipt(db.Model):
 	date = db.Column(db.DateTime, default=datetime.utcnow)
 	receipt_type = db.Column(db.String(64))
 	evidencija = db.relationship('Evidencija', backref='receipt', lazy='dynamic')
+	storno_date = db.Column(db.DateTime, nullable=True)
+	storno_user = db.Column(db.String(64), nullable=True)

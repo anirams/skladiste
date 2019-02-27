@@ -7,16 +7,16 @@
 	
 	<div class="index">
 		{% with messages = get_flashed_messages(with_categories=true) %}
-		{% if messages %}
-			{% for category, message in messages %}
-				<div class="alert alert-{{ category }}">
-					{{ message }}
-				</div>
-			{% endfor %}
-		{% endif %}
-	{% endwith %}
+			{% if messages %}
+				{% for category, message in messages %}
+					<div class="alert alert-{{ category }}">
+						{{ message }}
+					</div>
+				{% endfor %}
+			{% endif %}
+		{% endwith %}
     	<h1>Dobrodošli u skladište!</h1>
-    	<p>Ovdje možete kroz nekoliko klikova voditi skladište!</p>
+    	<p>U par klikova do učinkovitog skladišta!</p>
     </div>
 
 {% endblock %}

@@ -35,6 +35,7 @@
             {% for error in form.oib.errors %}
             <span style="color: red;">[{{ error }}]</span><br>
             {% endfor %}<br>
+
         
         
         {% with messages = get_flashed_messages(with_categories=true) %}

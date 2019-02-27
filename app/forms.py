@@ -43,6 +43,7 @@ class UnosProizvodaForm(FlaskForm):
 	zemlja_podrijetla = StringField('Zemlja podrijetla', validators=[DataRequired('Unesi Zemlju Podrijetla')])
 	#oib = IntegerField('OIB', validators=[DataRequired('Unesi OIB Tvrtke (broj)')])
 	#dodaj_jos = SubmitField('Dodaj jos')
+	barkod = IntegerField('Bar kod', validators=[DataRequired('Unesi bar kod')])
 	submit2 = SubmitField('Dodaj Proizvod')
 	def validate(self):
 		rv = FlaskForm.validate(self)
@@ -134,6 +135,7 @@ class UrediProizvodForm(FlaskForm):
 	name = StringField('Naziv proizvoda', validators=[DataRequired('Unesi Naziv Proizvoda')])
 	zemlja_podrijetla = StringField('Zemlja podrijetla')
 	opis_proizvoda = TextAreaField('Opis proizvoda')
+	barkod = IntegerField('Bar kod')
 	submit3 = SubmitField('Uredi')
 	def validate(self):
 		rv = FlaskForm.validate(self)
@@ -176,3 +178,6 @@ class EditPasswordForm(FlaskForm):
 class ListForm(FlaskForm):
 	listaProizvoda=HiddenField(validators=[DataRequired()])
 	submit = SubmitField('Potvrdi')
+
+class Storno(FlaskForm):
+	submit= SubmitField('Storniraj')
