@@ -153,12 +153,6 @@ def stanje_skladista(page_num, s):
 			proizvod = Proizvod(name=form2.name.data, opis_proizvoda=form2.opis_proizvoda.data, zemlja_podrijetla=form2.zemlja_podrijetla.data, bar_kod=form2.barkod.data)
 			db.session.add(proizvod)
 			db.session.commit()
-			#proizvod = Proizvod.query.filter_by(name=form2.name.data).first()
-			#tvrtka = Tvrtka.query.filter_by(oib=form2.oib.data).first()
-			# evidencija = Evidencija(proizvod_id=proizvod.id, user_id=current_user.id, vrsta_unosa='unos')
-			# db.session.add(evidencija)
-			# db.session.commit()
-			# tvrtka = Tvrtka.query.all()
 			flash(f'Dodali ste proizvod {form2.name.data}!', 'success')
 			return redirect(url_for('stanje_skladista1'))
 	return render_template('stanje_skladista.html', title='Stanje skladista', proizvodi=proizvodi, form=form, form2=form2, search=' ', lista=lista)
@@ -344,8 +338,7 @@ def edit_password(username):
 	if form.validate_on_submit():
 		user.set_password(form.password.data)
 		db.session.commit()
-		flash('Vaša lozinka je promijenjena!')
-		#return redirect(url_for('edit_password'))
+		flash('Lozinka je promijenjena!')
 	return render_template('edit_password.html', title='Edit Profile', form=form, user=user)
 
 
