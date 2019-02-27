@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
-
+<script type="text/javascript">
+    var lista = {{ lista|safe }}
+</script>
 <div class="unos-p">
     <h4><strong>Trenutno na zalihi:</strong></h4>
     <table class="table table-striped">
@@ -40,102 +42,99 @@
     <div class="row">
         <div class="col-xl-6">
             <h5>Evidencija unosa</h5>
-        <table class="table table-striped">
-        <tr>
-            <th>Proizvod</th> 
-            <th>Kolicina</th>
-            <th>Naziv tvrtke</th>
-            <th>OIB</th>
-            <th>Datum unosa</th>
-            <th>Korisnik</th>
-        </tr>
-        {% for evidencija in evidencijaUlaz %}
-        
-        <tr>
-            <td><a href="{{ url_for('evidencija', id=evidencija.id) }}">{{ evidencija.proizvod.name }}</a></td>
-            <td>{{ evidencija.promijenjena_kolicina }}</td>
-            <td>{{ evidencija.tvrtka.name }}</td>
-            <td>{{ evidencija.tvrtka.oib }}</td>
-            <td>{{ evidencija.datum_unosa.strftime('%B %d %Y - %H:%M:%S') }}</td>
-            <td>{{ evidencija.user.username }}</td>
-        </tr>
-
-        {% endfor %}
-        </table> 
+            <table class="table table-striped">
+                <tr>
+                    <th>Proizvod</th> 
+                    <th>Kolicina</th>
+                    <th>Naziv tvrtke</th>
+                    <th>OIB</th>
+                    <th>Datum unosa</th>
+                    <th>Korisnik</th>
+                </tr>
+                {% for evidencija in evidencijaUlaz %}
+                <tr>
+                    <td><a href="{{ url_for('evidencija', id=evidencija.id) }}">{{ evidencija.proizvod.name }}</a></td>
+                    <td>{{ evidencija.promijenjena_kolicina }}</td>
+                    <td>{{ evidencija.tvrtka.name }}</td>
+                    <td>{{ evidencija.tvrtka.oib }}</td>
+                    <td>{{ evidencija.datum_unosa.strftime('%d %m %Y - %H:%M:%S') }}</td>
+                    <td>{{ evidencija.user.username }}</td>
+                </tr>
+                {% endfor %}
+            </table> 
         </div>
         <div class="col-xl-6">
             <h5>Evidencija izdavanja</h5>
-        <table class="table table-striped">
-        <tr>
-            <th>Proizvod</th> 
-            <th>Kolicina</th>
-            <th>Naziv tvrtke</th>
-            <th>OIB</th>
-            <th>Datum unosa</th>
-            <th>Korisnik</th>
-            <th></th>
-        </tr>
-        {% for evidencija in evidencijaIzlaz %}
-        <tr>
-            <td><a href="{{ url_for('evidencija', id=evidencija.id) }}">{{ evidencija.proizvod.name }}</a></td>
-            <td>{{ evidencija.promijenjena_kolicina }}</td>
-            <td>{{ evidencija.tvrtka.name }}</td>
-            <td>{{ evidencija.tvrtka.oib }}</td>
-            <td>{{ evidencija.datum_unosa.strftime('%B %d %Y - %H:%M:%S') }}</td>
-            <td>{{ evidencija.user.username }}</td>
-        </tr>
-        {% endfor %}
-        </table> 
+            <table class="table table-striped">
+            <tr>
+                <th>Proizvod</th> 
+                <th>Kolicina</th>
+                <th>Naziv tvrtke</th>
+                <th>OIB</th>
+                <th>Datum unosa</th>
+                <th>Korisnik</th>
+                <th></th>
+            </tr>
+            {% for evidencija in evidencijaIzlaz %}
+            <tr>
+                <td><a href="{{ url_for('evidencija', id=evidencija.id) }}" class="dekoracija">{{ evidencija.proizvod.name }}</a></td>
+                <td>{{ evidencija.promijenjena_kolicina }}</td>
+                <td>{{ evidencija.tvrtka.name }}</td>
+                <td>{{ evidencija.tvrtka.oib }}</td>
+                <td>{{ evidencija.datum_unosa.strftime('%d %m %Y - %H:%M:%S') }}</td>
+                <td>{{ evidencija.user.username }}</td>
+            </tr>
+            {% endfor %}
+            </table> 
         </div>
     </div>
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle">Unos Robe</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <script>
-        var form_error1 = false;
-      </script>
-      <div class="modal-body">
-        <form action="" method="post" novalidate="">
-        {{ form_ulaz.hidden_tag() }}
-         <p>
-            {{ form_ulaz.promijenjena_kolicina.label }}<br>
-            {{ form_ulaz.promijenjena_kolicina(size=32) }}<br>
-            {% for error in form_ulaz.promijenjena_kolicina.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% if form_ulaz.promijenjena_kolicina.errors %}
-                <script> form_error1 = true; </script><br>
-            {% endif %}
-            {% endfor %}
-        </p>
-         <p>
-            {{ form_ulaz.oib.label }}<br>
-            {{ form_ulaz.oib(size=32) }}<br>
-            {% for error in form_ulaz.oib.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% if form_ulaz.oib.errors %}
-                <script> form_error1 = true; </script><br>
-            {% endif %}
-            {% endfor %}
-        </p>
-        <div class="modal-footer">
-        {{ form_ulaz.submit1(type="submit", class="btn btn-primary") }}
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-      </div>
-    </form>
-    
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Unos Robe</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+                <script>
+                    var form_error1 = false;
+                </script>
+              <div class="modal-body">
+                <form action="" method="post" novalidate="" autocomplete="off">
+                    {{ form_ulaz.hidden_tag() }}
+                     <p>
+                        {{ form_ulaz.promijenjena_kolicina.label }}<br>
+                        {{ form_ulaz.promijenjena_kolicina(size=32) }}<br>
+                        {% for error in form_ulaz.promijenjena_kolicina.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                        {% if form_ulaz.promijenjena_kolicina.errors %}
+                            <script> form_error1 = true; </script><br>
+                        {% endif %}
+                        {% endfor %}
+                    </p>
+                     <p>
+                        {{ form_ulaz.name.label }}<br>
+                        <div class="form-group autocomplete">
+                        {{ form_ulaz.name(size=64, id="myInput") }}</div><br>
+                        {% for error in form_ulaz.name.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                        {% if form_ulaz.name.errors %}
+                            <script> form_error1 = true; </script><br>
+                        {% endif %}
+                        {% endfor %}
+                    </p>
+                    <div class="modal-footer">
+                        {{ form_ulaz.submit1(type="submit", class="btn btn-primary") }}
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  </div>
+                </form>
+            </div>
+            </div>
+        </div>
     </div>
-      </div>
-    </div>
-  </div>
-
   </div>
 
 <!-- Modal -->
@@ -166,11 +165,12 @@
             {% endfor %}
         </p>
          <p>
-            {{ form_izlaz.oib.label }}<br>
-            {{ form_izlaz.oib(size=32) }}<br>
-            {% for error in form_izlaz.oib.errors %}
+            {{ form_izlaz.name.label }}<br>
+            <div class="form-group autocomplete">
+                        {{ form_izlaz.name(size=64, id="myInput2") }}</div><br>
+            {% for error in form_izlaz.name.errors %}
             <span style="color: red;">[{{ error }}]</span>
-            {% if form_izlaz.oib.errors %}
+            {% if form_izlaz.name.errors %}
                 <script> form_error2 = true; </script><br>
             {% endif %}
             {% endfor %}
@@ -224,6 +224,16 @@
             {% endif %}
             {% endfor %}
         </p>
+        <p>
+            {{ form_uredi.barkod.label }}<br>
+            {{ form_uredi.barkod(size=32, value=proizvod.bar_kod, class="form-control") }}<br>
+            {% for error in form_uredi.barkod.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% if form_uredi.barkod.errors %}
+                <script> form_error3 = true; </script><br>
+            {% endif %}
+            {% endfor %}
+        </p>
          <p>
         
             {{ form_uredi.opis_proizvoda.label }}<br>
@@ -247,6 +257,7 @@
   </div>
 
   </div>
+
 
 <script type="text/javascript">
 if (form_error1) {
@@ -279,5 +290,107 @@ else{
     console.log("form error" + form_error3)
 }
 
+</script>
+
+<script type="text/javascript">
+
+    function autocomplete(inp, arr) {
+  /* text field and array of values */
+  var currentFocus;
+  /*execute a function when someone writes in the text field:*/
+  inp.addEventListener("input", function(e) {
+      var a, b, i, val = this.value;
+      /*close any already open lists of autocompleted values*/
+      closeAllLists();
+      if (!val) { return false;}
+      currentFocus = -1;
+      /*create a DIV element that will contain the items (values):*/
+      a = document.createElement("DIV");
+      a.setAttribute("id", this.id + "autocomplete-list");
+      a.setAttribute("class", "autocomplete-items");
+      /*append the DIV element as a child of the autocomplete container:*/
+      this.parentNode.appendChild(a);
+      /*for each item in the array...*/
+      for (i = 0; i < arr.length; i++) {
+        /*check if the item starts with the same letters as the text field value:*/
+        if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+          /*create a DIV element for each matching element:*/
+          b = document.createElement("DIV");
+          /*make the matching letters bold:*/
+          b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+          b.innerHTML += arr[i].substr(val.length);
+          /*insert a input field that will hold the current array item's value:*/
+          b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+          /*execute a function when someone clicks on the item value (DIV element):*/
+              b.addEventListener("click", function(e) {
+              /*insert the value for the autocomplete text field:*/
+              inp.value = this.getElementsByTagName("input")[0].value;
+              /*close the list of autocompleted values,
+              (or any other open lists of autocompleted values:*/
+              closeAllLists();
+          });
+          a.appendChild(b);
+        }
+      }
+  });
+  /*execute a function presses a key on the keyboard:*/
+  inp.addEventListener("keydown", function(e) {
+      var x = document.getElementById(this.id + "autocomplete-list");
+      if (x) x = x.getElementsByTagName("div");
+      if (e.keyCode == 40) {
+        /*If the arrow DOWN key is pressed,
+        increase the currentFocus variable:*/
+        currentFocus++;
+        /*and and make the current item more visible:*/
+        addActive(x);
+      } else if (e.keyCode == 38) { //up
+        /*If the arrow UP key is pressed,
+        decrease the currentFocus variable:*/
+        currentFocus--;
+        /*and and make the current item more visible:*/
+        addActive(x);
+      } else if (e.keyCode == 13) {
+        /*If the ENTER key is pressed, prevent the form from being submitted,*/
+        e.preventDefault();
+        if (currentFocus > -1) {
+          /*and simulate a click on the "active" item:*/
+          if (x) x[currentFocus].click();
+        }
+      }
+  });
+  function addActive(x) {
+    /*a function to classify an item as "active":*/
+    if (!x) return false;
+    /*start by removing the "active" class on all items:*/
+    removeActive(x);
+    if (currentFocus >= x.length) currentFocus = 0;
+    if (currentFocus < 0) currentFocus = (x.length - 1);
+    /*add class "autocomplete-active":*/
+    x[currentFocus].classList.add("autocomplete-active");
+  }
+  function removeActive(x) {
+    /*a function to remove the "active" class from all autocomplete items:*/
+    for (var i = 0; i < x.length; i++) {
+      x[i].classList.remove("autocomplete-active");
+    }
+  }
+  function closeAllLists(elmnt) {
+    /*close all autocomplete lists in the document,
+    except the one passed as an argument:*/
+    var x = document.getElementsByClassName("autocomplete-items");
+    for (var i = 0; i < x.length; i++) {
+      if (elmnt != x[i] && elmnt != inp) {
+      x[i].parentNode.removeChild(x[i]);
+    }
+  }
+}
+/*execute a function when someone clicks in the document:*/
+document.addEventListener("click", function (e) {
+    closeAllLists(e.target);
+});
+}
+
+autocomplete(document.getElementById("myInput"), lista);
+autocomplete(document.getElementById("myInput2"), lista);
 </script>
 {% endblock %}

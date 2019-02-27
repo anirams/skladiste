@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="unos-p">
+    <h4><strong>Stornirane Otpremnice</strong></h4>
+    <table class="table table-striped">
+        <tr>
+            <th>Broj dokumenta</th>
+            <th>Ime korisnika</th> 
+            <th>Datum</th> 
+            <th>Stornirao</th>
+            <th>Datum storniranja</th>
+        </tr>
+    {% for receipt in receipts.items %}
+    
+        <tr>
+            <td><a href="/receipt/{{receipt.id}}" class="dekoracija">{{ receipt.id }}</a></td>
+            <td>{{ receipt.evidencija.first().user.username }}</td>
+            <td>{{ receipt.date.strftime('%d %m %Y - %H:%M:%S') }}</td>
+            <td>{{ receipt.storno_user }}</td>
+            <td>{{ receipt.storno_date.strftime('%d %m %Y - %H:%M:%S') }}</td>
+        </tr></a>
+    {% endfor %}  
+    </table>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-success" role="alert">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <h6>Stornirane Otpremnice</h6>
+            {% for page in receipts.iter_pages(left_edge=3, right_edge=3, left_current=3, right_current=3) %}
+                {% if page %}
+                    {% if page != receipts.page %}
+
+                            <a href="{{ url_for('receipts_izlaz_storno', page_num=page) }}">{{ page }}</a>
+      
+                    {% else %}
+                        <strong>{{ page }}</strong>
+                    {% endif %}
+                {% else %}
+                    <span class=ellipsis>…</span>
+                {% endif %}
+            {% endfor %}
+ 
+{% endblock %}

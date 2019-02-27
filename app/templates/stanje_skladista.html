@@ -24,25 +24,30 @@
             <div class="alert-danger p-1">{{ error }}</div>
             {% endfor %}
         </div>
-        
-    
-
-    <div class="row">
-        <div class="col-sm-8">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert-success p-1 mt-1">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
             <table class="table table-striped mt-2">
                 <tr>
                     <th>Proizvod</th> 
                     <th>Kolicina</th>
                     <th>Opis Proizvoda</th>
+                    <th>Bar kod</th>
                 </tr>
                 {% for proizvod in proizvodi.items %}
                 <tr>
                     <td><a href="../proizvod/{{proizvod.name}}" class="dekoracija">{{ proizvod.name }}</a></td>
                     <td>{{ proizvod.kolicina }}</td>
                     <td>{{ proizvod.opis_proizvoda }}</td>
+                    <td>{{ proizvod.bar_kod }}</td>
                 </tr>
                 {% endfor %}
             </table> 
+            
             <div class="d-flex justify-content-between">
                 <div></div>
                 <div>
@@ -64,53 +69,99 @@
                     {% endfor %}
                 </div>
                 <div>
-                    <button class="btn btn-primary m-2"><a href="/export_stanje_skladista" target="blank">Excel</a></button>
+                    <button class="btn btn-primary m-2"><a href="/export_stanje_skladista" target="blank">Excel - Stanje</a></button>
                 </div>
-            </div>
-        </div>
-
-        <div class="col-sm-4">
-            <form class="form-container p-5 mt-3" action="" method="post" novalidate="">
-                {{ form2.hidden_tag() }}
-                <h3 class="pb-3">Stvori novi proizvod</h3>
-        
-                    {{ form2.name.label }}<br>
-                    {{ form2.name(size=32, class="form-control") }}
-                    {% for error in form2.name.errors %}
-                    <span style="color: red;">[{{ error }}]</span><br>
-                    {% endfor %}<br>
-        
-                    {{ form2.opis_proizvoda.label }}<br>
-                    {{ form2.opis_proizvoda(size=300, class="form-control") }}
-                    {% for error in form2.opis_proizvoda.errors %}
-                    <span style="color: red;">[{{ error }}]</span><br>
-                    {% endfor %}<br>
-
-                    {{ form2.zemlja_podrijetla.label }}<br>
-                    {{ form2.zemlja_podrijetla(size=300, class="form-control") }}
-                    {% for error in form2.zemlja_podrijetla.errors %}
-                    <span style="color: red;">[{{ error }}]</span><br>
-                    {% endfor %}<br>
-        
-        
-                {% with messages = get_flashed_messages(with_categories=true) %}
-                    {% if messages %}
-                        {% for category, message in messages %}
-                            <div class="alert alert-{{ category }}">
-                                {{ message }}
-                            </div>
-                        {% endfor %}
-                    {% endif %}
-                {% endwith %}
-                <p class="pt-3">{{ form2.submit2(type="submit", class="btn btn-primary") }}</p>
-            </form>
-
-        </div>
-
     </div> 
+                               <!-- Button trigger modal -->
+<button type="button" class="btn btn-primary mt-2 tipka-margin" data-toggle="modal" data-target="#exampleModalCenter" id="tvrtka-potvrda">
+  Dodaj novi proizvod
+</button>
+
+
+</div>
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Dodaj novi proizvod</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <script>
+        var form_error = false;
+      </script>
+      <div class="modal-body">
+        <form action="" method="post" novalidate="">
+        <div>
+        {{ form2.hidden_tag() }}
+            {{ form2.name.label }}<br>
+            {{ form2.name(size=32) }}<br>
+            {% for error in form2.name.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% if form2.name.errors %}
+                <script> form_error = true; </script><br>
+            {% endif %}
+            {% endfor %}
+
+            {{ form2.opis_proizvoda.label }}<br>
+            {{ form2.opis_proizvoda(size=32) }}<br>
+            {% for error in form2.opis_proizvoda.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% if form2.opis_proizvoda.errors %}
+                <script> form2_error = true; </script><br>
+            {% endif %}
+            {% endfor %}
+
+            {{ form2.zemlja_podrijetla.label }}<br>
+            {{ form2.zemlja_podrijetla(size=32) }}<br>
+            {% for error in form2.zemlja_podrijetla.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% if form2.zemlja_podrijetla.errors %}
+                <script> form2_error = true; </script><br>
+            {% endif %}
+            {% endfor %}
+
+            {{ form2.barkod.label }}<br>
+            {{ form2.barkod(size=32) }}<br>
+            {% for error in form2.barkod.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% if form2.barkod.errors %}
+
+                <script> form2_error = true; </script><br>
+            {% endif %}
+            {% endfor %}
+
+        </div>
+        <div class="modal-footer">
+        {{ form2.submit2(type="submit", class="btn btn-primary") }}
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </form>
+    
+    </div>
+      </div>
+     
+      
+    </div>
+  </div>
 </div>
 
+<a id="klikni" href="{{ url_for('tvrtke1') }}">{{ page }}</a>
+
 <script type="text/javascript">
+if (form_error) {
+    console.log("form error " + form_error);
+    $(document).ready(function () {
+   $('#tvrtka-potvrda').click();
+});
+   
+   
+}
+else{
+    console.log("form error " + form_error)
+}
+
     function autocomplete(inp, arr) {
   /* text field and array of values */
   var currentFocus;
