@@ -6,8 +6,7 @@
 <!-- Bootstrap CSS -->
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrisha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 
-<!-- Local CSS -->
-<link href="../static/style.css" type="text/css" rel="stylesheet">
+
 
 <!-- Font Awesome -->
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
@@ -18,7 +17,7 @@
 	<div class="container">
 		<div class="card">		
 			<div class="card-header">
-				<span class="float-left">Dok. broj: <strong>{{ evidencija.id }}</strong></span>
+				<span class="float-left">Dok. broj: <strong>{{ evidencija.id }}</strong></span><br>
 				<span class="float-center"><strong>Datum dok.: </strong>{{ evidencija.datum_unosa.strftime('%B %d %Y - %H:%M:%S') }}</span>
 				<span class="float-right"> <strong>Status: </strong>{{evidencija.receipt.status}}</span>
 			</div>
@@ -26,10 +25,8 @@
 				<div class="row mb-4">
 					<div class="col-sm-6">
 						<h6 class="mb-3">Tvrtka:</h6>
-						<div>
-						<div>Ime: <strong>{{ evidencija.tvrtka.name }}</strong></div>
-						</div>
-						<div>OIB: {{ evidencija.tvrtka.oib }}</div>
+						<p>Ime: <strong>{{ evidencija.tvrtka.name }}</strong></p>
+						<p>OIB: {{ evidencija.tvrtka.oib }}</p>
 						<div>Grad: {{ evidencija.tvrtka.grad }}</div>
 						<div>Poštanski broj: {{ evidencija.tvrtka.p_broj }}</div>
 						<div>Država: {{ evidencija.tvrtka.drzava }}</div>

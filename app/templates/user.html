@@ -6,7 +6,7 @@
     <hr>
     {% if user.last_seen %}<p>Posljednje viđen: {{ user.last_seen.strftime('%B %d %Y - %H:%M:%S') }}</p>{% endif %}<br>
    {%  if current_user.username == "admin"%}
-   <button class="btn btn-primary"><a href="{{ url_for('edit_password', username=user.username) }}">Edit your password</a></button>
+   <button class="btn btn-primary"><a href="{{ url_for('edit_password', username=user.username) }}">Edit password</a></button>
    {% endif%}
 </div>
 {% endblock %}
