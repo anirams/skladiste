@@ -184,12 +184,29 @@ var counter=0;
           lista.push(listaSve)
 
           var tableR = document.createElement("tr");
-          for(var k=0; k<3; k++){
+          /*for(var k=0; k<3; k++){
             var tableD = document.createElement("td");
             var tableDime = document.createTextNode(listaSve[k]);
             tableD.appendChild(tableDime);
             tableR.appendChild(tableD)
-          }
+          }*/
+          var tableD = document.createElement("td");
+          var tableDime = document.createTextNode(listaSve[0]);
+          tableD.appendChild(tableDime);
+          tableR.appendChild(tableD)
+
+          var amount = document.createElement("input");
+          amount.value = listaSve[1];
+          amount.setAttribute('id', 'input '+counter);
+          amount.setAttribute('onchange', 'update(id);')
+          tableR.appendChild(amount);
+
+          var tableD = document.createElement("td");
+          var tableDime = document.createTextNode(listaSve[2]);
+          tableD.appendChild(tableDime);
+          tableR.appendChild(tableD);
+
+
           var button = document.createElement("button")
           button.setAttribute('id', counter)
           tableR.setAttribute('id', counter)
@@ -217,6 +234,16 @@ var counter=0;
       delete lista[id];
       listaJson= JSON.stringify(lista);
       document.getElementById("tajnaLista").value=listaJson;
+
+    }
+
+    function update(id){
+      var value = document.getElementById(id).value;
+      inputId=id[6];
+      lista[inputId][1]=value;
+      listaJson= JSON.stringify(lista);
+      document.getElementById("tajnaLista").value=listaJson;
+      console.log('!!!!!!!!!!!!!!!!!!!')
 
     }
 
