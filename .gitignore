@@ -20,3 +20,5 @@ app.db
 app.db
 *.pyc
 *.db
+app.db
+app.db
