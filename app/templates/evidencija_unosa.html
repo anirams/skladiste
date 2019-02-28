@@ -75,9 +75,26 @@
                 {% if page %}
                     {% if page != evidencija.page %}
                         {% if search!=' ' %}
-                            <a href="{{ url_for('evidencija_unosa', page_num=page, s=search) }}">{{ page }}</a>
+                            {% if begin!=' ' and end!=' '%}
+                                <a href="{{ url_for('evidencija_unosa', page_num=page, s=search, b=begin, e=end) }}">{{ page }}</a>
+                            {% elif  begin!=' '%}
+                                <a href="{{ url_for('evidencija_unosa', page_num=page, s=search, b=begin, e=' ') }}">{{ page }}</a>
+                            {% elif  end!=' '%}
+                                <a href="{{ url_for('evidencija_unosa', page_num=page, s=search, b=' ', e=end) }}">{{ page }}</a>
+                            {% else %}
+                                <a href="{{ url_for('evidencija_unosa', page_num=page, s=search, b=' ', e=' ') }}">{{ page }}</a>
+                            {% endif %}
                         {% else %}
-                            <a href="{{ url_for('evidencija_unosa', page_num=page, s=' ') }}">{{ page }}</a>
+                            
+                            {% if begin!=' ' and end!=' '%}
+                                <a href="{{ url_for('evidencija_unosa', page_num=page, s=' ', b=begin, e=end) }}">{{ page }}</a>
+                            {% elif  begin!=' '%}
+                                <a href="{{ url_for('evidencija_unosa', page_num=page, s=' ', b=begin, e=' ') }}">{{ page }}</a>
+                            {% elif  end!=' '%}
+                                <a href="{{ url_for('evidencija_unosa', page_num=page, s=' ', b=' ', e=end) }}">{{ page }}</a>
+                            {% else %}
+                                <a href="{{ url_for('evidencija_unosa', page_num=page, s=' ', b=' ', e=' ') }}">{{ page }}</a>
+                            {% endif %}
                         {% endif %}
                     {% else %}
                         <strong>{{ page }}</strong>
