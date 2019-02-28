@@ -33,6 +33,7 @@
             <th>Naziv tvrtke</th>
             <th>OIB</th>
             <th>Datum unosa</th>
+            <th>Status</th>
             <th>Korisnik</th>
             <th></th>
         </tr>
@@ -43,6 +44,7 @@
         	<td>{{ e.tvrtka.name }}</td>
         	<td>{{ e.tvrtka.oib }}</td>
         	<td>{{ e.datum_unosa.strftime('%d %m %Y - %H:%M:%S') }}</td>
+            <td>{{ e.receipt.status }}</td>
             <td>{{ e.user.username }}</td>
             <td><button class="btn btn-primary"><a href="../evidencija_pdf/{{e.id}}">PDF</a></button></td>
         </tr>

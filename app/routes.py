@@ -260,8 +260,8 @@ def evidencija_unosa(page_num, s):
 	form = SearchForm()
 	lista = []
 	evidencija = Evidencija.query.filter_by(vrsta_unosa='unos').order_by(Evidencija.datum_unosa.desc()).paginate(per_page=7, page=page_num, error_out=True)
-	proizvodii = Proizvod.query.all()
-	for proizvod in proizvodii:
+	sviProizvodi = Proizvod.query.all()
+	for proizvod in sviProizvodi:
 		lista.append(proizvod.name)
 	if s == ' ':
 		evidencija = Evidencija.query.filter_by(vrsta_unosa='unos').order_by(Evidencija.datum_unosa.desc()).paginate(per_page=7, page=page_num, error_out=True)
@@ -288,8 +288,8 @@ def evidencija_izdavanja(page_num, s):
 	form = SearchForm()
 	lista = []
 	evidencija = Evidencija.query.filter_by(vrsta_unosa='izlaz').order_by(Evidencija.datum_unosa.desc()).paginate(per_page=7, page=page_num, error_out=True)
-	proizvodii = Proizvod.query.all()
-	for proizvod in proizvodii:
+	sviProizvodi = Proizvod.query.all()
+	for proizvod in sviProizvodi:
 		lista.append(proizvod.name)
 	if s == ' ':
 		evidencija = Evidencija.query.filter_by(vrsta_unosa='izlaz').order_by(Evidencija.datum_unosa.desc()).paginate(per_page=7, page=page_num, error_out=True)
@@ -369,6 +369,7 @@ def export_proizvod_unos(name):
 	ovaj_proizvod_name = ovaj_proizvod.name
 	sql= text('SELECT evidencija.datum_unosa AS "Datum Unosa", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvoda, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id WHERE proizvod.name= "{}" AND evidencija.vrsta_unosa="unos"'.format(ovaj_proizvod.name))
 	result= db.engine.execute(sql)
+	#evidencije = session.query(Evidencija).join(Evidencija.ingredients)
 	query_sets = []
 	for r in result:
 		query_sets.append(r)
@@ -454,12 +455,15 @@ def ulaz():
 	for tvrtka in sve_tvrtke:
 		lista.append(tvrtka.name)
 	error=False
+	empty=True
 	products=[]
 	companies=[]
 	amounts=[]
 	if form.submit.data:
 		if form.validate_on_submit():
 			productList= json.loads(form.listaProizvoda.data)
+			if not None in productList:
+				empty=False
 			for productData in productList:
 				if productData is not None:
 					proizvod = Proizvod.query.filter_by(name=productData[0]).first()
@@ -483,7 +487,7 @@ def ulaz():
 							companies.append(tvrtka)
 							amounts.append(int(productData[1]))
 
-			if error is False:
+			if error is False and empty is False:
 				receipt = Receipt(status="active", receipt_type="unos")
 				db.session.add(receipt)
 				db.session.commit()
