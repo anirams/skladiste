@@ -206,6 +206,7 @@ var counter=0;
           var amount = document.createElement("input");
           amount.value = listaSve[1];
           amount.setAttribute('id', 'input '+counter);
+          amount.setAttribute('class', 'transparent-input');
           amount.setAttribute('onchange', 'update(id);')
           tableR.appendChild(amount);
 

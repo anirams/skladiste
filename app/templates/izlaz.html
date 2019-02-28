@@ -198,6 +198,7 @@ var counter=0;
           var amount = document.createElement("input");
           amount.value = listaSve[1];
           amount.setAttribute('id', 'input '+counter);
+          amount.setAttribute('class', 'transparent-input');
           amount.setAttribute('onchange', 'update(id);')
           tableR.appendChild(amount);
 
@@ -219,7 +220,7 @@ var counter=0;
           tableR.appendChild(button)
           var tablica = document.getElementById("tablica");
           tablica.appendChild(tableR);
-          ispisi();
+          //ispisi();
           listaJson= JSON.stringify(lista);
           document.getElementById("tajnaLista").value=listaJson;
 
@@ -243,7 +244,7 @@ var counter=0;
       lista[inputId][1]=value;
       listaJson= JSON.stringify(lista);
       document.getElementById("tajnaLista").value=listaJson;
-      console.log('!!!!!!!!!!!!!!!!!!!')
+      //console.log('!!!!!!!!!!!!!!!!!!!')
 
     }
 
