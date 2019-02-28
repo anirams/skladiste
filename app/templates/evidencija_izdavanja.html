@@ -71,7 +71,12 @@
             {% endfor %}
         </div>
         {% if search!=' ' %}
+        <div>
+
             <button class="btn btn-primary m-2"><a href="{{ url_for('export_proizvod_izlaz', name=search) }}" target="blank">Excel - Izlazne evidencije</a></button>
+            <button class="btn btn-primary m-2"><a href="{{ url_for('export_proizvod_izlaz_storno', name=search) }}" target="blank">Excel - Izlazne evidencije storno</a></button>
+        </div>
+
         {% else %}
             <button class="btn btn-primary m-2"><a href="/export_stanje_skladista" target="blank">Excel - Stanje</a></button>
         {% endif %}

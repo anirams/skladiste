@@ -174,11 +174,16 @@ var counter=0;
             if(!isNaN(nameOrBarcode)){
               var x= parseInt(nameOrBarcode);
               var y= kodovi1[nameOrBarcode];
-              listaSve.push(y);
+              if(y!=undefined){
+                listaSve.push(y);
+              }
+              
             } else{
               listaSve.push(nameOrBarcode);
+              y=1;
             }
             
+          if(y!=undefined){
           listaSve.push(document.getElementById("Kolicina").value);
           listaSve.push(document.getElementById("Tvrtka").value);
           lista.push(listaSve)
@@ -207,7 +212,6 @@ var counter=0;
           tableD.appendChild(tableDime);
           tableR.appendChild(tableD);
 
-
           var button = document.createElement("button")
           button.setAttribute('id', counter)
           tableR.setAttribute('id', counter)
@@ -220,13 +224,15 @@ var counter=0;
           tableR.appendChild(button)
           var tablica = document.getElementById("tablica");
           tablica.appendChild(tableR);
-          //ispisi();
+          ispisi();
           listaJson= JSON.stringify(lista);
           document.getElementById("tajnaLista").value=listaJson;
 
           $("#Ime").val('');
           $("#Kolicina").val(1);
-
+        }else{
+          $("#Ime").val('');
+        }
       }
     }
     function obrisi(id){

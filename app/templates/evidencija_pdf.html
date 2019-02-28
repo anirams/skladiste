@@ -19,7 +19,7 @@
 			<div class="card-header">
 				<span class="float-left"><strong>Dokument broj:</strong> {{ evidencija.id }}</span><br>
 				<span class="float-center"><strong>Datum dokumenta: </strong>{{ evidencija.datum_unosa.strftime('%B %d %Y - %H:%M:%S') }}</span>
-				<span class="float-right"> <strong>Status:</strong> U obradi</span>
+				<span class="float-right"> <strong>Status: </strong>{{evidencija.receipt.status}}</span>
 			</div>
 			<div class="card-body">
 				<div class="row mb-4">

@@ -267,12 +267,12 @@ def evidencija_unosa(page_num, s):
 		evidencija = Evidencija.query.filter_by(vrsta_unosa='unos').order_by(Evidencija.datum_unosa.desc()).paginate(per_page=7, page=page_num, error_out=True)
 	elif not form.submit.data:
 		proizvod = Proizvod.query.filter(Proizvod.name.like("%" + s + "%")).first()
-		evidencija = Evidencija.query.filter_by(proizvod_id=proizvod.id, vrsta_unosa="unos").paginate(per_page=3, page=page_num, error_out=True)
+		evidencija = Evidencija.query.filter_by(proizvod_id=proizvod.id, vrsta_unosa="unos").order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=page_num, error_out=True)
 		return render_template('evidencija_unosa.html', title='Evidencija unosa', form=form, evidencija=evidencija, search=s, lista=lista)
 	if form.submit.data:
 		if form.validate_on_submit():
 			proizvod = Proizvod.query.filter(Proizvod.name.like("%" + form.search.data + "%")).first()
-			evidencija = Evidencija.query.filter_by(proizvod_id=proizvod.id, vrsta_unosa="unos").paginate(per_page=3, page=1, error_out=True)
+			evidencija = Evidencija.query.filter_by(proizvod_id=proizvod.id, vrsta_unosa="unos").order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
 			return render_template('evidencija_unosa.html', title='Evidencija unosa', form=form, evidencija=evidencija, search=form.search.data, lista=lista, page=1)
 		return redirect(url_for('evidencija_unosa1'))
 	return render_template('evidencija_unosa.html', title='Evidencija unosa', form=form, evidencija=evidencija, search=' ', lista=lista)
@@ -295,12 +295,12 @@ def evidencija_izdavanja(page_num, s):
 		evidencija = Evidencija.query.filter_by(vrsta_unosa='izlaz').order_by(Evidencija.datum_unosa.desc()).paginate(per_page=7, page=page_num, error_out=True)
 	elif not form.submit.data:
 		proizvod = Proizvod.query.filter(Proizvod.name.like("%" + s + "%")).first()
-		evidencija = Evidencija.query.filter_by(proizvod_id=proizvod.id, vrsta_unosa="izlaz").paginate(per_page=3, page=page_num, error_out=True)
+		evidencija = Evidencija.query.filter_by(proizvod_id=proizvod.id, vrsta_unosa="izlaz").order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=page_num, error_out=True)
 		return render_template('evidencija_izdavanja.html', title='Evidencija izdavanja', form=form, evidencija=evidencija, search=s, lista=lista)
 	if form.submit.data:
 		if form.validate_on_submit():
 			proizvod = Proizvod.query.filter(Proizvod.name.like("%" + form.search.data + "%")).first()
-			evidencija = Evidencija.query.filter_by(proizvod_id=proizvod.id, vrsta_unosa="izlaz").paginate(per_page=3, page=1, error_out=True)
+			evidencija = Evidencija.query.filter_by(proizvod_id=proizvod.id, vrsta_unosa="izlaz").order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
 			return render_template('evidencija_izdavanja.html', title='Evidencija izdavanja', form=form, evidencija=evidencija, search=form.search.data, lista=lista, page=1)
 		return redirect(url_for('evidencija_izdavanja1'))
 	return render_template('evidencija_izdavanja.html', title='Evidencija izdavanja', form=form, evidencija=evidencija, search=' ', lista=lista)
@@ -367,7 +367,7 @@ def export_stanje_skladista():
 def export_proizvod_unos(name):
 	ovaj_proizvod = Proizvod.query.filter_by(name=name).first_or_404()
 	ovaj_proizvod_name = ovaj_proizvod.name
-	sql= text('SELECT evidencija.datum_unosa AS "Datum Unosa", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvoda, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id WHERE proizvod.name= "{}" AND evidencija.vrsta_unosa="unos"'.format(ovaj_proizvod.name))
+	sql= text('SELECT evidencija.datum_unosa AS "Datum Unosa", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvoda, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE proizvod.name= "{}" AND evidencija.vrsta_unosa="unos" AND receipt.status="active"'.format(ovaj_proizvod.name))
 	result= db.engine.execute(sql)
 	#evidencije = session.query(Evidencija).join(Evidencija.ingredients)
 	query_sets = []
@@ -383,13 +383,14 @@ def export_proizvod_unos(name):
 		]
 	return excel.make_response_from_query_sets(query_sets, column_names, 'xls', file_name="Ulazna evidencija "+name)
 
-@app.route('/export_proizvod_izlaz/<name>')
+@app.route('/export_proizvod_unos_storno/<name>')
 @login_required
-def export_proizvod_izlaz(name):
+def export_proizvod_unos_storno(name):
 	ovaj_proizvod = Proizvod.query.filter_by(name=name).first_or_404()
 	ovaj_proizvod_name = ovaj_proizvod.name
-	sql= ('SELECT evidencija.datum_unosa AS "Datum Unosa", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvoda, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id WHERE proizvod.name= "{}" AND evidencija.vrsta_unosa="izlaz"'.format(ovaj_proizvod.name))
+	sql= text('SELECT evidencija.datum_unosa AS "Datum Unosa", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvoda, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE proizvod.name= "{}" AND evidencija.vrsta_unosa="unos" AND receipt.status="storno"'.format(ovaj_proizvod.name))
 	result= db.engine.execute(sql)
+	#evidencije = session.query(Evidencija).join(Evidencija.ingredients)
 	query_sets = []
 	for r in result:
 		query_sets.append(r)
@@ -401,7 +402,49 @@ def export_proizvod_izlaz(name):
 		'Tvrtka',
 		'Korisnik'
 		]
+	return excel.make_response_from_query_sets(query_sets, column_names, 'xls', file_name="Ulazna evidencija storno "+name)
+
+@app.route('/export_proizvod_izlaz/<name>')
+@login_required
+def export_proizvod_izlaz(name):
+	ovaj_proizvod = Proizvod.query.filter_by(name=name).first_or_404()
+	ovaj_proizvod_name = ovaj_proizvod.name
+	sql= text('SELECT evidencija.datum_unosa AS "Datum Izdavanja", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvoda, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE proizvod.name= "{}" AND evidencija.vrsta_unosa="izlaz" AND receipt.status="active"'.format(ovaj_proizvod.name))
+	result= db.engine.execute(sql)
+	#evidencije = session.query(Evidencija).join(Evidencija.ingredients)
+	query_sets = []
+	for r in result:
+		query_sets.append(r)
+	column_names = [
+		'Datum Izdavanja',
+		'Promijenjena Kolicina',
+		'Proizvoda',
+		'ID Proizvoda',
+		'Tvrtka',
+		'Korisnik'
+		]
 	return excel.make_response_from_query_sets(query_sets, column_names, 'xls', file_name="Izlazna evidencija "+name)
+
+@app.route('/export_proizvod_izlaz_storno/<name>')
+@login_required
+def export_proizvod_izlaz_storno(name):
+	ovaj_proizvod = Proizvod.query.filter_by(name=name).first_or_404()
+	ovaj_proizvod_name = ovaj_proizvod.name
+	sql= text('SELECT evidencija.datum_unosa AS "Datum Izdavanja", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvoda, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE proizvod.name= "{}" AND evidencija.vrsta_unosa="izlaz" AND receipt.status="storno"'.format(ovaj_proizvod.name))
+	result= db.engine.execute(sql)
+	#evidencije = session.query(Evidencija).join(Evidencija.ingredients)
+	query_sets = []
+	for r in result:
+		query_sets.append(r)
+	column_names = [
+		'Datum Izdavanja',
+		'Promijenjena Kolicina',
+		'Proizvoda',
+		'ID Proizvoda',
+		'Tvrtka',
+		'Korisnik'
+		]
+	return excel.make_response_from_query_sets(query_sets, column_names, 'xls', file_name="Izlazna evidencija storno "+name)
 
 @app.route('/export_receipt_unos/<id>')
 @login_required
@@ -511,6 +554,7 @@ def izlaz():
 	sve_tvrtke = Tvrtka.query.all() 
 	svi_proizvodi = Proizvod.query.all()
 	error=False
+	empty=True
 	products=[]
 	companies=[]
 	amounts=[]
@@ -523,6 +567,8 @@ def izlaz():
 	if form.submit.data:
 		if form.validate_on_submit():
 			productList= json.loads(form.listaProizvoda.data)
+			if not None in productList:
+				empty=False
 			for productData in productList:
 				if productData is not None:
 					proizvod = Proizvod.query.filter_by(name=productData[0]).first()
@@ -552,7 +598,7 @@ def izlaz():
 							products.append(proizvod)
 							companies.append(tvrtka)
 							amounts.append(int(productData[1]))
-			if error is False:
+			if error is False and empty is False:
 				receipt = Receipt(status="active", receipt_type="izlaz")
 				db.session.add(receipt)
 				db.session.commit()

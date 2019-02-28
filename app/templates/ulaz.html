@@ -182,11 +182,16 @@ var counter=0;
               var x= parseInt(nameOrBarcode);
               console.log(x);
               var y= kodovi1[nameOrBarcode];
-              listaSve.push(y);
+             
+              if(y!=undefined){
+                listaSve.push(y);
+              }
+              
             } else{
               listaSve.push(nameOrBarcode);
+              y=1;
             }
-            
+          if(y!=undefined){
           listaSve.push(document.getElementById("Kolicina").value);
           listaSve.push(document.getElementById("Tvrtka").value);
           lista.push(listaSve)
@@ -233,6 +238,9 @@ var counter=0;
 
           $("#Ime").val('');
           $("#Kolicina").val(1);
+        }else{
+          $("#Ime").val('');
+        }
       }
     }
     function obrisi(id){
