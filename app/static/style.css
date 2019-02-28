@@ -393,3 +393,7 @@ input[type=submit] {
     border:solid 1px white;
 }
 
+.date{
+    display: flex;
+    flex-direction: column;
+}

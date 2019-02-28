@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField, PasswordField, BooleanField, SubmitField, HiddenField, TextAreaField
-from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, Length, NumberRange
+from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, Length, NumberRange, Optional
 from app.models import User, Proizvod, Tvrtka, Evidencija
 from flask import request
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -143,9 +143,11 @@ class UrediProizvodForm(FlaskForm):
 class SearchForm(FlaskForm):
 	search = StringField(('Pronađi Proizvod'), validators=[DataRequired('Unesi ime proizvoda')])
 	submit = SubmitField('Pronađi')
+	begin = DateField('Pocetak', format='%Y-%m-%d', validators=[Optional()])
+	end = DateField('Kraj', format='%Y-%m-%d', validators=[Optional()])
 
 class SearchFormKorisnik(FlaskForm):
-	search = StringField(('Pronađi Proizvod'), validators=[DataRequired('Unesi ime korisnika')])
+	search = StringField(('Pronađi Korisnika'), validators=[DataRequired('Unesi ime korisnika')])
 	submit = SubmitField('Pronađi')
 
 class SearchFormTvrtka(FlaskForm):
@@ -178,3 +180,4 @@ class ListForm(FlaskForm):
 
 class Storno(FlaskForm):
 	submit= SubmitField('Storniraj')
+

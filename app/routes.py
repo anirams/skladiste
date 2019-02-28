@@ -272,9 +272,19 @@ def evidencija_unosa(page_num, s):
 		evidencija = Evidencija.query.filter_by(proizvod_id=proizvod.id, vrsta_unosa="unos").order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=page_num, error_out=True)
 		return render_template('evidencija_unosa.html', title='Evidencija unosa', form=form, evidencija=evidencija, search=s, lista=lista)
 	if form.submit.data:
+		#import pdb; pdb.set_trace();
 		if form.validate_on_submit():
 			proizvod = Proizvod.query.filter(Proizvod.name.like("%" + form.search.data + "%")).first()
-			evidencija = Evidencija.query.filter_by(proizvod_id=proizvod.id, vrsta_unosa="unos").order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
+			#import pdb; pdb.set_trace();
+			if form.begin.data is None and form.end.data is None:
+				evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=="unos").order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
+			elif form.begin.data is None:
+				evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=="unos", Evidencija.datum_unosa <= form.end.data).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
+			elif form.end.data is None:
+				evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=="unos", Evidencija.datum_unosa >= form.begin.data).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
+			else:
+				evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=="unos", Evidencija.datum_unosa >= form.begin.data, Evidencija.datum_unosa <= form.end.data).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
+			
 			return render_template('evidencija_unosa.html', title='Evidencija unosa', form=form, evidencija=evidencija, search=form.search.data, lista=lista, page=1)
 		return redirect(url_for('evidencija_unosa1'))
 	return render_template('evidencija_unosa.html', title='Evidencija unosa', form=form, evidencija=evidencija, search=' ', lista=lista)
