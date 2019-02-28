@@ -4,7 +4,7 @@ from app.forms import LoginForm, RegistrationForm, UlazRobeForm, IzlazRobeForm, 
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Proizvod, Tvrtka, Evidencija, Receipt
 from werkzeug.urls import url_parse
-from datetime import datetime
+from datetime import datetime, timedelta
 import flask_excel as excel
 from sqlalchemy import text
 import pdfkit
@@ -99,8 +99,10 @@ def proizvod(name):
 	sveTvrtke=Tvrtka.query.all()
 	for tvrtka in sveTvrtke:
 		lista.append(tvrtka.name)
-	evidencijaUlaz = Evidencija.query.filter_by(proizvod_id=proizvod.id, vrsta_unosa='unos').order_by(Evidencija.datum_unosa.desc()).all()
-	evidencijaIzlaz = Evidencija.query.filter_by(proizvod_id=proizvod.id, vrsta_unosa='izlaz').order_by(Evidencija.datum_unosa.desc()).all()
+	#yesterday=datetime.today() - timedelta(days = 1)
+	todays_datetime = datetime(datetime.today().year, datetime.today().month, datetime.today().day)
+	evidencijaUlaz = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=='unos', Evidencija.datum_unosa >= todays_datetime).order_by(Evidencija.datum_unosa.desc()).all()
+	evidencijaIzlaz = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=='izlaz', Evidencija.datum_unosa >= todays_datetime).order_by(Evidencija.datum_unosa.desc()).all()
 	form_ulaz = UlazRobeForm()
 	form_izlaz = IzlazRobeForm()
 	form_uredi = UrediProizvodForm()

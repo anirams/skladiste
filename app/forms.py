@@ -5,6 +5,7 @@ from app.models import User, Proizvod, Tvrtka, Evidencija
 from flask import request
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import current_user
+from wtforms.fields.html5 import DateField
 
 class LoginForm(FlaskForm):
 	username = StringField('Korisnicko ime', validators=[DataRequired('Ovo polje je nužno')])
