@@ -261,13 +261,13 @@ def svi_korisnici1():
 def evidencija_unosa(page_num, s, b, e):
 	form = SearchForm()
 	lista = []
-	evidencija = Evidencija.query.filter_by(vrsta_unosa='unos').order_by(Evidencija.datum_unosa.desc()).paginate(per_page=7, page=page_num, error_out=True)
+	evidencija = Evidencija.query.filter_by(vrsta_unosa='unos').order_by(Evidencija.datum_unosa.desc()).paginate(per_page=5, page=page_num, error_out=True)
 	sviProizvodi = Proizvod.query.all()
 	for proizvod in sviProizvodi:
 		lista.append(proizvod.name)
 	if s == ' ':
 		if b ==' ' and e==' ':
-			evidencija = Evidencija.query.filter_by(vrsta_unosa='unos').order_by(Evidencija.datum_unosa.desc()).paginate(per_page=7, page=page_num, error_out=True)
+			evidencija = Evidencija.query.filter_by(vrsta_unosa='unos').order_by(Evidencija.datum_unosa.desc()).paginate(per_page=5, page=page_num, error_out=True)
 		elif b ==' ':
 			evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=="unos", Evidencija.datum_unosa <= form.end.data).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
 		elif e==' ':
@@ -278,7 +278,7 @@ def evidencija_unosa(page_num, s, b, e):
 	elif not form.submit.data:
 		proizvod = Proizvod.query.filter(Proizvod.name.like("%" + s + "%")).first()
 		if b ==' ' and e==' ':
-			evidencija = Evidencija.query.filter_by(vrsta_unosa='unos').order_by(Evidencija.datum_unosa.desc()).paginate(per_page=7, page=page_num, error_out=True)
+			evidencija = Evidencija.query.filter_by(vrsta_unosa='unos').order_by(Evidencija.datum_unosa.desc()).paginate(per_page=5, page=page_num, error_out=True)
 		elif b ==' ':
 			evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=="unos", Evidencija.datum_unosa <= form.end.data).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
 		elif e ==' ':
