@@ -650,8 +650,9 @@ def ulaz():
 	if form.submit.data:
 		if form.validate_on_submit():
 			productList= json.loads(form.listaProizvoda.data)
-			if not None in productList:
-				empty=False
+			for product in productList:
+				if product != None:
+					empty=False
 			for productData in productList:
 				if productData is not None:
 					proizvod = Proizvod.query.filter_by(name=productData[0]).first()
@@ -712,8 +713,9 @@ def izlaz():
 	if form.submit.data:
 		if form.validate_on_submit():
 			productList= json.loads(form.listaProizvoda.data)
-			if not None in productList:
-				empty=False
+			for product in productList:
+				if product != None:
+					empty=False
 			for productData in productList:
 				if productData is not None:
 					proizvod = Proizvod.query.filter_by(name=productData[0]).first()
