@@ -8,30 +8,32 @@
 </script>
 <div class="stanje-s">
     <div class="row justify-content-md-center">
-        <form class=" form-inline" action="" method="post" novalidate="" autocomplete="off">
+        <form class=" form" action="" method="post" novalidate="" autocomplete="off">
                 {{ form.hidden_tag() }}
+                <div class="form-inline">
                 <div class="form-group autocomplete">
                     {{ form.search(size=32, class="form-control", placeholder="Pronađi proizvod", id="myInput") }}    
                 </div>
                 <div class="form-group">
                     {{ form.submit(type="submit", class="btn btn-primary ml-3") }}
                 </div>
-                <div class="date">
-            <p>
+            </div>
+                <div class="row date">
+            <div class="m-2 form-group">
                 {{ form.begin.label }}<br>
-                {{ form.begin(size=32) }}<br>
+                {{ form.begin(size=32, class="form-control") }}<br>
                 {% for error in form.begin.errors %}
                 <span style="color: red;">[{{ error }}]</span>
                 {% endfor %}
-            </p>
+            </div>
 
-            <p>
+            <div class="m-2 form-group">
                 {{ form.end.label }}<br>
-                {{ form.end(size=32) }}<br>
+                {{ form.end(size=32, class="form-control") }}<br>
                 {% for error in form.end.errors %}
                 <span style="color: red;">[{{ error }}]</span>
                 {% endfor %}
-            </p>
+            </div>
         </div>
             </form>
         </div>
