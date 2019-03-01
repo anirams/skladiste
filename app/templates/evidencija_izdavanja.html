@@ -58,9 +58,9 @@
                 {% if page %}
                     {% if page != evidencija.page %}
                         {% if search!=' ' %}
-                            <a href="{{ url_for('evidencija_unosa', page_num=page, s=search) }}">{{ page }}</a>
+                            <a href="{{ url_for('evidencija_izdavanja', page_num=page, s=search) }}">{{ page }}</a>
                         {% else %}
-                            <a href="{{ url_for('evidencija_unosa', page_num=page, s=' ') }}">{{ page }}</a>
+                            <a href="{{ url_for('evidencija_izdavanja', page_num=page, s=' ') }}">{{ page }}</a>
                         {% endif %}
                     {% else %}
                         <strong>{{ page }}</strong>
