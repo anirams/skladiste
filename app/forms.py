@@ -141,10 +141,11 @@ class UrediProizvodForm(FlaskForm):
 		return True
 
 class SearchForm(FlaskForm):
-	search = StringField(('Pronađi Proizvod'), validators=[DataRequired('Unesi ime proizvoda')])
+	search = StringField(('Pronađi Proizvod'), validators=[Optional()])
 	submit = SubmitField('Pronađi')
 	begin = DateField('Pocetak', format='%Y-%m-%d', validators=[Optional()])
 	end = DateField('Kraj', format='%Y-%m-%d', validators=[Optional()])
+	user = StringField(('Pronađi po korisniku'), validators=[Optional()])
 
 class SearchFormKorisnik(FlaskForm):
 	search = StringField(('Pronađi Korisnika'), validators=[DataRequired('Unesi ime korisnika')])

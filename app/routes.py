@@ -261,31 +261,31 @@ def svi_korisnici1():
 def evidencija_unosa(page_num, s, b, e):
 	form = SearchForm()
 	lista = []
-	evidencija = Evidencija.query.filter_by(vrsta_unosa='unos').order_by(Evidencija.datum_unosa.desc()).paginate(per_page=7, page=page_num, error_out=True)
+	evidencija = Evidencija.query.filter_by(vrsta_unosa='unos').order_by(Evidencija.datum_unosa.desc()).paginate(per_page=5, page=page_num, error_out=True)
 	sviProizvodi = Proizvod.query.all()
 	for proizvod in sviProizvodi:
 		lista.append(proizvod.name)
 	if s == ' ':
 		if b ==' ' and e==' ':
-			evidencija = Evidencija.query.filter_by(vrsta_unosa='unos').order_by(Evidencija.datum_unosa.desc()).paginate(per_page=7, page=page_num, error_out=True)
+			evidencija = Evidencija.query.filter_by(vrsta_unosa='unos').order_by(Evidencija.datum_unosa.desc()).paginate(per_page=5, page=page_num, error_out=True)
 		elif b ==' ':
-			evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=="unos", Evidencija.datum_unosa <= form.end.data).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
+			evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=="unos", Evidencija.datum_unosa <= e).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
 		elif e==' ':
-			evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=="unos", Evidencija.datum_unosa >= form.begin.data).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
+			evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=="unos", Evidencija.datum_unosa >= b).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
 		else:
-			evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=="unos", Evidencija.datum_unosa >= form.begin.data, Evidencija.datum_unosa <= form.end.data).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
+			evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=="unos", Evidencija.datum_unosa >= b, Evidencija.datum_unosa <=e).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
 		
 	elif not form.submit.data:
 		proizvod = Proizvod.query.filter(Proizvod.name.like("%" + s + "%")).first()
 		if b ==' ' and e==' ':
-			evidencija = Evidencija.query.filter_by(vrsta_unosa='unos').order_by(Evidencija.datum_unosa.desc()).paginate(per_page=7, page=page_num, error_out=True)
+			evidencija = Evidencija.query.filter_by(vrsta_unosa='unos').order_by(Evidencija.datum_unosa.desc()).paginate(per_page=5, page=page_num, error_out=True)
 		elif b ==' ':
-			evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=="unos", Evidencija.datum_unosa <= form.end.data).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
+			evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=="unos", Evidencija.datum_unosa <= e).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
 		elif e ==' ':
-			evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=="unos", Evidencija.datum_unosa >= form.begin.data).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
+			evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=="unos", Evidencija.datum_unosa >= b).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
 		else:
-			evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=="unos", Evidencija.datum_unosa >= form.begin.data, Evidencija.datum_unosa <= form.end.data).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
-		evidencija = Evidencija.query.filter_by(proizvod_id=proizvod.id, vrsta_unosa="unos").order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=page_num, error_out=True)
+			evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=="unos", Evidencija.datum_unosa >= b, Evidencija.datum_unosa <= e).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=5, page=1, error_out=True)
+		evidencija = Evidencija.query.filter_by(proizvod_id=proizvod.id, vrsta_unosa="unos").order_by(Evidencija.datum_unosa.desc()).paginate(per_page=5, page=page_num, error_out=True)
 		return render_template('evidencija_unosa.html', title='Evidencija unosa', form=form, evidencija=evidencija, search=s, begin=b, end=e, lista=lista)
 	if form.submit.data:
 		#import pdb; pdb.set_trace();
@@ -293,7 +293,7 @@ def evidencija_unosa(page_num, s, b, e):
 			proizvod = Proizvod.query.filter(Proizvod.name.like("%" + form.search.data + "%")).first()
 			#import pdb; pdb.set_trace();
 			if form.begin.data is None and form.end.data is None:
-				evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=="unos").order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
+				evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=="unos").order_by(Evidencija.datum_unosa.desc()).paginate(per_page=5, page=1, error_out=True)
 				form.begin.data = ' '
 				form.end.data = ' '
 			elif form.begin.data is None:
