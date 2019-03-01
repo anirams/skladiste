@@ -7,6 +7,7 @@
     var lista1 = {{ lista|safe }};
 </script>
 <div class="stanje-s">
+    <h3 class="mb-4">Unos robe</h3>
     <div class="row justify-content-md-center">
         <form class=" form" action="" method="post" novalidate="" autocomplete="off">
                 {{ form.hidden_tag() }}
@@ -18,23 +19,23 @@
                     {{ form.submit(type="submit", class="btn btn-primary ml-3") }}
                 </div>
             </div>
-                <div class="row date">
-            <div class="m-2 form-group">
-                {{ form.begin.label }}<br>
-                {{ form.begin(size=32, class="form-control") }}<br>
-                {% for error in form.begin.errors %}
-                <span style="color: red;">[{{ error }}]</span>
-                {% endfor %}
-            </div>
+            <div class="row date">
+                <div class="m-1 form-group">
+                    {{ form.begin.label }}<br>
+                    {{ form.begin(size=32, class="form-control") }}
+                    {% for error in form.begin.errors %}
+                    <br><span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </div>
 
-            <div class="m-2 form-group">
-                {{ form.end.label }}<br>
-                {{ form.end(size=32, class="form-control") }}<br>
-                {% for error in form.end.errors %}
-                <span style="color: red;">[{{ error }}]</span>
-                {% endfor %}
+                <div class="m-1 form-group">
+                    {{ form.end.label }}<br>
+                    {{ form.end(size=32, class="form-control") }}
+                    {% for error in form.end.errors %}
+                    <br><span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </div>
             </div>
-        </div>
             </form>
         </div>
         <div>
@@ -44,7 +45,6 @@
         </div>
         
 
-    <h3 class="mb-4">Unos robe</h3>
     <table class="table table-striped">
     	<tr>
             <th>Proizvod</th> 
