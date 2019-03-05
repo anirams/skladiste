@@ -8,7 +8,7 @@
 </style>
 -->
 
-
+<script type="text/javascript">var number =1;</script>
 <div id="contentToPdf" class="unos-p">
 	
 <div class="container">
@@ -55,7 +55,6 @@
 							<th>Proizvod</th>
 							<th>Opis</th>
 							<th class="right">Količina</th>
-							<th class="center">Vrsta eviden.</th>
 							<th class="right">Novo stanje</th>
 						</tr>
 					</thead>
@@ -63,12 +62,10 @@
 					<tbody>						
 					{% for evidencija in evidencije %}
 						<tr>
-							<td class="center">1</td>
+							<td class="left"><script type="text/javascript">document.write(number); number+=1;</script></td>
 							<td class="left">{{ evidencija.proizvod.name }}</td>
 							<td class="left">{{ evidencija.proizvod.opis_proizvoda }}</td>
-
 							<td class="right">{{ evidencija.promijenjena_kolicina }}</td>
-							<td class="center">{{ evidencija.vrsta_unosa }}</td>
 							<td class="right">{{ evidencija.trenutna_kolicina }}</td>
 						</tr>
 					{% endfor %}

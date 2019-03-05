@@ -226,7 +226,11 @@
         </p>
         <p>
             {{ form_uredi.barkod.label }}<br>
-            {{ form_uredi.barkod(size=32, value=proizvod.bar_kod, class="form-control") }}<br>
+            {% if proizvod.bar_kod[0] == "l" %}
+                {{ form_uredi.barkod(size=32, value=proizvod.bar_kod[11:], class="form-control") }}<br>
+            {% else %}
+                {{ form_uredi.barkod(size=32, value=proizvod.bar_kod, class="form-control") }}<br>
+            {% endif %}
             {% for error in form_uredi.barkod.errors %}
             <span style="color: red;">[{{ error }}]</span>
             {% if form_uredi.barkod.errors %}
@@ -237,7 +241,7 @@
          <p>
         
             {{ form_uredi.opis_proizvoda.label }}<br>
-            {{ form_uredi.opis_proizvoda(size=300, value=proizvod.opis_proizvoda, class="form-control") }}<br>
+            {{ form_uredi.opis_proizvoda(size=32, value=proizvod.opis_proizvoda, class="form-control") }}<br>
             {% for error in form_uredi.opis_proizvoda.errors %}
             <span style="color: red;">[{{ error }}]</span>
             {% if form_uredi.opis_proizvoda.errors %}

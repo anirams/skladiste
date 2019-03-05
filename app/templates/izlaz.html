@@ -172,8 +172,13 @@ var counter=0;
           var nameOrBarcode=document.getElementById("Ime").value;
           
             if(!isNaN(nameOrBarcode)){
-              var x= parseInt(nameOrBarcode);
-              var y= kodovi1[nameOrBarcode];
+              if (nameOrBarcode[0]==0){
+                var y= kodovi1["leadingZero"+nameOrBarcode];
+
+              } else{
+                var y= kodovi1[nameOrBarcode];
+              }
+
               if(y!=undefined){
                 listaSve.push(y);
               }
@@ -246,7 +251,7 @@ var counter=0;
 
     function update(id){
       var value = document.getElementById(id).value;
-      inputId=id[6];
+      inputId=id.replace("input ", "");
       lista[inputId][1]=value;
       listaJson= JSON.stringify(lista);
       document.getElementById("tajnaLista").value=listaJson;

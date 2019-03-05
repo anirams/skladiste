@@ -7,7 +7,7 @@
     var lista1 = {{ lista|safe }};
 </script>
 <div class="stanje-s">
-    <h3 class="mb-4">Unos robe</h3>
+    <h3 class="mb-4">Ulazne evidencije</h3>
     <div class="row justify-content-md-center">
         <form class=" form" action="" method="post" novalidate="" autocomplete="off">
             {{ form.hidden_tag() }}
@@ -39,7 +39,11 @@
                 </div>
                 <div class="m-2 form-group">
                     {{ form.user.label }}<br>
-                    {{ form.user(size=32, class="form-control") }}
+                    {% if user==' ' %}
+                      {{ form.user(size=32, value='', class="form-control") }}
+                    {% else %}
+                      {{ form.user(size=32, class="form-control") }}
+                    {% endif %}
                     {% for error in form.user.errors %}
                     <br><span style="color: red;">[{{ error }}]</span>
                     {% endfor %}

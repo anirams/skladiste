@@ -42,7 +42,7 @@ class UnosProizvodaForm(FlaskForm):
 	opis_proizvoda = StringField ('Opis proizvoda')
 	zemlja_podrijetla = StringField('Zemlja podrijetla', validators=[DataRequired('Unesi Zemlju Podrijetla')])
 
-	barkod = IntegerField('Bar kod', validators=[DataRequired('Unesi bar kod')])
+	barkod = StringField('Bar kod', validators=[DataRequired('Unesi bar kod')])
 	submit2 = SubmitField('Dodaj Proizvod')
 	def validate(self):
 		rv = FlaskForm.validate(self)
@@ -131,8 +131,8 @@ class IzlazRobeForm(FlaskForm):
 class UrediProizvodForm(FlaskForm):
 	name = StringField('Naziv proizvoda', validators=[DataRequired('Unesi Naziv Proizvoda')])
 	zemlja_podrijetla = StringField('Zemlja podrijetla')
-	opis_proizvoda = TextAreaField('Opis proizvoda')
-	barkod = IntegerField('Bar kod')
+	opis_proizvoda = StringField('Opis proizvoda')
+	barkod = StringField('Bar kod')
 	submit3 = SubmitField('Uredi')
 	def validate(self):
 		rv = FlaskForm.validate(self)
@@ -143,9 +143,7 @@ class UrediProizvodForm(FlaskForm):
 class SearchForm(FlaskForm):
 	search = StringField(('Pronađi Proizvod'), validators=[Optional()])
 	submit = SubmitField('Pronađi')
-	begin = DateField('Pocetak', format='%Y-%m-%d', validators=[Optional()])
-	end = DateField('Kraj', format='%Y-%m-%d', validators=[Optional()])
-	user = StringField(('Pronađi po korisniku'), validators=[Optional()])
+
 
 class SearchFormKorisnik(FlaskForm):
 	search = StringField(('Pronađi Korisnika'), validators=[DataRequired('Unesi ime korisnika')])
@@ -182,3 +180,9 @@ class ListForm(FlaskForm):
 class Storno(FlaskForm):
 	submit= SubmitField('Storniraj')
 
+class SearchFormEvidencija(FlaskForm):
+	search = StringField(('Pronađi Proizvod'), validators=[Optional()])
+	submit = SubmitField('Pronađi')
+	begin = DateField('Pocetak', format='%Y-%m-%d', validators=[Optional()])
+	end = DateField('Kraj', format='%Y-%m-%d', validators=[Optional()])
+	user = StringField(('Pronađi po korisniku'), validators=[Optional()])

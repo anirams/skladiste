@@ -33,7 +33,7 @@ class Proizvod(db.Model):
 	opis_proizvoda = db.Column(db.String(300))
 	datum_unosa = db.Column(db.DateTime, default=datetime.utcnow)
 	evidencija = db.relationship('Evidencija', backref='proizvod', lazy='dynamic')
-	bar_kod = db.Column(db.Integer)
+	bar_kod = db.Column(db.String(64))
 
 class Tvrtka(db.Model):
 	__searchable__ = ['name']

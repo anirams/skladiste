@@ -1,6 +1,6 @@
-from flask import render_template, flash, redirect, url_for, request, send_file, send_from_directory
+from flask import render_template, flash, redirect, url_for, request, send_file, send_from_directory, make_response
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, UlazRobeForm, IzlazRobeForm, UrediProizvodForm, UnosProizvodaForm, SearchForm, EditPasswordForm, UnosTvrtkeForm, SearchFormTvrtka, SearchFormKorisnik, ListForm, UrediTvrtkuForm, Storno
+from app.forms import LoginForm, RegistrationForm, UlazRobeForm, IzlazRobeForm, UrediProizvodForm, UnosProizvodaForm, SearchForm, EditPasswordForm, UnosTvrtkeForm, SearchFormTvrtka, SearchFormKorisnik, ListForm, UrediTvrtkuForm, Storno, SearchFormEvidencija
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Proizvod, Tvrtka, Evidencija, Receipt
 from werkzeug.urls import url_parse
@@ -106,6 +106,7 @@ def proizvod(name):
 	form_ulaz = UlazRobeForm()
 	form_izlaz = IzlazRobeForm()
 	form_uredi = UrediProizvodForm()
+	#form_uredi.opis_proizvoda.data=proizvod.opis_proizvoda
 	if form_ulaz.submit1.data and form_ulaz.validate():
 			#tvrtka = Tvrtka.query.filter_by(oib=form_ulaz.oib.data).first_or_404()
 			tvrtka = Tvrtka.query.filter_by(name=form_ulaz.name.data).first()
@@ -129,7 +130,11 @@ def proizvod(name):
 			proizvod.name = form_uredi.name.data
 			proizvod.zemlja_podrijetla = form_uredi.zemlja_podrijetla.data
 			proizvod.opis_proizvoda = form_uredi.opis_proizvoda.data
-			proizvod.bar_kod = form_uredi.barkod.data
+			barkod = str(form_uredi.barkod.data)
+			if barkod[0] == '0':
+				proizvod.bar_kod = 'leadingZero'+form_uredi.barkod.data
+			else:
+				proizvod.bar_kod = form_uredi.barkod.data
 			db.session.add(proizvod)
 			db.session.commit()
 			flash('Uspjesno ste uredili proizvod!')
@@ -158,7 +163,14 @@ def stanje_skladista(page_num, s):
 			return render_template("stanje_skladista.html", title='Stanje skladista', form=form, proizvodi=proizvodi2, search=form.search.data, form2=form2, lista=lista )
 	if form2.submit2.data:
 		if form2.validate_on_submit():
-			proizvod = Proizvod(name=form2.name.data, opis_proizvoda=form2.opis_proizvoda.data, zemlja_podrijetla=form2.zemlja_podrijetla.data, bar_kod=form2.barkod.data)
+			proizvod = Proizvod(name=form2.name.data, opis_proizvoda=form2.opis_proizvoda.data, zemlja_podrijetla=form2.zemlja_podrijetla.data)
+			barkod = str(form2.barkod.data)
+			#import pdb; pdb.set_trace();
+			if barkod[0] == '0':
+				proizvod.bar_kod='leadingZero'+form2.barkod.data
+			else:
+				proizvod.bar_kod = form2.barkod.data
+
 			db.session.add(proizvod)
 			db.session.commit()
 			flash(f'Dodali ste proizvod {form2.name.data}!', 'success')
@@ -259,7 +271,7 @@ def svi_korisnici1():
 @app.route('/evidencija_unosa/<int:page_num>+<s>+<b>+<e>+<u>', methods=['GET', 'POST'])
 @login_required
 def evidencija_unosa(page_num, s, b, e, u):
-	form = SearchForm()
+	form = SearchFormEvidencija()
 	lista = []
 	evidencija = Evidencija.query.filter_by(vrsta_unosa='unos').order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=page_num, error_out=True)
 	sviProizvodi = Proizvod.query.all()
@@ -334,6 +346,7 @@ def evidencija_unosa(page_num, s, b, e, u):
 			else:
 				user = User.query.filter_by(username=form.user.data).first()
 				if form.begin.data is None and form.end.data is None:
+					#import pdb; pdb.set_trace();
 					evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=="unos", Evidencija.user_id==user.id).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
 					form.begin.data = ' '
 					form.end.data = ' '
@@ -358,7 +371,7 @@ def evidencija_unosa1():
 @app.route('/evidencija_izdavanja/<int:page_num>+<s>+<b>+<e>+<u>', methods=['GET', 'POST'])
 @login_required
 def evidencija_izdavanja(page_num, s, b, e, u):
-	form = SearchForm()
+	form = SearchFormEvidencija()
 	lista = []
 	evidencija = Evidencija.query.filter_by(vrsta_unosa='izlaz').order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=page_num, error_out=True)
 	sviProizvodi = Proizvod.query.all()
@@ -847,8 +860,18 @@ def receipt_pdf(id):
 				os.unlink(file_path)
 		except Exception as e:
 			print(e)
+	receipt = Receipt.query.get(id)
 	evidencije = Evidencija.query.filter_by(receipt_id=id)
 	evidencija = Evidencija.query.filter_by(receipt_id=id).first()
-	html = render_template('receipt_pdf.html', id=id, evidencije=evidencije, evidencija=evidencija)
-	pdfkit.from_string(html, 'app/Receipts/receipt '+id +'.pdf', configuration=config)
-	return send_file('Receipts/receipt '+id +'.pdf')
+	html = render_template('receipt_pdf.html', id=id, evidencije=evidencije, evidencija=evidencija, receipt=receipt)
+	pdf= pdfkit.from_string(html, False, configuration=config)
+	response = make_response(pdf)
+	response.headers['Content-Type']='application/pdf'
+	response.headers['Content-Disposition']= 'inline; filename=receipt.pdf'
+	return response
+	#if evidencija.vrsta_unosa == "izlaz":
+	#	pdfkit.from_string(html, 'app/Receipts/otpremnica '+id +'.pdf', configuration=config)
+	#	return send_file('Receipts/otpremnica '+id +'.pdf')
+	#else:
+	#	pdfkit.from_string(html, 'app/Receipts/primka '+id +'.pdf', configuration=config)
+	#	return send_file('Receipts/primka '+id +'.pdf')
