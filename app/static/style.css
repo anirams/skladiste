@@ -387,3 +387,13 @@ input[type=submit] {
   background-color: DodgerBlue !important; 
   color: #ffffff; 
 }
+
+.transparent-input{
+    background: transparent;
+    border:solid 1px white;
+}
+
+.date{
+    display: flex;
+    flex-direction: row;
+}

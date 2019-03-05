@@ -17,29 +17,28 @@
 	<div class="container">
 		<div class="card">		
 			<div class="card-header">
-				<span class="float-left">Dok. broj: <strong>{{ evidencija.id }}</strong></span>
-				<span class="float-center"><strong>Datum dok.: </strong>{{ evidencija.datum_unosa.strftime('%B %d %Y - %H:%M:%S') }}</span>
-				<span class="float-right"> <strong>Status:</strong> U obradi</span>
+				<span class="float-left"><strong>Dokument broj:</strong> {{ evidencija.id }}</span><br>
+				<span class="float-center"><strong>Datum dokumenta: </strong>{{ evidencija.datum_unosa.strftime('%B %d %Y - %H:%M:%S') }}</span>
+				<span class="float-right"> <strong>Status: </strong>{{evidencija.receipt.status}}</span>
 			</div>
 			<div class="card-body">
 				<div class="row mb-4">
 					<div class="col-sm-6">
 						<h6 class="mb-3">Tvrtka:</h6>
-						<div>
 						<div>Ime: <strong>{{ evidencija.tvrtka.name }}</strong></div>
-						</div>
 						<div>OIB: {{ evidencija.tvrtka.oib }}</div>
 						<div>Grad: {{ evidencija.tvrtka.grad }}</div>
+						<div>Adresa: {{ evidencija.tvrtka.adresa }}</div>
 						<div>Poštanski broj: {{ evidencija.tvrtka.p_broj }}</div>
 						<div>Država: {{ evidencija.tvrtka.drzava }}</div>
 					</div>
-
+					<br>
 					<div class="col-sm-6">
 						<h6 class="mb-3">Skladište:</h6>
 						<div>Ime: <strong>Marina Rijeka</strong></div>
-						</div>
 						<div>OIB: 0000000000</div>
 						<div>Grad: Rijeka</div>
+						<div>Adresa: Školjić 5a</div>
 						<div>Poštanski broj: 51000</div>
 						<div>Država: Hrvatska</div>
 					</div>

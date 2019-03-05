@@ -44,7 +44,7 @@
 				<a href="{{ url_for('tvrtke1') }}"><i class="fas fa-handshake mr-2"></i>Tvrtke</a>
 			</li>
 			
-			<li>
+			<li class="{% block ulaz_izlaz %}{% endblock %}">
 				<a href="#pageSubmenu2" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fas fa-box-open mr-2"></i>Ulaz/Izlaz Robe</a>
 				<ul class="collapse list-unstyled" id="pageSubmenu2">
 					<li>
@@ -56,7 +56,7 @@
 				</ul>
 			</li> 
 
-			<li>
+			<li class="{% block racuni %}{% endblock %}">
 				<a href="#pageSubmenu3" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fas fa-file-invoice-dollar mr-2"></i>Računi</a>
 				<ul class="collapse list-unstyled" id="pageSubmenu3">
 					<li>
@@ -74,7 +74,7 @@
 				</ul>
 			</li>
 			
-			<li>
+			<li class="{% block evidencije %}{% endblock %}">
 				<a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fas fa-book-open mr-2"></i>Evidencije</a>
 				<ul class="collapse list-unstyled" id="pageSubmenu">
 					<li>

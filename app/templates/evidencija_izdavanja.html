@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block evidencija_izdavanja %}active{% endblock %}
+{% block evidencije %}active{% endblock %}
 
 {% block content %}
 <script type="text/javascript">  
@@ -8,15 +8,44 @@
 </script>
 
 <div class="stanje-s">
-    <div class="row justify-content-md-center">
-        <form class=" form-inline" action="" method="post" novalidate="" autocomplete="off">
+    <h3 class="mb-4">Izdavanje robe</h3>
+    <div class="row justify-content-md-center mb-1">
+        <form class=" form" action="" method="post" novalidate="" autocomplete="off">
                 {{ form.hidden_tag() }}
+                <div class="form-inline">
                 <div class="form-group autocomplete">
                     {{ form.search(size=32, class="form-control", placeholder="Pronađi proizvod", id="myInput") }}    
                 </div>
                 <div class="form-group">
                     {{ form.submit(type="submit", class="btn btn-primary ml-3") }}
                 </div>
+            </div>
+            <div class="m-1 form-group">
+                    {{ form.user.label }}<br>
+                    {{ form.user(size=32, class="form-control") }}
+                    {% for error in form.user.errors %}
+                    <br><span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </div>
+            <div class="row date">
+                <div class="m-1 form-group">
+                    {{ form.begin.label }}<br>
+                    {{ form.begin(size=32, class="form-control") }}
+                    {% for error in form.begin.errors %}
+                    <br><span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </div>
+
+
+                <div class="m-1 form-group">
+                    {{ form.end.label }}<br>
+                    {{ form.end(size=32, class="form-control") }}
+                    {% for error in form.end.errors %}
+                    <br><span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </div>
+            </div>
+
             </form>
         </div>
         <div>
@@ -25,7 +54,7 @@
             {% endfor %}
         </div>
 
-    <h3 class="mb-4">Izdavanje robe</h3>
+    
     <table class="table table-striped">
     	<tr>
             <th>Proizvod</th> 
@@ -33,6 +62,7 @@
             <th>Naziv tvrtke</th>
             <th>OIB</th>
             <th>Datum unosa</th>
+            <th>Status</th>
             <th>Korisnik</th>
             <th></th>
         </tr>
@@ -43,8 +73,9 @@
         	<td>{{ e.tvrtka.name }}</td>
         	<td>{{ e.tvrtka.oib }}</td>
         	<td>{{ e.datum_unosa.strftime('%d %m %Y - %H:%M:%S') }}</td>
+            <td>{{ e.receipt.status }}</td>
             <td>{{ e.user.username }}</td>
-            <td><button class="btn btn-primary"><a href="../evidencija/{{e.id}}">PDF</a></button></td>
+            <td><button class="btn btn-primary"><a href="../evidencija_pdf/{{e.id}}">PDF</a></button></td>
         </tr>
         {% endfor %}
     </table> 
@@ -56,9 +87,49 @@
                 {% if page %}
                     {% if page != evidencija.page %}
                         {% if search!=' ' %}
-                            <a href="{{ url_for('evidencija_unosa', page_num=page, s=search) }}">{{ page }}</a>
+                            {% if user!=' ' %}
+                                {% if begin!=' ' and end!=' '%}
+                                    <a href="{{ url_for('evidencija_izdavanja', page_num=page, s=search, b=begin, e=end, u=user) }}">{{ page }}</a>
+                                {% elif  begin!=' '%}
+                                    <a href="{{ url_for('evidencija_izdavanja', page_num=page, s=search, b=begin, e=' ', u=user) }}">{{ page }}</a>
+                                {% elif  end!=' '%}
+                                    <a href="{{ url_for('evidencija_izdavanja', page_num=page, s=search, b=' ', e=end, u=user) }}">{{ page }}</a>
+                                {% else %}
+                                    <a href="{{ url_for('evidencija_izdavanja', page_num=page, s=search, b=' ', e=' ', u=user) }}">{{ page }}</a>
+                                {% endif %}
+                            {% else %}
+                                {% if begin!=' ' and end!=' '%}
+                                    <a href="{{ url_for('evidencija_izdavanja', page_num=page, s=search, b=begin, e=end, u=' ') }}">{{ page }}</a>
+                                {% elif  begin!=' '%}
+                                    <a href="{{ url_for('evidencija_izdavanja', page_num=page, s=search, b=begin, e=' ', u=' ') }}">{{ page }}</a>
+                                {% elif  end!=' '%}
+                                    <a href="{{ url_for('evidencija_izdavanja', page_num=page, s=search, b=' ', e=end, u=' ') }}">{{ page }}</a>
+                                {% else %}
+                                    <a href="{{ url_for('evidencija_izdavanja', page_num=page, s=search, b=' ', e=' ', u=' ') }}">{{ page }}</a>
+                                {% endif %}
+                            {% endif %}
                         {% else %}
-                            <a href="{{ url_for('evidencija_unosa', page_num=page, s=' ') }}">{{ page }}</a>
+                            {% if user!=' ' %}
+                                {% if begin!=' ' and end!=' '%}
+                                    <a href="{{ url_for('evidencija_izdavanja', page_num=page, s=' ', b=begin, e=end, u=user) }}">{{ page }}</a>
+                                {% elif  begin!=' '%}
+                                    <a href="{{ url_for('evidencija_izdavanja', page_num=page, s=' ', b=begin, e=' ', u=user) }}">{{ page }}</a>
+                                {% elif  end!=' '%}
+                                    <a href="{{ url_for('evidencija_izdavanja', page_num=page, s=' ', b=' ', e=end, u=user) }}">{{ page }}</a>
+                                {% else %}
+                                    <a href="{{ url_for('evidencija_izdavanja', page_num=page, s=' ', b=' ', e=' ', u=user) }}">{{ page }}</a>
+                                {% endif %}
+                            {% else %}
+                                {% if begin!=' ' and end!=' '%}
+                                    <a href="{{ url_for('evidencija_izdavanja', page_num=page, s=' ', b=begin, e=end, u=' ') }}">{{ page }}</a>
+                                {% elif  begin!=' '%}
+                                    <a href="{{ url_for('evidencija_izdavanja', page_num=page, s=' ', b=begin, e=' ', u=' ') }}">{{ page }}</a>
+                                {% elif  end!=' '%}
+                                    <a href="{{ url_for('evidencija_izdavanja', page_num=page, s=' ', b=' ', e=end, u=' ') }}">{{ page }}</a>
+                                {% else %}
+                                    <a href="{{ url_for('evidencija_izdavanja', page_num=page, s=' ', b=' ', e=' ', u=' ') }}">{{ page }}</a>
+                                {% endif %}
+                            {% endif %}
                         {% endif %}
                     {% else %}
                         <strong>{{ page }}</strong>
@@ -69,7 +140,12 @@
             {% endfor %}
         </div>
         {% if search!=' ' %}
+        <div>
+
             <button class="btn btn-primary m-2"><a href="{{ url_for('export_proizvod_izlaz', name=search) }}" target="blank">Excel - Izlazne evidencije</a></button>
+            <button class="btn btn-primary m-2"><a href="{{ url_for('export_proizvod_izlaz_storno', name=search) }}" target="blank">Excel - Izlazne evidencije storno</a></button>
+        </div>
+
         {% else %}
             <button class="btn btn-primary m-2"><a href="/export_stanje_skladista" target="blank">Excel - Stanje</a></button>
         {% endif %}

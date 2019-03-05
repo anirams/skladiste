@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 
+{% block ulaz_izlaz %}active{% endblock %}
 
 {% block content %}
 <script type="text/javascript">  
@@ -14,13 +15,13 @@
    <div class="container">
      <div class="row justify-content-md-cente">
        <form class="form-inline" action="" novalidate="" autocomplete="off">
-                <div class="form-group autocomplete">
-                    <input size=32, class="form-control", placeholder="Unesi ime proizvoda", type="text", id="Ime", ></input>   
-                    <input size=32, class="form-control", placeholder="Unesi količinu", type="text", value=1 , id="Kolicina"></input>
-                    <input size=32, class="form-control", placeholder="Unesi tvrtku", type="text", id="Tvrtka"></input>
+                <div class="form-group autocomplete d-flex justify-content-between">
+                    <input class="form-control m-2", placeholder="Unesi ime proizvoda", type="text", id="Ime", ></input>   
+                    <input class="form-control m-2", placeholder="Unesi količinu", type="text", value=1 , id="Kolicina"></input>
+                    <input class="form-control m-2", placeholder="Unesi tvrtku", type="text", id="Tvrtka"></input>
                 </div>
                 <div class="form-group">
-                    <input size=32, class="form-control btn btn-primary", type="button", value="Dodaj Proizvod", onclick="dodaj()", id="klikFunkcija"></input> 
+                    <input size=32, class="form-control btn btn-primary m-2", type="button", value="Dodaj Proizvod", onclick="dodaj()", id="klikFunkcija"></input> 
                 </div>
         </form>
      </div>
@@ -182,22 +183,44 @@ var counter=0;
               var x= parseInt(nameOrBarcode);
               console.log(x);
               var y= kodovi1[nameOrBarcode];
-              listaSve.push(y);
+             
+              if(y!=undefined){
+                listaSve.push(y);
+              }
+              
             } else{
               listaSve.push(nameOrBarcode);
+              y='aaa';
             }
-            
+          if(y!=undefined){
           listaSve.push(document.getElementById("Kolicina").value);
           listaSve.push(document.getElementById("Tvrtka").value);
           lista.push(listaSve)
 
           var tableR = document.createElement("tr");
-          for(var k=0; k<3; k++){
+          /*for(var k=0; k<3; k++){
             var tableD = document.createElement("td");
             var tableDime = document.createTextNode(listaSve[k]);
             tableD.appendChild(tableDime);
             tableR.appendChild(tableD)
-          }
+          }*/
+          var tableD = document.createElement("td");
+          var tableDime = document.createTextNode(listaSve[0]);
+          tableD.appendChild(tableDime);
+          tableR.appendChild(tableD)
+
+          var amount = document.createElement("input");
+          amount.value = listaSve[1];
+          amount.setAttribute('id', 'input '+counter);
+          amount.setAttribute('class', 'transparent-input');
+          amount.setAttribute('onchange', 'update(id);')
+          tableR.appendChild(amount);
+
+          var tableD = document.createElement("td");
+          var tableDime = document.createTextNode(listaSve[2]);
+          tableD.appendChild(tableDime);
+          tableR.appendChild(tableD);
+
           var button = document.createElement("button")
           button.setAttribute('id', counter)
           tableR.setAttribute('id', counter)
@@ -215,6 +238,10 @@ var counter=0;
           document.getElementById("tajnaLista").value=listaJson;
 
           $("#Ime").val('');
+          $("#Kolicina").val(1);
+        }else{
+          $("#Ime").val('');
+        }
       }
     }
     function obrisi(id){
@@ -223,6 +250,16 @@ var counter=0;
       delete lista[id];
       listaJson= JSON.stringify(lista);
       document.getElementById("tajnaLista").value=listaJson;
+
+    }
+
+    function update(id){
+      var value = document.getElementById(id).value;
+      inputId=id[6];
+      lista[inputId][1]=value;
+      listaJson= JSON.stringify(lista);
+      document.getElementById("tajnaLista").value=listaJson;
+      console.log('!!!!!!!!!!!!!!!!!!!')
 
     }
 

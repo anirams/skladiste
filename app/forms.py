@@ -1,10 +1,11 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField, PasswordField, BooleanField, SubmitField, HiddenField, TextAreaField
-from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, Length, NumberRange
+from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, Length, NumberRange, Optional
 from app.models import User, Proizvod, Tvrtka, Evidencija
 from flask import request
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import current_user
+from wtforms.fields.html5 import DateField
 
 class LoginForm(FlaskForm):
 	username = StringField('Korisnicko ime', validators=[DataRequired('Ovo polje je nužno')])
@@ -38,11 +39,9 @@ class RegistrationForm(FlaskForm):
 
 class UnosProizvodaForm(FlaskForm):
 	name = StringField('Naziv proizvoda', validators=[DataRequired('Unesi Naziv Proizvoda')])
-	#promijenjena_kolicina = IntegerField('Kolicina', validators=[DataRequired('Unesi Količinu (broj)')])
 	opis_proizvoda = StringField ('Opis proizvoda')
 	zemlja_podrijetla = StringField('Zemlja podrijetla', validators=[DataRequired('Unesi Zemlju Podrijetla')])
-	#oib = IntegerField('OIB', validators=[DataRequired('Unesi OIB Tvrtke (broj)')])
-	#dodaj_jos = SubmitField('Dodaj jos')
+
 	barkod = IntegerField('Bar kod', validators=[DataRequired('Unesi bar kod')])
 	submit2 = SubmitField('Dodaj Proizvod')
 	def validate(self):
@@ -53,10 +52,6 @@ class UnosProizvodaForm(FlaskForm):
 		if proizvod is not None:
 			self.name.errors.append('Proizvod pod tim imenom već postoji')
 			return False
-		#tvrtka = Tvrtka.query.filter_by(oib=self.oib.data).first()
-		#if tvrtka is None:
-			#self.oib.errors.append('Tvrtka ne postoji')
-			#return False
 		else:
 			return True
 
@@ -95,23 +90,25 @@ class UrediTvrtkuForm(FlaskForm):
 
 class UlazRobeForm(FlaskForm):
 	promijenjena_kolicina = IntegerField('Kolicina', validators=[DataRequired('Unesi količinu')])
-	oib = IntegerField('OIB', validators=[DataRequired('Unesi OIB tvrtke')])
+	#oib = IntegerField('Tvrtka', validators=[DataRequired('Unesi OIB tvrtke')])
+	name = StringField('Naziv tvrtke', validators=[DataRequired('Unesi ime tvrtke')])
 	submit1 = SubmitField('Dodaj')
 	def validate(self):
 		rv = FlaskForm.validate(self)
 		if not rv:
 			return False
 		tvrtka = Tvrtka.query.filter_by(
-			oib=self.oib.data).first()
+			name=self.name.data).first()
 		if tvrtka is None:
-			self.oib.errors.append('Tvrtka ne postoji')
+			self.name.errors.append('Tvrtka ne postoji')
 			return False
 		else:
 			return True
 
 class IzlazRobeForm(FlaskForm):
 	promijenjena_kolicina = IntegerField('Kolicina', validators=[DataRequired('Unesi količinu')])
-	oib = IntegerField('OIB', validators=[DataRequired('Unesi OIB tvrtke')])
+	#oib = IntegerField('Tvrtka', validators=[DataRequired('Unesi OIB tvrtke')])
+	name = StringField('Naziv tvrtke', validators=[DataRequired('Unesi ime tvrtke')])
 	proizvod_id = HiddenField()
 	submit2 = SubmitField('Oduzmi')
 	def validate(self):
@@ -124,9 +121,9 @@ class IzlazRobeForm(FlaskForm):
 			self.promijenjena_kolicina.errors.append('Nema dovoljno artikla na stanju')
 			return False
 
-		tvrtka = Tvrtka.query.filter_by(oib=self.oib.data).first()
+		tvrtka = Tvrtka.query.filter_by(name=self.name.data).first()
 		if tvrtka is None:
-			self.oib.errors.append('Tvrtka ne postoji')
+			self.name.errors.append('Tvrtka ne postoji')
 			return False
 		else:
 			return True
@@ -144,11 +141,14 @@ class UrediProizvodForm(FlaskForm):
 		return True
 
 class SearchForm(FlaskForm):
-	search = StringField(('Pronađi Proizvod'), validators=[DataRequired('Unesi ime proizvoda')])
+	search = StringField(('Pronađi Proizvod'), validators=[Optional()])
 	submit = SubmitField('Pronađi')
+	begin = DateField('Pocetak', format='%Y-%m-%d', validators=[Optional()])
+	end = DateField('Kraj', format='%Y-%m-%d', validators=[Optional()])
+	user = StringField(('Pronađi po korisniku'), validators=[Optional()])
 
 class SearchFormKorisnik(FlaskForm):
-	search = StringField(('Pronađi Proizvod'), validators=[DataRequired('Unesi ime korisnika')])
+	search = StringField(('Pronađi Korisnika'), validators=[DataRequired('Unesi ime korisnika')])
 	submit = SubmitField('Pronađi')
 
 class SearchFormTvrtka(FlaskForm):
@@ -159,7 +159,7 @@ class SearchFormTvrtka(FlaskForm):
 class EditPasswordForm(FlaskForm):
 	old_password = PasswordField('Stara Lozinka', validators=[DataRequired()])
 	username = HiddenField()
-	password = PasswordField('Lozinka', validators=[DataRequired()])
+	password = PasswordField('Lozinka', validators=[DataRequired(), Length(min=5, max=35)])
 	password2 = PasswordField(
 		'Ponovite lozinku', validators=[DataRequired(), EqualTo('password')])
 	
@@ -181,3 +181,4 @@ class ListForm(FlaskForm):
 
 class Storno(FlaskForm):
 	submit= SubmitField('Storniraj')
+
