@@ -20,7 +20,7 @@ class RegistrationForm(FlaskForm):
 	password = PasswordField('Lozinka', validators=[DataRequired('Ovo polje je nužno'), Length(min=5, max=35)])
 	password2 = PasswordField(
 		'Ponovite lozinku', validators=[DataRequired('Ovo polje je nužno'), EqualTo('password', message='Lozinke moraju biti jednake')])
-	submit = SubmitField('Registriraj se')
+	submit = SubmitField('Registriraj korisnika')
 
 	def validate_username(self, username):
 		user = User.query.filter_by(username=username.data).first()
@@ -186,3 +186,7 @@ class SearchFormEvidencija(FlaskForm):
 	begin = DateField('Pocetak', format='%Y-%m-%d', validators=[Optional()])
 	end = DateField('Kraj', format='%Y-%m-%d', validators=[Optional()])
 	user = StringField(('Pronađi po korisniku'), validators=[Optional()])
+
+class SearchReceiptNumber(FlaskForm):
+	number = IntegerField('Broj računa', validators=[Optional()])
+	submit = SubmitField('Pronađi')

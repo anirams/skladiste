@@ -80,10 +80,19 @@
         	<td>{{ e.datum_unosa.strftime('%d %m %Y - %H:%M:%S') }}</td>
             <td>{{ e.receipt.status }}</td>
             <td>{{ e.user.username }}</td>
-            <td><button class="btn btn-primary"><a href="../evidencija_pdf/{{e.id}}">PDF</a></button></td>
+            <td><button class="btn btn-primary" onclick="window.open('../evidencija_pdf/{{e.id}}')">PDF</button></td>
         </tr>
         {% endfor %}
     </table> 
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
     <div class="d-flex justify-content-between">
         <div></div>
         <div>
@@ -147,12 +156,12 @@
         {% if search!=' ' %}
         <div>
 
-            <button class="btn btn-primary m-2"><a href="{{ url_for('export_proizvod_izlaz', name=search) }}" target="blank">Excel - Izlazne evidencije</a></button>
-            <button class="btn btn-primary m-2"><a href="{{ url_for('export_proizvod_izlaz_storno', name=search) }}" target="blank">Excel - Izlazne evidencije storno</a></button>
+            <button class="btn btn-primary m-2" onclick="window.open('{{ url_for('export_proizvod_izlaz', name=search) }}')">Excel - Izlazne evidencije</button>
+            <button class="btn btn-primary m-2" onclick="window.open('{{ url_for('export_proizvod_izlaz_storno', name=search) }}')">Excel - Izlazne evidencije storno</button>
         </div>
 
         {% else %}
-            <button class="btn btn-primary m-2"><a href="/export_stanje_skladista" target="blank">Excel - Stanje</a></button>
+            <button class="btn btn-primary m-2" onclick="window.open('../export_stanje_skladista')">Excel - Stanje</button>
         {% endif %}
        
 

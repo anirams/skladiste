@@ -17,55 +17,73 @@
 	<div class="container">
 		<div class="card">		
 			<div class="card-header">
-				<span class="float-left"><strong>Dokument broj:</strong> {{ evidencija.id }}</span><br>
-				<span class="float-center"><strong>Datum dokumenta: </strong>{{ evidencija.datum_unosa.strftime('%B %d %Y - %H:%M:%S') }}</span>
-				<span class="float-right"> <strong>Status: </strong>{{evidencija.receipt.status}}</span>
+				<span class="float-left"><span class="float-left">Dok. broj: <strong>{{id}}</strong></span><br><span class="float-left"><strong>Datum dok.: </strong>{{ evidencija.datum_unosa.strftime('%B %d %Y - %H:%M:%S') }}</span>
+				{% if evidencija.receipt.status =='storno' %}
+					<br><strong>Datum storn.: </strong>{{ evidencija.receipt.storno_date.strftime('%B %d %Y - %H:%M:%S') }}
+				{% endif %}</span></span>
+				
+				<span class="float-right"><strong>Status:</strong> {{evidencija.receipt.status}}<br><strong>Napravio:</strong> {{evidencija.user.username}}
+				{% if evidencija.receipt.status =='storno' %}
+					<br><strong>Stornirao:</strong> {{evidencija.receipt.storno_user}}
+				{% endif %}</span>
+				<br>
+				<br>
+				<br>
 			</div>
-			<div class="card-body">
-				<div class="row mb-4">
-					<div class="col-sm-6">
-						<h6 class="mb-3">Tvrtka:</h6>
-						<div>Ime: <strong>{{ evidencija.tvrtka.name }}</strong></div>
-						<div>OIB: {{ evidencija.tvrtka.oib }}</div>
-						<div>Grad: {{ evidencija.tvrtka.grad }}</div>
-						<div>Adresa: {{ evidencija.tvrtka.adresa }}</div>
-						<div>Poštanski broj: {{ evidencija.tvrtka.p_broj }}</div>
-						<div>Država: {{ evidencija.tvrtka.drzava }}</div>
+			<div class="card-body" style="text-align: center;">
+				
+
+			<div class="row mb-4" style=" padding-bottom: 9rem;">
+				<div class="float-left" class="col-sm-6" style="padding-left: 10rem; >
+					<h6 class="mb-3">Tvrtka:</h6>
+					<div>
+					<div>Ime: <strong>{{ evidencija.tvrtka.name }}</strong></div>
 					</div>
-					<br>
-					<div class="col-sm-6">
-						<h6 class="mb-3">Skladište:</h6>
-						<div>Ime: <strong>Marina Rijeka</strong></div>
-						<div>OIB: 0000000000</div>
-						<div>Grad: Rijeka</div>
-						<div>Adresa: Školjić 5a</div>
-						<div>Poštanski broj: 51000</div>
-						<div>Država: Hrvatska</div>
-					</div>
+					<div>OIB: {{ evidencija.tvrtka.oib }}</div>
+					<div>Grad: {{ evidencija.tvrtka.grad }}</div>
+					<div>Poštanski broj: {{ evidencija.tvrtka.p_broj }}</div>
+					<div>Država: {{ evidencija.tvrtka.drzava }}</div>
 				</div>
+				
+				<div class="float-right" class="col-sm-6" style="padding-right: 10rem;>
+					<h6 class="mb-3">Skladište:</h6>
+					<div>
+					<div>Ime: <strong>Marina Rijeka</strong></div>
+					</div>
+					<div>OIB: 0000000000</div>
+					<div>Grad: Rijeka</div>
+					<div>Poštanski broj: 51000</div>
+					<div>Država: Hrvatska</div>
+				</div>
+			</div>
 				<div class="table-responsive-sm">
 					<table class="table table-striped">
 						<thead>
-							<tr>
-								<th class="center">#</th>
-								<th>Proizvod</th>
-								<th>Opis</th>
-								<th class="right">Količina</th>
-								<th class="center">Vrsta eviden.</th>
-								<th class="right">Novo stanje</th>
-							</tr>
-						</thead>
-						<tbody>						
-							<tr>
-								<td class="center">1</td>
-								<td class="left">{{ evidencija.proizvod.name }}</td>
-								<td class="left">{{ evidencija.proizvod.opis_proizvoda }}</td>
+						<tr>
+							<th class="center">#</th>
+							<th ><span class="float-left" style=" padding-left: 20px;">Proizvod</span></th>
+							<th> <span class="float-left" style=" padding-left: 0px;">Opis</th>
+							<th class="right" style=" padding-left: 30px;">Količina</th>
+							<th class="right">Novo stanje</th>
+							<th class="center">Vrsta eviden.</th>
+						</tr>
+					</thead>
 
-								<td class="right">{{ evidencija.promijenjena_kolicina }}</td>
-								<td class="center">{{ evidencija.vrsta_unosa }}</td>
-								<td class="right">{{ evidencija.trenutna_kolicina }}</td>
-							</tr>
-						</tbody>
+					<tbody>						
+					
+						<tr>
+							<td >1</td>
+							<td  style=" padding-left: 30px; ">{{ evidencija.proizvod.name }}</td>
+							<td  style=" padding-left: 10px; ">{{ evidencija.proizvod.opis_proizvoda }}</td>
+							<td  style=" padding-left: 55px;">{{ evidencija.promijenjena_kolicina }}</td>
+							<td  style=" padding-left: 40px;">{{ evidencija.trenutna_kolicina }}</td>
+							<td class="center" style=" padding-left: 45px;">{{ evidencija.vrsta_unosa }}</td>
+						</tr>
+				
+					</tbody>
+
+
+						
 					</table>
 				</div>
 				<div class="row">

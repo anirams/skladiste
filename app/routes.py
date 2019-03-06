@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, url_for, request, send_file, send_from_directory, make_response
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, UlazRobeForm, IzlazRobeForm, UrediProizvodForm, UnosProizvodaForm, SearchForm, EditPasswordForm, UnosTvrtkeForm, SearchFormTvrtka, SearchFormKorisnik, ListForm, UrediTvrtkuForm, Storno, SearchFormEvidencija
+from app.forms import LoginForm, RegistrationForm, UlazRobeForm, IzlazRobeForm, UrediProizvodForm, UnosProizvodaForm, SearchForm, EditPasswordForm, UnosTvrtkeForm, SearchFormTvrtka, SearchFormKorisnik, ListForm, UrediTvrtkuForm, Storno, SearchFormEvidencija, SearchReceiptNumber
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Proizvod, Tvrtka, Evidencija, Receipt
 from werkzeug.urls import url_parse
@@ -11,6 +11,7 @@ import pdfkit
 from flask_paginate import Pagination, get_page_parameter, get_page_args
 from sqlalchemy import text
 import os, json
+#from flask_weasyprint import HTML, render_pdf
 
 config = pdfkit.configuration(wkhtmltopdf="C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe")
 
@@ -322,11 +323,16 @@ def evidencija_unosa(page_num, s, b, e, u):
 				evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=="unos", Evidencija.datum_unosa >= b, Evidencija.datum_unosa <= e, Evidencija.user_id==user.id).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=page_num, error_out=True)
 			return render_template('evidencija_unosa.html', title='Evidencija unosa', form=form, evidencija=evidencija, search=s, begin=b, end=e, user=u, lista=lista)
 	if form.submit.data:
-		#import pdb; pdb.set_trace();
 		if form.validate_on_submit():
 			proizvod = Proizvod.query.filter(Proizvod.name.like("%" + form.search.data + "%")).first()
-			#import pdb; pdb.set_trace();
-			if form.user.data == '':
+			if form.search.data != "" and form.search.data != " " and proizvod is None:
+				flash(f'Proizvod '+form.search.data+ ' ne postoji!', 'danger')
+				return redirect(url_for('evidencija_unosa1'))
+			user = User.query.filter_by(username=form.user.data).first()
+			if form.user.data != "" and form.user.data != " " and user is None:
+				flash(f'Korisnik '+form.user.data+ ' ne postoji!', 'danger')
+				return redirect(url_for('evidencija_unosa1'))
+			if user is None:
 				if form.begin.data is None and form.end.data is None:
 					evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=="unos").order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
 					form.begin.data = ' '
@@ -344,7 +350,7 @@ def evidencija_unosa(page_num, s, b, e, u):
 					form.user.data=' '
 					evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=="unos", Evidencija.datum_unosa >= form.begin.data, Evidencija.datum_unosa <= form.end.data).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
 			else:
-				user = User.query.filter_by(username=form.user.data).first()
+				
 				if form.begin.data is None and form.end.data is None:
 					#import pdb; pdb.set_trace();
 					evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=="unos", Evidencija.user_id==user.id).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
@@ -425,8 +431,14 @@ def evidencija_izdavanja(page_num, s, b, e, u):
 		#import pdb; pdb.set_trace();
 		if form.validate_on_submit():
 			proizvod = Proizvod.query.filter(Proizvod.name.like("%" + form.search.data + "%")).first()
-			
-			if form.user.data == '':
+			if form.search.data != "" and form.search.data != " " and proizvod is None:
+				flash(f'Proizvod '+form.search.data+ ' ne postoji!', 'danger')
+				return redirect(url_for('evidencija_unosa1'))
+			user = User.query.filter_by(username=form.user.data).first()
+			if form.user.data != "" and form.user.data != " " and user is None:
+				flash(f'Korisnik '+form.user.data+ ' ne postoji!', 'danger')
+				return redirect(url_for('evidencija_unosa1'))
+			if user is None:
 				if form.begin.data is None and form.end.data is None:
 					evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=='izlaz').order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
 					form.begin.data = ' '
@@ -478,18 +490,16 @@ def evidencija(id):
 @app.route('/evidencija_pdf/<id>')
 @login_required
 def evidencija_pdf(id):
-	folder = 'app/Evidencije/'
-	for the_file in os.listdir(folder):
-		file_path = os.path.join(folder, the_file)
-		try:
-			if os.path.isfile(file_path):
-				os.unlink(file_path)
-		except Exception as e:
-			print(e)
 	evidencija = Evidencija.query.filter_by(id=id).first_or_404()
 	html = render_template('evidencija_pdf.html', id=id, evidencija=evidencija)
-	pdfkit.from_string(html, 'app/Evidencije/evidencija '+id +'.pdf', configuration=config)
-	return send_file('Evidencije/evidencija '+id +'.pdf')
+	pdf= pdfkit.from_string(html, False, configuration=config)
+	response = make_response(pdf)
+	response.headers['Content-Type']='application/pdf'
+	if evidencija.vrsta_unosa == "izlaz":
+		response.headers['Content-Disposition']= 'inline; filename="{}"'.format('evidencija izdavanja '+id+'.pdf')
+	else:
+		response.headers['Content-Disposition']= 'inline; filename="{}"'.format('evidencija unosa '+id+'.pdf')
+	return response
 	
 
 @app.route('/edit_password/<username>', methods=['GET', 'POST'])
@@ -775,8 +785,9 @@ def izlaz():
 @app.route('/receipts_unosa/<int:page_num>')
 @login_required
 def receipts_unosa(page_num):
+	form = SearchReceiptNumber()
 	receipts = Receipt.query.filter_by(receipt_type="unos", status="active").paginate(per_page=7, page=page_num, error_out=True)
-	return render_template('receipts_unosa.html', title='Racuni', receipts=receipts)
+	return render_template('receipts_unosa.html', title='Racuni', receipts=receipts, form = form)
 
 @app.route('/receipts_unosa1', methods=['GET', 'POST'])
 @login_required
@@ -787,6 +798,7 @@ def receipts_unosa1():
 @app.route('/receipts_izlaz/<int:page_num>')
 @login_required
 def receipts_izlaz(page_num):
+	form = SearchReceiptNumber()
 	receipts = Receipt.query.filter_by(receipt_type="izlaz", status="active").paginate(per_page=7, page=page_num, error_out=True)
 	return render_template('receipts_izlaz.html', title='Racuni', receipts=receipts)
 
@@ -798,6 +810,7 @@ def receipts_izlaz1():
 @app.route('/receipts_unosa_storno/<int:page_num>')
 @login_required
 def receipts_unosa_storno(page_num):
+	form = SearchReceiptNumber()
 	receipts = Receipt.query.filter_by(receipt_type="unos", status="storno").paginate(per_page=7, page=page_num, error_out=True)
 	return render_template('receipts_unosa_storno.html', title='Racuni', receipts=receipts)
 
@@ -852,14 +865,6 @@ def receipt(id):
 @app.route('/receipt_pdf/<id>')
 @login_required
 def receipt_pdf(id):
-	folder = 'app/Receipts/'
-	for the_file in os.listdir(folder):
-		file_path = os.path.join(folder, the_file)
-		try:
-			if os.path.isfile(file_path):
-				os.unlink(file_path)
-		except Exception as e:
-			print(e)
 	receipt = Receipt.query.get(id)
 	evidencije = Evidencija.query.filter_by(receipt_id=id)
 	evidencija = Evidencija.query.filter_by(receipt_id=id).first()
@@ -867,11 +872,8 @@ def receipt_pdf(id):
 	pdf= pdfkit.from_string(html, False, configuration=config)
 	response = make_response(pdf)
 	response.headers['Content-Type']='application/pdf'
-	response.headers['Content-Disposition']= 'inline; filename=receipt.pdf'
+	if evidencija.vrsta_unosa == "izlaz":
+		response.headers['Content-Disposition']= 'inline; filename="{}"'.format('otpremnica '+id+'.pdf')
+	else:
+		response.headers['Content-Disposition']= 'inline; filename="{}"'.format('primka '+id+'.pdf')
 	return response
-	#if evidencija.vrsta_unosa == "izlaz":
-	#	pdfkit.from_string(html, 'app/Receipts/otpremnica '+id +'.pdf', configuration=config)
-	#	return send_file('Receipts/otpremnica '+id +'.pdf')
-	#else:
-	#	pdfkit.from_string(html, 'app/Receipts/primka '+id +'.pdf', configuration=config)
-	#	return send_file('Receipts/primka '+id +'.pdf')

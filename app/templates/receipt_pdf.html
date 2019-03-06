@@ -1,4 +1,3 @@
-
 <meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -11,24 +10,39 @@
 	<!-- Font Awesome -->
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
 
-	
+
+	<!--JQUERY -->
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet" >
+<link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet" >
+<link href="{{ url_for('static', filename='css/bootstrap-theme.css') }}" rel="stylesheet">
+
+
 <script type="text/javascript">var number =1;</script>
 <div id="contentToPdf" class="unos-p">
 	
-<div class="container">
+<div class="container" >
 	
 	<div class="card">		
 
 		<div class="card-header">
-			<span class="float-left">Dok. broj: <strong>{{id}}</strong></span>
-			<span class="float-center"><strong>Datum dok.: </strong>{{ evidencija.datum_unosa.strftime('%B %d %Y - %H:%M:%S') }}</span>
-			<span class="float-right"> <strong>Status:</strong> {{receipt.status}}</span>
+			<span class="float-left">Dok. broj: <strong>{{id}}</strong><br><strong>Datum dok.: </strong>{{ evidencija.datum_unosa.strftime('%B %d %Y - %H:%M:%S') }}
+			{% if receipt.status =='storno' %}
+				<br><strong>Datum storn.: </strong>{{ receipt.storno_date.strftime('%B %d %Y - %H:%M:%S') }}
+			{% endif %}</span>
+			
+			<span class="float-right"><strong>Status:</strong> {{receipt.status}} <br><strong>Napravio:</strong> {{evidencija.user.username}} {% if receipt.status =='storno' %}
+				<br><strong>Stornirao:</strong> {{receipt.storno_user}}
+			{% endif %}</span>
+			<br>
+			<br>
+			<br>
 		</div>
 
-		<div class="card-body">
+		<div class="card-body" style="text-align: center; ">
 
-			<div class="row mb-4">
-				<div class="col-sm-6">
+			<div class="row mb-4" style=" padding-bottom: 9rem;">
+				<div class="float-left" class="col-sm-6" style="padding-left: 10rem; >
 					<h6 class="mb-3">Tvrtka:</h6>
 					<div>
 					<div>Ime: <strong>{{ evidencija.tvrtka.name }}</strong></div>
@@ -38,8 +52,8 @@
 					<div>Poštanski broj: {{ evidencija.tvrtka.p_broj }}</div>
 					<div>Država: {{ evidencija.tvrtka.drzava }}</div>
 				</div>
-
-				<div class="col-sm-6">
+				
+				<div class="float-right" class="col-sm-6" style="padding-right: 10rem;>
 					<h6 class="mb-3">Skladište:</h6>
 					<div>
 					<div>Ime: <strong>Marina Rijeka</strong></div>
@@ -56,9 +70,9 @@
 					<thead>
 						<tr>
 							<th class="center">#</th>
-							<th>Proizvod</th>
-							<th>Opis</th>
-							<th class="right">Količina</th>
+							<th ><span class="float-left" style=" padding-left: 20px;">Proizvod</span></th>
+							<th> <span class="float-left" style=" padding-left: 0px;">Opis</th>
+							<th class="right" style=" padding-left: 0px;">Količina</th>
 							<th class="right">Novo stanje</th>
 						</tr>
 					</thead>
@@ -66,11 +80,11 @@
 					<tbody>						
 					{% for evidencija in evidencije %}
 						<tr>
-							<td class="left"><script type="text/javascript">document.write(number); number+=1;</script></td>
-							<td class="left">{{ evidencija.proizvod.name }}</td>
-							<td class="left">{{ evidencija.proizvod.opis_proizvoda }}</td>
-							<td class="right">{{ evidencija.promijenjena_kolicina }}</td>
-							<td class="right">{{ evidencija.trenutna_kolicina }}</td>
+							<td ><script type="text/javascript">document.write(number); number+=1;</script></td>
+							<td  style=" padding-left: 30px; ">{{ evidencija.proizvod.name }}</td>
+							<td  style=" padding-left: 10px; ">{{ evidencija.proizvod.opis_proizvoda }}</td>
+							<td  style=" padding-left: 35px;">{{ evidencija.promijenjena_kolicina }}</td>
+							<td  style=" padding-left: 50px;">{{ evidencija.trenutna_kolicina }}</td>
 						</tr>
 					{% endfor %}
 					</tbody>
@@ -85,3 +99,4 @@
 		</div>
 	</div>
 </div>
+

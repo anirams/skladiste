@@ -16,9 +16,14 @@
 	<div class="card">		
 
 		<div class="card-header">
-			<span class="float-left">Dok. broj: <strong>{{id}}</strong></span>
-			<span class="float-center"><strong>Datum dok.: </strong>{{ evidencija.datum_unosa.strftime('%B %d %Y - %H:%M:%S') }}</span>
-			<span class="float-right"> <strong>Status:</strong> {{receipt.status}}</span>
+			<span class="float-left"><span class="float-left">Dok. broj: <strong>{{id}}</strong></span><br><strong><span class="float-left">Datum dok.: </strong>{{ evidencija.datum_unosa.strftime('%B %d %Y - %H:%M:%S') }}
+			{% if receipt.status =='storno' %}
+				<br><strong>Datum storn.: </strong>{{ receipt.storno_date.strftime('%B %d %Y - %H:%M:%S') }}
+			{% endif %}</span>
+			
+			<span class="float-right"><strong>Status:</strong> {{receipt.status}} <br><strong>Napravio:</strong> {{evidencija.user.username}} {% if receipt.status =='storno' %}
+				<br><strong>Stornirao:</strong> {{receipt.storno_user}}
+			{% endif %}</span>
 		</div>
 
 		<div class="card-body">
@@ -52,7 +57,7 @@
 					<thead>
 						<tr>
 							<th class="center">#</th>
-							<th>Proizvod</th>
+							<th style=" margin-left: -100px;">Proizvod</th>
 							<th>Opis</th>
 							<th class="right">Količina</th>
 							<th class="right">Novo stanje</th>
@@ -85,11 +90,11 @@
 
 <div id="editor"></div>
 
-<button class="btn btn-primary m-2"><a href="../receipt_pdf/{{id}}">PDF</a></button>
+<button class="btn btn-primary m-2" onclick="window.open('../receipt_pdf/{{id}}')">PDF</button>
 {% if evidencija.vrsta_unosa =='unos' %}
-            <button class="btn btn-primary m-2"><a href="{{ url_for('export_receipt_unos', id=id) }}" target="blank">Excel - Ulazni račun</a></button>
+            <button class="btn btn-primary m-2" onclick="window.open('{{ url_for('export_receipt_unos', id=id) }}')">Excel - Ulazni račun</button>
 {% else %}
-			<button class="btn btn-primary m-2"><a href="{{ url_for('export_receipt_izlaz', id=id) }}" target="blank">Excel - Izlazni račun</a></button>
+			<button class="btn btn-primary m-2" onclick="window.open('{{ url_for('export_receipt_izlaz', id=id) }}')">Excel - Izlazni račun</button>
 {% endif %}
 {% if receipt.status !='storno' %}
 <form  action="" method="post" novalidate="">

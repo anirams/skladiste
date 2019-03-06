@@ -20,9 +20,17 @@
 	<div class="container">
 		<div class="card">		
 			<div class="card-header">
-				<span class="float-left">Dok. broj: <strong>{{ evidencija.id }}</strong></span>
-				<span class="float-center"><strong>Datum dok.: </strong>{{ evidencija.datum_unosa.strftime('%B %d %Y - %H:%M:%S') }}</span>
-				<span class="float-right"> <strong>Status: </strong>{{evidencija.receipt.status}}</span>
+				<span class="float-left"><span class="float-left">Dok. broj: <strong>{{id}}</strong></span><br><span class="float-left"><strong>Datum dok.: </strong>{{ evidencija.datum_unosa.strftime('%B %d %Y - %H:%M:%S') }}</span>
+				{% if evidencija.receipt.status =='storno' %}
+					<br><strong>Datum storn.: </strong>{{ evidencija.receipt.storno_date.strftime('%B %d %Y - %H:%M:%S') }}
+				{% endif %}</span></span>
+
+				<span class="float-right"><strong>Status:</strong> {{evidencija.receipt.status}}<br><strong>Napravio:</strong> {{evidencija.user.username}}
+				{% if evidencija.receipt.status =='storno' %}
+					<br><strong>Stornirao:</strong> {{evidencija.receipt.storno_user}}
+				{% endif %}</span>
+				<br>
+				<br>
 			</div>
 			<div class="card-body">
 				<div class="row mb-4">
@@ -52,26 +60,29 @@
 				<div class="table-responsive-sm">
 					<table class="table table-striped">
 						<thead>
-							<tr>
-								<th class="center">#</th>
-								<th>Proizvod</th>
-								<th>Opis</th>
-								<th class="right">Količina</th>
-								<th class="center">Vrsta eviden.</th>
-								<th class="right">Novo stanje</th>
-							</tr>
-						</thead>
-						<tbody>						
-							<tr>
-								<td class="center">1</td>
-								<td class="left">{{ evidencija.proizvod.name }}</td>
-								<td class="left">{{ evidencija.proizvod.opis_proizvoda }}</td>
+						<tr>
+							<th class="center">#</th>
+							<th ><span class="float-left" style=" padding-left: 20px;">Proizvod</span></th>
+							<th> <span class="float-left" style=" padding-left: 0px;">Opis</th>
+							<th class="right" style=" padding-left: 0px;">Količina</th>
+							<th class="right">Novo stanje</th>
+							<th class="center">Vrsta eviden.</th>
+						</tr>
+					</thead>
 
-								<td class="right">{{ evidencija.promijenjena_kolicina }}</td>
-								<td class="center">{{ evidencija.vrsta_unosa }}</td>
-								<td class="right">{{ evidencija.trenutna_kolicina }}</td>
-							</tr>
-						</tbody>
+					<tbody>						
+					
+						<tr>
+							<td ><script type="text/javascript">document.write(number); number+=1;</script></td>
+							<td  style=" padding-left: 30px; ">{{ evidencija.proizvod.name }}</td>
+							<td  style=" padding-left: 10px; ">{{ evidencija.proizvod.opis_proizvoda }}</td>
+							<td  style=" padding-left: 35px;">{{ evidencija.promijenjena_kolicina }}</td>
+							<td  style=" padding-left: 50px;">{{ evidencija.trenutna_kolicina }}</td>
+							<td class="center">{{ evidencija.vrsta_unosa }}</td>
+						</tr>
+					
+					</tbody>
+						
 					</table>
 				</div>
 				<div class="row">
@@ -80,7 +91,7 @@
 		</div>
 	</div>
 </div>
-<button class="btn btn-primary"><a href="../evidencija_pdf/{{evidencija.id}}">PDF</a></button>
+<button class="btn btn-primary" onclick="window.open('../evidencija_pdf/{{evidencija.id}}')">PDF</button>
 
 <div id="editor"></div>
 
