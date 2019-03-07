@@ -335,9 +335,11 @@ def evidencija_unosa(page_num, s, b, e, u):
 				flash(f'Korisnik '+form.user.data+ ' ne postoji!', 'danger')
 				return redirect(url_for('evidencija_unosa1'))
 			if user is None:
+				form.user.data=" "
 				if form.begin.data is None and form.end.data is None:
 					if form.search.data == "" or form.search.data == " ":
 						evidencija = Evidencija.query.filter(Evidencija.vrsta_unosa=="unos").order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
+						form.search.data= " "
 					else:
 						evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=="unos").order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
 					form.begin.data = ' '
@@ -346,6 +348,7 @@ def evidencija_unosa(page_num, s, b, e, u):
 				elif form.begin.data is None:
 					if form.search.data == "" or form.search.data == " ":
 						evidencija = Evidencija.query.filter(Evidencija.vrsta_unosa=="unos", Evidencija.datum_unosa <= form.end.data).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
+						form.search.data= " "
 					else:
 						evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=="unos", Evidencija.datum_unosa <= form.end.data).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
 					form.begin.data = ' '
@@ -353,6 +356,7 @@ def evidencija_unosa(page_num, s, b, e, u):
 				elif form.end.data is None:
 					if form.search.data == "" or form.search.data == " ":
 						evidencija = Evidencija.query.filter(Evidencija.vrsta_unosa=="unos", Evidencija.datum_unosa >= form.begin.data).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
+						form.search.data= " "
 					else:
 						evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=="unos", Evidencija.datum_unosa >= form.begin.data).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
 					form.end.data = ' '
@@ -362,6 +366,7 @@ def evidencija_unosa(page_num, s, b, e, u):
 					form.user.data=' '
 					if form.search.data == "" or form.search.data == " ":
 						evidencija = Evidencija.query.filter(Evidencija.vrsta_unosa=="unos", Evidencija.datum_unosa >= form.begin.data, Evidencija.datum_unosa <= form.end.data).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
+						form.search.data= " "
 					else:
 						evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=="unos", Evidencija.datum_unosa >= form.begin.data, Evidencija.datum_unosa <= form.end.data).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
 			else:
@@ -370,6 +375,7 @@ def evidencija_unosa(page_num, s, b, e, u):
 					#import pdb; pdb.set_trace();
 					if form.search.data == "" or form.search.data == " ":
 						evidencija = Evidencija.query.filter(Evidencija.vrsta_unosa=="unos", Evidencija.user_id==user.id).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
+						form.search.data= " "
 					else:
 						evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=="unos", Evidencija.user_id==user.id).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
 					form.begin.data = ' '
@@ -377,18 +383,21 @@ def evidencija_unosa(page_num, s, b, e, u):
 				elif form.begin.data is None:
 					if form.search.data == "" or form.search.data == " ":
 						evidencija = Evidencija.query.filter(Evidencija.vrsta_unosa=="unos", Evidencija.datum_unosa <= form.end.data, Evidencija.user_id==user.id).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
+						form.search.data= " "
 					else:
 						evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=="unos", Evidencija.datum_unosa <= form.end.data, Evidencija.user_id==user.id).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
 					form.begin.data = ' '
 				elif form.end.data is None:
 					if form.search.data == "" or form.search.data == " ":
 						evidencija = Evidencija.query.filter(Evidencija.vrsta_unosa=="unos", Evidencija.datum_unosa >= form.begin.data, Evidencija.user_id==user.id).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
+						form.search.data= " "
 					else:
 						evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=="unos", Evidencija.datum_unosa >= form.begin.data, Evidencija.user_id==user.id).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
 					form.end.data = ' '
 				else:
 					if form.search.data == "" or form.search.data == " ":
 						evidencija = Evidencija.query.filter(Evidencija.vrsta_unosa=="unos", Evidencija.datum_unosa >= form.begin.data, Evidencija.datum_unosa <= form.end.data, Evidencija.user_id==user.id).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
+						form.search.data= " "
 					else:
 						evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=="unos", Evidencija.datum_unosa >= form.begin.data, Evidencija.datum_unosa <= form.end.data, Evidencija.user_id==user.id).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
 			return render_template('evidencija_unosa.html', title='Evidencija unosa', form=form, evidencija=evidencija, search=form.search.data, begin=form.begin.data, end=form.end.data, lista=lista, user=form.user.data, page=1)
@@ -465,9 +474,11 @@ def evidencija_izdavanja(page_num, s, b, e, u):
 				flash(f'Korisnik '+form.user.data+ ' ne postoji!', 'danger')
 				return redirect(url_for('evidencija_unosa1'))
 			if user is None:
+				form.user.data=" "
 				if form.begin.data is None and form.end.data is None:
 					if form.search.data == "" or form.search.data == " ":
 						evidencija = Evidencija.query.filter(Evidencija.vrsta_unosa=='izlaz').order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
+						form.search.data= " "
 					else:
 						evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=='izlaz').order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
 					form.begin.data = ' '
@@ -476,6 +487,7 @@ def evidencija_izdavanja(page_num, s, b, e, u):
 				elif form.begin.data is None:
 					if form.search.data == "" or form.search.data == " ":
 						evidencija = Evidencija.query.filter(Evidencija.vrsta_unosa=='izlaz', Evidencija.datum_unosa <= form.end.data).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
+						form.search.data= " "
 					else:
 						evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=='izlaz', Evidencija.datum_unosa <= form.end.data).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
 					form.begin.data = ' '
@@ -483,6 +495,7 @@ def evidencija_izdavanja(page_num, s, b, e, u):
 				elif form.end.data is None:
 					if form.search.data == "" or form.search.data == " ":
 						evidencija = Evidencija.query.filter(Evidencija.vrsta_unosa=='izlaz', Evidencija.datum_unosa >= form.begin.data).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
+						form.search.data= " "
 					else:
 						evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=='izlaz', Evidencija.datum_unosa >= form.begin.data).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
 					form.end.data = ' '
@@ -491,6 +504,7 @@ def evidencija_izdavanja(page_num, s, b, e, u):
 					form.user.data=' '
 					if form.search.data == "" or form.search.data == " ":
 						evidencija = Evidencija.query.filter(Evidencija.vrsta_unosa=='izlaz', Evidencija.datum_unosa >= form.begin.data, Evidencija.datum_unosa <= form.end.data).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
+						form.search.data= " "
 					else:
 						evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=='izlaz', Evidencija.datum_unosa >= form.begin.data, Evidencija.datum_unosa <= form.end.data).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)	
 			else:
@@ -499,6 +513,7 @@ def evidencija_izdavanja(page_num, s, b, e, u):
 				if form.begin.data is None and form.end.data is None:
 					if form.search.data == "" or form.search.data == " ":
 						evidencija = Evidencija.query.filter(Evidencija.vrsta_unosa=='izlaz', Evidencija.user_id==user.id).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
+						form.search.data= " "
 					else:
 						evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=='izlaz', Evidencija.user_id==user.id).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
 					form.begin.data = ' '
@@ -506,18 +521,21 @@ def evidencija_izdavanja(page_num, s, b, e, u):
 				elif form.begin.data is None:
 					if form.search.data == "" or form.search.data == " ":
 						evidencija = Evidencija.query.filter(Evidencija.vrsta_unosa=='izlaz', Evidencija.datum_unosa <= form.end.data, Evidencija.user_id==user.id).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
+						form.search.data= " "
 					else:
 						evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=='izlaz', Evidencija.datum_unosa <= form.end.data, Evidencija.user_id==user.id).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
 					form.begin.data = ' '
 				elif form.end.data is None:
 					if form.search.data == "" or form.search.data == " ":
 						evidencija = Evidencija.query.filter(Evidencija.vrsta_unosa=='izlaz', Evidencija.datum_unosa >= form.begin.data, Evidencija.user_id==user.id).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
+						form.search.data= " "
 					else:
 						evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=='izlaz', Evidencija.datum_unosa >= form.begin.data, Evidencija.user_id==user.id).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
 					form.end.data = ' '
 				else:
 					if form.search.data == "" or form.search.data == " ":
 						evidencija = Evidencija.query.filter(Evidencija.vrsta_unosa=='izlaz', Evidencija.datum_unosa >= form.begin.data, Evidencija.datum_unosa <= form.end.data, Evidencija.user_id==user.id).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
+						form.search.data= " "
 					else:
 						evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=='izlaz', Evidencija.datum_unosa >= form.begin.data, Evidencija.datum_unosa <= form.end.data, Evidencija.user_id==user.id).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
 			return render_template('evidencija_izdavanja.html', title='Evidencija izdavanja', form=form, evidencija=evidencija, search=form.search.data, begin=form.begin.data, end=form.end.data, lista=lista, user=form.user.data, page=1)
@@ -579,94 +597,246 @@ def export_stanje_skladista():
 		]
 	return excel.make_response_from_query_sets(query_sets, column_names, 'xls')
 
-@app.route('/export_proizvod_unos/<name>')
+
+
+@app.route('/export_proizvod_unos/<s>+<b>+<e>+<u>')
 @login_required
-def export_proizvod_unos(name):
-	ovaj_proizvod = Proizvod.query.filter_by(name=name).first_or_404()
-	ovaj_proizvod_name = ovaj_proizvod.name
-	sql= text('SELECT evidencija.datum_unosa AS "Datum Unosa", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvoda, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE proizvod.name= "{}" AND evidencija.vrsta_unosa="unos" AND receipt.status="active"'.format(ovaj_proizvod.name))
+def export_proizvod_unos(s, b, e, u):
+	if s== " ":
+		if u== " ":
+			if b==" " and e==" ":
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Unosa", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE evidencija.vrsta_unosa="unos" AND receipt.status="active"')
+			elif b==" ":
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Unosa", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE evidencija.datum_unosa <= "{}" AND evidencija.vrsta_unosa="unos" AND receipt.status="active"'.format(e))
+			elif e==" ":
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Unosa", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE evidencija.datum_unosa >= "{}" AND evidencija.vrsta_unosa="unos" AND receipt.status="active"'.format(b))
+			else:
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Unosa", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE evidencija.datum_unosa >= "{}" AND evidencija.datum_unosa <= "{}" AND evidencija.vrsta_unosa="unos" AND receipt.status="active"'.format(b, e))
+		else:
+			if b==" " and e==" ":
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Unosa", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE  user.username= "{}" AND evidencija.vrsta_unosa="unos" AND receipt.status="active"'.format(u))
+			elif b==" ":
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Unosa", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE  user.username= "{}" AND evidencija.datum_unosa <= "{}" AND evidencija.vrsta_unosa="unos" AND receipt.status="active"'.format(u, e))
+			elif e==" ":
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Unosa", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE  user.username= "{}" AND evidencija.datum_unosa >= "{}" AND evidencija.vrsta_unosa="unos" AND receipt.status="active"'.format(u, b))
+			else:
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Unosa", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE  user.username= "{}" AND evidencija.datum_unosa >= "{}" AND evidencija.datum_unosa <= "{}" AND evidencija.vrsta_unosa="unos" AND receipt.status="active"'.format(u, b, e))
+	else:
+		if u== " ":
+			if b==" " and e==" ":
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Unosa", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE  proizvod.name= "{}" AND evidencija.vrsta_unosa="unos" AND receipt.status="active"'.format(s))
+			elif b==" ":
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Unosa", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE  proizvod.name= "{}" AND evidencija.datum_unosa <= "{}" AND evidencija.vrsta_unosa="unos" AND receipt.status="active"'.format(s, e))
+			elif e==" ":
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Unosa", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE  proizvod.name= "{}" AND evidencija.datum_unosa >= "{}" AND evidencija.vrsta_unosa="unos" AND receipt.status="active"'.format(s, b))
+			else:
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Unosa", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE  proizvod.name= "{}" AND evidencija.datum_unosa >= "{}" AND evidencija.datum_unosa <= "{}" AND evidencija.vrsta_unosa="unos" AND receipt.status="active"'.format(s, b, e))
+		else:
+			if b==" " and e==" ":
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Unosa", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE  proizvod.name= "{}" AND user.username= "{}" AND evidencija.vrsta_unosa="unos" AND receipt.status="active"'.format(s, u))
+			elif b==" ":
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Unosa", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE  proizvod.name= "{}" AND user.username= "{}" AND evidencija.datum_unosa <= "{}" AND evidencija.vrsta_unosa="unos" AND receipt.status="active"'.format(s, u, e))
+			elif e==" ":
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Unosa", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE  proizvod.name= "{}" AND user.username= "{}" AND evidencija.datum_unosa >= "{}" AND evidencija.vrsta_unosa="unos" AND receipt.status="active"'.format(s, u, b))				
+			else:
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Unosa", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE  proizvod.name= "{}" AND user.username= "{}" AND evidencija.datum_unosa >= "{}" AND evidencija.datum_unosa <= "{}" AND evidencija.vrsta_unosa="unos" AND receipt.status="active"'.format(s, u, b, e))
+
+	
 	result= db.engine.execute(sql)
-	#evidencije = session.query(Evidencija).join(Evidencija.ingredients)
 	query_sets = []
 	for r in result:
 		query_sets.append(r)
 	column_names = [
 		'Datum Unosa',
 		'Promijenjena Kolicina',
-		'Proizvoda',
+		'Proizvod',
 		'ID Proizvoda',
 		'Tvrtka',
-		'Korisnik'
+		'Korisnik',
+		'ID Racuna'
 		]
-	return excel.make_response_from_query_sets(query_sets, column_names, 'xls', file_name="Ulazna evidencija "+name)
+	return excel.make_response_from_query_sets(query_sets, column_names, 'xls', file_name="Ulazna evidencija "+ "proizvoda "+s+" od "+b+" do "+e+" korisnik "+u)
 
-@app.route('/export_proizvod_unos_storno/<name>')
+@app.route('/export_proizvod_unos_storno/<s>+<b>+<e>+<u>')
 @login_required
-def export_proizvod_unos_storno(name):
-	ovaj_proizvod = Proizvod.query.filter_by(name=name).first_or_404()
-	ovaj_proizvod_name = ovaj_proizvod.name
-	sql= text('SELECT evidencija.datum_unosa AS "Datum Unosa", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvoda, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE proizvod.name= "{}" AND evidencija.vrsta_unosa="unos" AND receipt.status="storno"'.format(ovaj_proizvod.name))
+def export_proizvod_unos_storno(s, b, e, u):
+	if s== " ":
+		if u== " ":
+			if b==" " and e==" ":
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Unosa", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status", receipt.storno_date AS "Datum Storniranja", receipt.storno_user AS "Stornirao" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE evidencija.vrsta_unosa="unos" AND receipt.status="storno"')
+			elif b==" ":
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Unosa", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status", receipt.storno_date AS "Datum Storniranja", receipt.storno_user AS "Stornirao" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE evidencija.datum_unosa <= "{}" AND evidencija.vrsta_unosa="unos" AND receipt.status="storno"'.format(e))
+			elif e==" ":
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Unosa", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status", receipt.storno_date AS "Datum Storniranja", receipt.storno_user AS "Stornirao" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE evidencija.datum_unosa >= "{}" AND evidencija.vrsta_unosa="unos" AND receipt.status="storno"'.format(b))
+			else:
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Unosa", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status", receipt.storno_date AS "Datum Storniranja", receipt.storno_user AS "Stornirao" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE evidencija.datum_unosa >= "{}" AND evidencija.datum_unosa <= "{}" AND evidencija.vrsta_unosa="unos" AND receipt.status="storno"'.format(b, e))
+		else:
+			if b==" " and e==" ":
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Unosa", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status", receipt.storno_date AS "Datum Storniranja", receipt.storno_user AS "Stornirao" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE  user.username= "{}" AND evidencija.vrsta_unosa="unos" AND receipt.status="storno"'.format(u))
+			elif b==" ":
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Unosa", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status", receipt.storno_date AS "Datum Storniranja", receipt.storno_user AS "Stornirao" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE  user.username= "{}" AND evidencija.datum_unosa <= "{}" AND evidencija.vrsta_unosa="unos" AND receipt.status="storno"'.format(u, e))
+			elif e==" ":
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Unosa", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status", receipt.storno_date AS "Datum Storniranja", receipt.storno_user AS "Stornirao" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE  user.username= "{}" AND evidencija.datum_unosa >= "{}" AND evidencija.vrsta_unosa="unos" AND receipt.status="storno"'.format(u, b))
+			else:
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Unosa", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status", receipt.storno_date AS "Datum Storniranja", receipt.storno_user AS "Stornirao" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE  user.username= "{}" AND evidencija.datum_unosa >= "{}" AND evidencija.datum_unosa <= "{}" AND evidencija.vrsta_unosa="unos" AND receipt.status="storno"'.format(u, b, e))
+	else:
+		if u== " ":
+			if b==" " and e==" ":
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Unosa", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status", receipt.storno_date AS "Datum Storniranja", receipt.storno_user AS "Stornirao" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE  proizvod.name= "{}" AND evidencija.vrsta_unosa="unos" AND receipt.status="storno"'.format(s))
+			elif b==" ":
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Unosa", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status", receipt.storno_date AS "Datum Storniranja", receipt.storno_user AS "Stornirao" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE  proizvod.name= "{}" AND evidencija.datum_unosa <= "{}" AND evidencija.vrsta_unosa="unos" AND receipt.status="storno"'.format(s, e))
+			elif e==" ":
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Unosa", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status", receipt.storno_date AS "Datum Storniranja", receipt.storno_user AS "Stornirao" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE  proizvod.name= "{}" AND evidencija.datum_unosa >= "{}" AND evidencija.vrsta_unosa="unos" AND receipt.status="storno"'.format(s, b))
+			else:
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Unosa", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status", receipt.storno_date AS "Datum Storniranja", receipt.storno_user AS "Stornirao" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE  proizvod.name= "{}" AND evidencija.datum_unosa >= "{}" AND evidencija.datum_unosa <= "{}" AND evidencija.vrsta_unosa="unos" AND receipt.status="storno"'.format(s, b, e))
+		else:
+			if b==" " and e==" ":
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Unosa", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status", receipt.storno_date AS "Datum Storniranja", receipt.storno_user AS "Stornirao" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE  proizvod.name= "{}" AND user.username= "{}" AND evidencija.vrsta_unosa="unos" AND receipt.status="storno"'.format(s, u))
+			elif b==" ":
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Unosa", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status", receipt.storno_date AS "Datum Storniranja", receipt.storno_user AS "Stornirao" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE  proizvod.name= "{}" AND user.username= "{}" AND evidencija.datum_unosa <= "{}" AND evidencija.vrsta_unosa="unos" AND receipt.status="storno"'.format(s, u, e))
+			elif e==" ":
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Unosa", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status", receipt.storno_date AS "Datum Storniranja", receipt.storno_user AS "Stornirao" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE  proizvod.name= "{}" AND user.username= "{}" AND evidencija.datum_unosa >= "{}" AND evidencija.vrsta_unosa="unos" AND receipt.status="storno"'.format(s, u, b))				
+			else:
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Unosa", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status", receipt.storno_date AS "Datum Storniranja", receipt.storno_user AS "Stornirao" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE  proizvod.name= "{}" AND user.username= "{}" AND evidencija.datum_unosa >= "{}" AND evidencija.datum_unosa <= "{}" AND evidencija.vrsta_unosa="unos" AND receipt.status="storno"'.format(s, u, b, e))
+
 	result= db.engine.execute(sql)
-	#evidencije = session.query(Evidencija).join(Evidencija.ingredients)
 	query_sets = []
 	for r in result:
 		query_sets.append(r)
 	column_names = [
 		'Datum Unosa',
 		'Promijenjena Kolicina',
-		'Proizvoda',
+		'Proizvod',
 		'ID Proizvoda',
 		'Tvrtka',
-		'Korisnik'
+		'Korisnik',
+		'ID Racuna',
+		'Datum Storniranja',
+		'Stornirao'
 		]
-	return excel.make_response_from_query_sets(query_sets, column_names, 'xls', file_name="Ulazna evidencija storno "+name)
+	return excel.make_response_from_query_sets(query_sets, column_names, 'xls', file_name="Ulazna evidencija storno "+ "proizvoda "+s+" od "+b+" do "+e+" korisnik "+u)
 
-@app.route('/export_proizvod_izlaz/<name>')
+@app.route('/export_proizvod_izlaz/<s>+<b>+<e>+<u>')
 @login_required
-def export_proizvod_izlaz(name):
-	ovaj_proizvod = Proizvod.query.filter_by(name=name).first_or_404()
-	ovaj_proizvod_name = ovaj_proizvod.name
-	sql= text('SELECT evidencija.datum_unosa AS "Datum Izdavanja", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvoda, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE proizvod.name= "{}" AND evidencija.vrsta_unosa="izlaz" AND receipt.status="active"'.format(ovaj_proizvod.name))
+def export_proizvod_izlaz(s, b, e, u):
+	if s== " ":
+		if u== " ":
+			if b==" " and e==" ":
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Izdavanja", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE evidencija.vrsta_unosa="izlaz" AND receipt.status="active"')
+			elif b==" ":
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Izdavanja", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE evidencija.datum_unosa <= "{}" AND evidencija.vrsta_unosa="izlaz" AND receipt.status="active"'.format(e))
+			elif e==" ":
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Izdavanja", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE evidencija.datum_unosa >= "{}" AND evidencija.vrsta_unosa="izlaz" AND receipt.status="active"'.format(b))
+			else:
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Izdavanja", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE evidencija.datum_unosa >= "{}" AND evidencija.datum_unosa <= "{}" AND evidencija.vrsta_unosa="izlaz" AND receipt.status="active"'.format(b, e))
+		else:
+			if b==" " and e==" ":
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Izdavanja", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE  user.username= "{}" AND evidencija.vrsta_unosa="izlaz" AND receipt.status="active"'.format(u))
+			elif b==" ":
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Izdavanja", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE  user.username= "{}" AND evidencija.datum_unosa <= "{}" AND evidencija.vrsta_unosa="izlaz" AND receipt.status="active"'.format(u, e))
+			elif e==" ":
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Izdavanja", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE  user.username= "{}" AND evidencija.datum_unosa >= "{}" AND evidencija.vrsta_unosa="izlaz" AND receipt.status="active"'.format(u, b))
+			else:
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Izdavanja", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE  user.username= "{}" AND evidencija.datum_unosa >= "{}" AND evidencija.datum_unosa <= "{}" AND evidencija.vrsta_unosa="izlaz" AND receipt.status="active"'.format(u, b, e))
+	else:
+		if u== " ":
+			if b==" " and e==" ":
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Izdavanja", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE  proizvod.name= "{}" AND evidencija.vrsta_unosa="izlaz" AND receipt.status="active"'.format(s))
+			elif b==" ":
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Izdavanja", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE  proizvod.name= "{}" AND evidencija.datum_unosa <= "{}" AND evidencija.vrsta_unosa="izlaz" AND receipt.status="active"'.format(s, e))
+			elif e==" ":
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Izdavanja", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE  proizvod.name= "{}" AND evidencija.datum_unosa >= "{}" AND evidencija.vrsta_unosa="izlaz" AND receipt.status="active"'.format(s, b))
+			else:
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Izdavanja", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE  proizvod.name= "{}" AND evidencija.datum_unosa >= "{}" AND evidencija.datum_unosa <= "{}" AND evidencija.vrsta_unosa="unos" AND receipt.status="active"'.format(s, b, e))
+		else:
+			if b==" " and e==" ":
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Izdavanja", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE  proizvod.name= "{}" AND user.username= "{}" AND evidencija.vrsta_unosa="izlaz" AND receipt.status="active"'.format(s, u))
+			elif b==" ":
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Izdavanja", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE  proizvod.name= "{}" AND user.username= "{}" AND evidencija.datum_unosa <= "{}" AND evidencija.vrsta_unosa="izlaz" AND receipt.status="active"'.format(s, u, e))
+			elif e==" ":
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Izdavanja", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE  proizvod.name= "{}" AND user.username= "{}" AND evidencija.datum_unosa >= "{}" AND evidencija.vrsta_unosa="izlaz" AND receipt.status="active"'.format(s, u, b))				
+			else:
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Izdavanja", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE  proizvod.name= "{}" AND user.username= "{}" AND evidencija.datum_unosa >= "{}" AND evidencija.datum_unosa <= "{}" AND evidencija.vrsta_unosa="izlaz" AND receipt.status="active"'.format(s, u, b, e))
+
+	
 	result= db.engine.execute(sql)
-	#evidencije = session.query(Evidencija).join(Evidencija.ingredients)
 	query_sets = []
 	for r in result:
 		query_sets.append(r)
 	column_names = [
 		'Datum Izdavanja',
 		'Promijenjena Kolicina',
-		'Proizvoda',
+		'Proizvod',
 		'ID Proizvoda',
 		'Tvrtka',
-		'Korisnik'
+		'Korisnik',
+		'ID Racuna'
 		]
-	return excel.make_response_from_query_sets(query_sets, column_names, 'xls', file_name="Izlazna evidencija "+name)
+	return excel.make_response_from_query_sets(query_sets, column_names, 'xls', file_name="Izlazna evidencija "+ "proizvoda "+s+" od "+b+" do "+e+" korisnik "+u)
 
-@app.route('/export_proizvod_izlaz_storno/<name>')
+@app.route('/export_proizvod_izlaz_storno/<s>+<b>+<e>+<u>')
 @login_required
-def export_proizvod_izlaz_storno(name):
-	ovaj_proizvod = Proizvod.query.filter_by(name=name).first_or_404()
-	ovaj_proizvod_name = ovaj_proizvod.name
-	sql= text('SELECT evidencija.datum_unosa AS "Datum Izdavanja", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvoda, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE proizvod.name= "{}" AND evidencija.vrsta_unosa="izlaz" AND receipt.status="storno"'.format(ovaj_proizvod.name))
+def export_proizvod_izlaz_storno(s, b, e, u):
+	if s== " ":
+		if u== " ":
+			if b==" " and e==" ":
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Izdavanja", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status", receipt.storno_date AS "Datum Storniranja", receipt.storno_user AS "Stornirao" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE evidencija.vrsta_unosa="izlaz" AND receipt.status="storno"')
+			elif b==" ":
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Izdavanja", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status", receipt.storno_date AS "Datum Storniranja", receipt.storno_user AS "Stornirao" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE evidencija.datum_unosa <= "{}" AND evidencija.vrsta_unosa="izlaz" AND receipt.status="storno"'.format(e))
+			elif e==" ":
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Izdavanja", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status", receipt.storno_date AS "Datum Storniranja", receipt.storno_user AS "Stornirao" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE evidencija.datum_unosa >= "{}" AND evidencija.vrsta_unosa="izlaz" AND receipt.status="storno"'.format(b))
+			else:
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Izdavanja", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status", receipt.storno_date AS "Datum Storniranja", receipt.storno_user AS "Stornirao" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE evidencija.datum_unosa >= "{}" AND evidencija.datum_unosa <= "{}" AND evidencija.vrsta_unosa="izlaz" AND receipt.status="storno"'.format(b, e))
+		else:
+			if b==" " and e==" ":
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Izdavanja", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status", receipt.storno_date AS "Datum Storniranja", receipt.storno_user AS "Stornirao" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE  user.username= "{}" AND evidencija.vrsta_unosa="izlaz" AND receipt.status="storno"'.format(u))
+			elif b==" ":
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Izdavanja", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status", receipt.storno_date AS "Datum Storniranja", receipt.storno_user AS "Stornirao" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE  user.username= "{}" AND evidencija.datum_unosa <= "{}" AND evidencija.vrsta_unosa="izlaz" AND receipt.status="storno"'.format(u, e))
+			elif e==" ":
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Izdavanja", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status", receipt.storno_date AS "Datum Storniranja", receipt.storno_user AS "Stornirao" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE  user.username= "{}" AND evidencija.datum_unosa >= "{}" AND evidencija.vrsta_unosa="izlaz" AND receipt.status="storno"'.format(u, b))
+			else:
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Izdavanja", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status", receipt.storno_date AS "Datum Storniranja", receipt.storno_user AS "Stornirao" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE  user.username= "{}" AND evidencija.datum_unosa >= "{}" AND evidencija.datum_unosa <= "{}" AND evidencija.vrsta_unosa="izlaz" AND receipt.status="storno"'.format(u, b, e))
+	else:
+		if u== " ":
+			if b==" " and e==" ":
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Izdavanja", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status", receipt.storno_date AS "Datum Storniranja", receipt.storno_user AS "Stornirao" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE  proizvod.name= "{}" AND evidencija.vrsta_unosa="izlaz" AND receipt.status="storno"'.format(s))
+			elif b==" ":
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Izdavanja", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status", receipt.storno_date AS "Datum Storniranja", receipt.storno_user AS "Stornirao" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE  proizvod.name= "{}" AND evidencija.datum_unosa <= "{}" AND evidencija.vrsta_unosa="izlaz" AND receipt.status="storno"'.format(s, e))
+			elif e==" ":
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Izdavanja", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status", receipt.storno_date AS "Datum Storniranja", receipt.storno_user AS "Stornirao" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE  proizvod.name= "{}" AND evidencija.datum_unosa >= "{}" AND evidencija.vrsta_unosa="izlaz" AND receipt.status="storno"'.format(s, b))
+			else:
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Izdavanja", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status", receipt.storno_date AS "Datum Storniranja", receipt.storno_user AS "Stornirao" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE  proizvod.name= "{}" AND evidencija.datum_unosa >= "{}" AND evidencija.datum_unosa <= "{}" AND evidencija.vrsta_unosa="izlaz" AND receipt.status="storno"'.format(s, b, e))
+		else:
+			if b==" " and e==" ":
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Izdavanja", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status", receipt.storno_date AS "Datum Storniranja", receipt.storno_user AS "Stornirao" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE  proizvod.name= "{}" AND user.username= "{}" AND evidencija.vrsta_unosa="izlaz" AND receipt.status="storno"'.format(s, u))
+			elif b==" ":
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Izdavanja", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status", receipt.storno_date AS "Datum Storniranja", receipt.storno_user AS "Stornirao" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE  proizvod.name= "{}" AND user.username= "{}" AND evidencija.datum_unosa <= "{}" AND evidencija.vrsta_unosa="izlaz" AND receipt.status="storno"'.format(s, u, e))
+			elif e==" ":
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Izdavanja", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status", receipt.storno_date AS "Datum Storniranja", receipt.storno_user AS "Stornirao" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE  proizvod.name= "{}" AND user.username= "{}" AND evidencija.datum_unosa >= "{}" AND evidencija.vrsta_unosa="izlaz" AND receipt.status="storno"'.format(s, u, b))				
+			else:
+				sql= text('SELECT evidencija.datum_unosa AS "Datum Izdavanja", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status", receipt.storno_date AS "Datum Storniranja", receipt.storno_user AS "Stornirao" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE  proizvod.name= "{}" AND user.username= "{}" AND evidencija.datum_unosa >= "{}" AND evidencija.datum_unosa <= "{}" AND evidencija.vrsta_unosa="izlaz" AND receipt.status="storno"'.format(s, u, b, e))
+
 	result= db.engine.execute(sql)
-	#evidencije = session.query(Evidencija).join(Evidencija.ingredients)
 	query_sets = []
 	for r in result:
 		query_sets.append(r)
 	column_names = [
 		'Datum Izdavanja',
 		'Promijenjena Kolicina',
-		'Proizvoda',
+		'Proizvod',
 		'ID Proizvoda',
 		'Tvrtka',
-		'Korisnik'
+		'Korisnik',
+		'ID Racuna',
+		'Datum Storniranja',
+		'Stornirao'
 		]
-	return excel.make_response_from_query_sets(query_sets, column_names, 'xls', file_name="Izlazna evidencija storno "+name)
+	return excel.make_response_from_query_sets(query_sets, column_names, 'xls', file_name="Izlazna evidencija storno "+ "proizvoda "+s+" od "+b+" do "+e+" korisnik "+u)
 
 @app.route('/export_receipt_unos/<id>')
 @login_required
 def export_receipt_unos(id):
-	sql= text('SELECT evidencija.datum_unosa AS "Datum Unosa", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvoda, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id WHERE evidencija.receipt_id = "{}"'.format(id))
+	sql= text('SELECT evidencija.datum_unosa AS "Datum Unosa", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id WHERE evidencija.receipt_id = "{}"'.format(id))
 	result= db.engine.execute(sql)
 	query_sets = []
 	for r in result:
@@ -674,7 +844,7 @@ def export_receipt_unos(id):
 	column_names = [
 		'Datum Unosa',
 		'Promijenjena Kolicina',
-		'Proizvoda',
+		'Proizvod',
 		'ID Proizvoda',
 		'Tvrtka',
 		'Korisnik'
@@ -684,7 +854,7 @@ def export_receipt_unos(id):
 @app.route('/export_receipt_izlaz/<id>')
 @login_required
 def export_receipt_izlaz(id):
-	sql= text('SELECT evidencija.datum_unosa AS "Datum Unosa", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvoda, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id WHERE evidencija.receipt_id = "{}"'.format(id))
+	sql= text('SELECT evidencija.datum_unosa AS "Datum Unosa", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id WHERE evidencija.receipt_id = "{}"'.format(id))
 	result= db.engine.execute(sql)
 	query_sets = []
 	for r in result:
@@ -692,7 +862,7 @@ def export_receipt_izlaz(id):
 	column_names = [
 		'Datum Unosa',
 		'Promijenjena Kolicina',
-		'Proizvoda',
+		'Proizvod',
 		'ID Proizvoda',
 		'Tvrtka',
 		'Korisnik'
@@ -849,7 +1019,7 @@ def receipts_unosa1():
 def receipts_izlaz(page_num):
 	form = SearchReceiptNumber()
 	receipts = Receipt.query.filter_by(receipt_type="izlaz", status="active").paginate(per_page=7, page=page_num, error_out=True)
-	return render_template('receipts_izlaz.html', title='Racuni', receipts=receipts)
+	return render_template('receipts_izlaz.html', title='Racuni', receipts=receipts, form = form)
 
 @app.route('/receipts_izlaz1', methods=['GET', 'POST'])
 @login_required
@@ -861,7 +1031,7 @@ def receipts_izlaz1():
 def receipts_unosa_storno(page_num):
 	form = SearchReceiptNumber()
 	receipts = Receipt.query.filter_by(receipt_type="unos", status="storno").paginate(per_page=7, page=page_num, error_out=True)
-	return render_template('receipts_unosa_storno.html', title='Racuni', receipts=receipts)
+	return render_template('receipts_unosa_storno.html', title='Racuni', receipts=receipts, form = form)
 
 @app.route('/receipts_unosa_storno1', methods=['GET', 'POST'])
 @login_required
@@ -872,7 +1042,7 @@ def receipts_unosa_storno1():
 @login_required
 def receipts_izlaz_storno(page_num):
 	receipts = Receipt.query.filter_by(receipt_type="izlaz", status="storno").paginate(per_page=7, page=page_num, error_out=True)
-	return render_template('receipts_izlaz_storno.html', title='Racuni', receipts=receipts)
+	return render_template('receipts_izlaz_storno.html', title='Racuni', receipts=receipts, form = form)
 
 @app.route('/receipts_izlaz_storno1', methods=['GET', 'POST'])
 @login_required

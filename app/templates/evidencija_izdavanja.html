@@ -100,8 +100,8 @@
             {% for page in evidencija.iter_pages(left_edge=3, right_edge=3, left_current=3, right_current=3) %}
                 {% if page %}
                     {% if page != evidencija.page %}
-                        {% if search!=' ' and search!= '' %}
-                            {% if user!=' ' and user!= '' %}
+                        {% if search!=' ' %}
+                            {% if user!=' ' %}
                                 {% if begin!=' ' and end!=' '%}
                                     <a href="{{ url_for('evidencija_izdavanja', page_num=page, s=search, b=begin, e=end, u=user) }}">{{ page }}</a>
                                 {% elif  begin!=' '%}
@@ -123,7 +123,7 @@
                                 {% endif %}
                             {% endif %}
                         {% else %}
-                            {% if user!=' ' and user!= '' %}
+                            {% if user!=' ' %}
                                 {% if begin!=' ' and end!=' '%}
                                     <a href="{{ url_for('evidencija_izdavanja', page_num=page, s=' ', b=begin, e=end, u=user) }}">{{ page }}</a>
                                 {% elif  begin!=' '%}
@@ -156,8 +156,8 @@
         {% if search!=' ' %}
         <div>
 
-            <button class="btn btn-primary m-2" onclick="window.open('{{ url_for('export_proizvod_izlaz', name=search) }}')">Excel - Izlazne evidencije</button>
-            <button class="btn btn-primary m-2" onclick="window.open('{{ url_for('export_proizvod_izlaz_storno', name=search) }}')">Excel - Izlazne evidencije storno</button>
+            <button class="btn btn-primary m-2" onclick="window.open('{{ url_for('export_proizvod_izlaz', s=search, b=begin, e=end, u=user) }}')">Excel - Izlazne evidencije</button>
+            <button class="btn btn-primary m-2" onclick="window.open('{{ url_for('export_proizvod_izlaz_storno', s=search, b=begin, e=end, u=user) }}')">Excel - Izlazne evidencije storno</button>
         </div>
 
         {% else %}
