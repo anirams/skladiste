@@ -99,8 +99,8 @@
             {% for page in evidencija.iter_pages(left_edge=3, right_edge=3, left_current=3, right_current=3) %}
                 {% if page %}
                     {% if page != evidencija.page %}
-                        {% if search!=' ' %}
-                            {% if user!=' ' %}
+                        {% if search!=' ' and search!= "" %}
+                            {% if user!=' ' and user!= "" %}
                                 {% if begin!=' ' and end!=' '%}
                                     <a href="{{ url_for('evidencija_unosa', page_num=page, s=search, b=begin, e=end, u=user) }}">{{ page }}</a>
                                 {% elif  begin!=' '%}
@@ -122,7 +122,7 @@
                                 {% endif %}
                             {% endif %}
                         {% else %}
-                            {% if user!=' ' %}
+                            {% if user!=' ' and user!= "" %}
                                 {% if begin!=' ' and end!=' '%}
                                     <a href="{{ url_for('evidencija_unosa', page_num=page, s=' ', b=begin, e=end, u=user) }}">{{ page }}</a>
                                 {% elif  begin!=' '%}

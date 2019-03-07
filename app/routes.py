@@ -324,7 +324,9 @@ def evidencija_unosa(page_num, s, b, e, u):
 			return render_template('evidencija_unosa.html', title='Evidencija unosa', form=form, evidencija=evidencija, search=s, begin=b, end=e, user=u, lista=lista)
 	if form.submit.data:
 		if form.validate_on_submit():
+
 			proizvod = Proizvod.query.filter(Proizvod.name.like("%" + form.search.data + "%")).first()
+			#import pdb; pdb.set_trace();
 			if form.search.data != "" and form.search.data != " " and proizvod is None:
 				flash(f'Proizvod '+form.search.data+ ' ne postoji!', 'danger')
 				return redirect(url_for('evidencija_unosa1'))
@@ -334,40 +336,64 @@ def evidencija_unosa(page_num, s, b, e, u):
 				return redirect(url_for('evidencija_unosa1'))
 			if user is None:
 				if form.begin.data is None and form.end.data is None:
-					evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=="unos").order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
+					if form.search.data == "" or form.search.data == " ":
+						evidencija = Evidencija.query.filter(Evidencija.vrsta_unosa=="unos").order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
+					else:
+						evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=="unos").order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
 					form.begin.data = ' '
 					form.end.data = ' '
 					form.user.data=' '
 				elif form.begin.data is None:
-					evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=="unos", Evidencija.datum_unosa <= form.end.data).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
+					if form.search.data == "" or form.search.data == " ":
+						evidencija = Evidencija.query.filter(Evidencija.vrsta_unosa=="unos", Evidencija.datum_unosa <= form.end.data).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
+					else:
+						evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=="unos", Evidencija.datum_unosa <= form.end.data).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
 					form.begin.data = ' '
 					form.user.data=' '
 				elif form.end.data is None:
-					evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=="unos", Evidencija.datum_unosa >= form.begin.data).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
+					if form.search.data == "" or form.search.data == " ":
+						evidencija = Evidencija.query.filter(Evidencija.vrsta_unosa=="unos", Evidencija.datum_unosa >= form.begin.data).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
+					else:
+						evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=="unos", Evidencija.datum_unosa >= form.begin.data).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
 					form.end.data = ' '
 					form.user.data=' '
 				else:
+
 					form.user.data=' '
-					evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=="unos", Evidencija.datum_unosa >= form.begin.data, Evidencija.datum_unosa <= form.end.data).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
+					if form.search.data == "" or form.search.data == " ":
+						evidencija = Evidencija.query.filter(Evidencija.vrsta_unosa=="unos", Evidencija.datum_unosa >= form.begin.data, Evidencija.datum_unosa <= form.end.data).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
+					else:
+						evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=="unos", Evidencija.datum_unosa >= form.begin.data, Evidencija.datum_unosa <= form.end.data).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
 			else:
 				
 				if form.begin.data is None and form.end.data is None:
 					#import pdb; pdb.set_trace();
-					evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=="unos", Evidencija.user_id==user.id).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
+					if form.search.data == "" or form.search.data == " ":
+						evidencija = Evidencija.query.filter(Evidencija.vrsta_unosa=="unos", Evidencija.user_id==user.id).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
+					else:
+						evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=="unos", Evidencija.user_id==user.id).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
 					form.begin.data = ' '
 					form.end.data = ' '
 				elif form.begin.data is None:
-					evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=="unos", Evidencija.datum_unosa <= form.end.data, Evidencija.user_id==user.id).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
+					if form.search.data == "" or form.search.data == " ":
+						evidencija = Evidencija.query.filter(Evidencija.vrsta_unosa=="unos", Evidencija.datum_unosa <= form.end.data, Evidencija.user_id==user.id).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
+					else:
+						evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=="unos", Evidencija.datum_unosa <= form.end.data, Evidencija.user_id==user.id).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
 					form.begin.data = ' '
 				elif form.end.data is None:
-					evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=="unos", Evidencija.datum_unosa >= form.begin.data, Evidencija.user_id==user.id).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
+					if form.search.data == "" or form.search.data == " ":
+						evidencija = Evidencija.query.filter(Evidencija.vrsta_unosa=="unos", Evidencija.datum_unosa >= form.begin.data, Evidencija.user_id==user.id).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
+					else:
+						evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=="unos", Evidencija.datum_unosa >= form.begin.data, Evidencija.user_id==user.id).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
 					form.end.data = ' '
 				else:
-					evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=="unos", Evidencija.datum_unosa >= form.begin.data, Evidencija.datum_unosa <= form.end.data, Evidencija.user_id==user.id).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
-			
+					if form.search.data == "" or form.search.data == " ":
+						evidencija = Evidencija.query.filter(Evidencija.vrsta_unosa=="unos", Evidencija.datum_unosa >= form.begin.data, Evidencija.datum_unosa <= form.end.data, Evidencija.user_id==user.id).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
+					else:
+						evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=="unos", Evidencija.datum_unosa >= form.begin.data, Evidencija.datum_unosa <= form.end.data, Evidencija.user_id==user.id).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
 			return render_template('evidencija_unosa.html', title='Evidencija unosa', form=form, evidencija=evidencija, search=form.search.data, begin=form.begin.data, end=form.end.data, lista=lista, user=form.user.data, page=1)
 		return redirect(url_for('evidencija_unosa1'))
-	return render_template('evidencija_unosa.html', title='Evidencija unosa', form=form, evidencija=evidencija, search=' ', begin=' ', end=' ', user=' ', lista=lista)
+	return render_template('evidencija_unosa.html', title='Evidencija unosa', form=form, evidencija=evidencija, search=s, begin=b, end=e, user=u, lista=lista)
 
 @app.route('/evidencija_unosa1', methods=['GET', 'POST'])
 @login_required
@@ -440,40 +466,63 @@ def evidencija_izdavanja(page_num, s, b, e, u):
 				return redirect(url_for('evidencija_unosa1'))
 			if user is None:
 				if form.begin.data is None and form.end.data is None:
-					evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=='izlaz').order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
+					if form.search.data == "" or form.search.data == " ":
+						evidencija = Evidencija.query.filter(Evidencija.vrsta_unosa=='izlaz').order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
+					else:
+						evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=='izlaz').order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
 					form.begin.data = ' '
 					form.end.data = ' '
 					form.user.data=' '
 				elif form.begin.data is None:
-					evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=='izlaz', Evidencija.datum_unosa <= form.end.data).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
+					if form.search.data == "" or form.search.data == " ":
+						evidencija = Evidencija.query.filter(Evidencija.vrsta_unosa=='izlaz', Evidencija.datum_unosa <= form.end.data).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
+					else:
+						evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=='izlaz', Evidencija.datum_unosa <= form.end.data).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
 					form.begin.data = ' '
 					form.user.data=' '
 				elif form.end.data is None:
-					evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=='izlaz', Evidencija.datum_unosa >= form.begin.data).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
+					if form.search.data == "" or form.search.data == " ":
+						evidencija = Evidencija.query.filter(Evidencija.vrsta_unosa=='izlaz', Evidencija.datum_unosa >= form.begin.data).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
+					else:
+						evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=='izlaz', Evidencija.datum_unosa >= form.begin.data).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
 					form.end.data = ' '
 					form.user.data=' '
 				else:
 					form.user.data=' '
-					evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=='izlaz', Evidencija.datum_unosa >= form.begin.data, Evidencija.datum_unosa <= form.end.data).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
+					if form.search.data == "" or form.search.data == " ":
+						evidencija = Evidencija.query.filter(Evidencija.vrsta_unosa=='izlaz', Evidencija.datum_unosa >= form.begin.data, Evidencija.datum_unosa <= form.end.data).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
+					else:
+						evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=='izlaz', Evidencija.datum_unosa >= form.begin.data, Evidencija.datum_unosa <= form.end.data).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)	
 			else:
 				#import pdb; pdb.set_trace();
 				user = User.query.filter_by(username=form.user.data).first()
 				if form.begin.data is None and form.end.data is None:
-					evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=='izlaz', Evidencija.user_id==user.id).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
+					if form.search.data == "" or form.search.data == " ":
+						evidencija = Evidencija.query.filter(Evidencija.vrsta_unosa=='izlaz', Evidencija.user_id==user.id).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
+					else:
+						evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=='izlaz', Evidencija.user_id==user.id).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
 					form.begin.data = ' '
 					form.end.data = ' '
 				elif form.begin.data is None:
-					evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=='izlaz', Evidencija.datum_unosa <= form.end.data, Evidencija.user_id==user.id).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
+					if form.search.data == "" or form.search.data == " ":
+						evidencija = Evidencija.query.filter(Evidencija.vrsta_unosa=='izlaz', Evidencija.datum_unosa <= form.end.data, Evidencija.user_id==user.id).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
+					else:
+						evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=='izlaz', Evidencija.datum_unosa <= form.end.data, Evidencija.user_id==user.id).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
 					form.begin.data = ' '
 				elif form.end.data is None:
-					evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=='izlaz', Evidencija.datum_unosa >= form.begin.data, Evidencija.user_id==user.id).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
+					if form.search.data == "" or form.search.data == " ":
+						evidencija = Evidencija.query.filter(Evidencija.vrsta_unosa=='izlaz', Evidencija.datum_unosa >= form.begin.data, Evidencija.user_id==user.id).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
+					else:
+						evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=='izlaz', Evidencija.datum_unosa >= form.begin.data, Evidencija.user_id==user.id).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
 					form.end.data = ' '
 				else:
-					evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=='izlaz', Evidencija.datum_unosa >= form.begin.data, Evidencija.datum_unosa <= form.end.data, Evidencija.user_id==user.id).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
-			
+					if form.search.data == "" or form.search.data == " ":
+						evidencija = Evidencija.query.filter(Evidencija.vrsta_unosa=='izlaz', Evidencija.datum_unosa >= form.begin.data, Evidencija.datum_unosa <= form.end.data, Evidencija.user_id==user.id).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
+					else:
+						evidencija = Evidencija.query.filter(Evidencija.proizvod_id==proizvod.id, Evidencija.vrsta_unosa=='izlaz', Evidencija.datum_unosa >= form.begin.data, Evidencija.datum_unosa <= form.end.data, Evidencija.user_id==user.id).order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=1, error_out=True)
 			return render_template('evidencija_izdavanja.html', title='Evidencija izdavanja', form=form, evidencija=evidencija, search=form.search.data, begin=form.begin.data, end=form.end.data, lista=lista, user=form.user.data, page=1)
 		return redirect(url_for('evidencija_izdavanja1'))
-	return render_template('evidencija_izdavanja.html', title='Evidencija izdavanja', form=form, evidencija=evidencija, search=' ', begin=' ', end=' ', user=' ', lista=lista)
+	return render_template('evidencija_izdavanja.html', title='Evidencija izdavanja', form=form, evidencija=evidencija, search=s, begin=b, end=e, user=u, lista=lista)
 
 @app.route('/evidencija_izdavanja1', methods=['GET', 'POST'])
 @login_required
