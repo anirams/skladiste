@@ -1001,11 +1001,15 @@ def izlaz():
 
 
 
-@app.route('/receipts_unosa/<int:page_num>')
+@app.route('/receipts_unosa/<int:page_num>', methods=['GET', 'POST'])
 @login_required
 def receipts_unosa(page_num):
 	form = SearchReceiptNumber()
-	receipts = Receipt.query.filter_by(receipt_type="unos", status="active").paginate(per_page=7, page=page_num, error_out=True)
+	if form.submit.data:
+		if form.validate_on_submit():
+			receipts = Receipt.query.filter_by(id=form.number.data, receipt_type="unos", status="active").order_by(Receipt.date.desc()).paginate(per_page=7, page=1, error_out=True)
+			return render_template('receipts_unosa.html', title='Racuni', receipts=receipts, form = form)
+	receipts = Receipt.query.filter_by(receipt_type="unos", status="active").order_by(Receipt.date.desc()).paginate(per_page=7, page=page_num, error_out=True)
 	return render_template('receipts_unosa.html', title='Racuni', receipts=receipts, form = form)
 
 @app.route('/receipts_unosa1', methods=['GET', 'POST'])
@@ -1018,7 +1022,7 @@ def receipts_unosa1():
 @login_required
 def receipts_izlaz(page_num):
 	form = SearchReceiptNumber()
-	receipts = Receipt.query.filter_by(receipt_type="izlaz", status="active").paginate(per_page=7, page=page_num, error_out=True)
+	receipts = Receipt.query.filter_by(receipt_type="izlaz", status="active").order_by(Receipt.date.desc()).paginate(per_page=7, page=page_num, error_out=True)
 	return render_template('receipts_izlaz.html', title='Racuni', receipts=receipts, form = form)
 
 @app.route('/receipts_izlaz1', methods=['GET', 'POST'])
@@ -1030,7 +1034,7 @@ def receipts_izlaz1():
 @login_required
 def receipts_unosa_storno(page_num):
 	form = SearchReceiptNumber()
-	receipts = Receipt.query.filter_by(receipt_type="unos", status="storno").paginate(per_page=7, page=page_num, error_out=True)
+	receipts = Receipt.query.filter_by(receipt_type="unos", status="storno").order_by(Receipt.date.desc()).paginate(per_page=7, page=page_num, error_out=True)
 	return render_template('receipts_unosa_storno.html', title='Racuni', receipts=receipts, form = form)
 
 @app.route('/receipts_unosa_storno1', methods=['GET', 'POST'])
@@ -1041,7 +1045,7 @@ def receipts_unosa_storno1():
 @app.route('/receipts_izlaz_storno/<int:page_num>')
 @login_required
 def receipts_izlaz_storno(page_num):
-	receipts = Receipt.query.filter_by(receipt_type="izlaz", status="storno").paginate(per_page=7, page=page_num, error_out=True)
+	receipts = Receipt.query.filter_by(receipt_type="izlaz", status="storno").order_by(Receipt.date.desc()).paginate(per_page=7, page=page_num, error_out=True)
 	return render_template('receipts_izlaz_storno.html', title='Racuni', receipts=receipts, form = form)
 
 @app.route('/receipts_izlaz_storno1', methods=['GET', 'POST'])
