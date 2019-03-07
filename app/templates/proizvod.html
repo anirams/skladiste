@@ -37,8 +37,8 @@
     <hr>
 
     <h4>Povijest evidencije:</h4>
-    <button class="btn btn-primary m-2" onclick="window.open('{{ url_for('export_proizvod_unos', name=name) }}')">Excel - Ulazne evidencije</button>
-    <button class="btn btn-primary m-2" onclick="window.open('{{ url_for('export_proizvod_izlaz', name=name) }}')">Excel - Izlazne evidencije</button>
+    <button class="btn btn-primary m-2" onclick="window.open('{{ url_for('export_proizvod_unos', s=name, b=' ', e=' ', u=' ') }}')">Excel - Ulazne evidencije</button>
+    <button class="btn btn-primary m-2" onclick="window.open('{{ url_for('export_proizvod_izlaz', s=name, b=' ', e=' ', u=' ') }}')">Excel - Izlazne evidencije</button>
     <div class="row">
         <div class="col-xl-6">
             <h5>Evidencija unosa</h5>

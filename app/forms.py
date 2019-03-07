@@ -41,7 +41,6 @@ class UnosProizvodaForm(FlaskForm):
 	name = StringField('Naziv proizvoda', validators=[DataRequired('Unesi Naziv Proizvoda')])
 	opis_proizvoda = StringField ('Opis proizvoda')
 	zemlja_podrijetla = StringField('Zemlja podrijetla', validators=[DataRequired('Unesi Zemlju Podrijetla')])
-
 	barkod = StringField('Bar kod', validators=[DataRequired('Unesi bar kod')])
 	submit2 = SubmitField('Dodaj Proizvod')
 	def validate(self):
@@ -51,6 +50,10 @@ class UnosProizvodaForm(FlaskForm):
 		proizvod = Proizvod.query.filter_by(name=self.name.data).first()
 		if proizvod is not None:
 			self.name.errors.append('Proizvod pod tim imenom već postoji')
+			return False
+		proizvod = Proizvod.query.filter_by(bar_kod=self.barkod.data).first()
+		if proizvod is not None:
+			self.barkod.errors.append('Proizvod s tim barkodom već postoji')
 			return False
 		else:
 			return True
@@ -138,6 +141,10 @@ class UrediProizvodForm(FlaskForm):
 		rv = FlaskForm.validate(self)
 		if not rv:
 			return False		
+		proizvod = Proizvod.query.filter_by(bar_kod=self.barkod.data).first()
+		if proizvod != None:
+			self.barkod.errors.append('Proizvod s tim barkodom već postoji')
+			return False
 		return True
 
 class SearchForm(FlaskForm):
