@@ -15,7 +15,7 @@
                     {{ form.search(size=32, class="form-control", placeholder="Pronađi proizvod", id="myInput") }}    
                 </div>
                 <div class="form-group">
-                    {{ form.submit(type="submit", class="btn btn-primary ml-3") }}
+                    {{ form.submit(type="submit", class="btn btn-primary ml-3", id="Pronadji") }}
                 </div>
             </form>
         </div>
@@ -59,7 +59,7 @@
                     {% for page in proizvodi.iter_pages(left_edge=3, right_edge=3, left_current=3, right_current=3) %}
                         {% if page %}
                             {% if page != proizvodi.page %}
-                                {% if search!=' ' %}
+                                {% if search!=' ' and search!=''%}
                                 <a href="{{ url_for('stanje_skladista', page_num=page, s=search) }}">{{ page }}</a>
                                 {% else %}
                                 <a href="{{ url_for('stanje_skladista', page_num=page, s=' ') }}">{{ page }}</a>
@@ -263,5 +263,15 @@ document.addEventListener("click", function (e) {
 }
 
 autocomplete(document.getElementById("myInput"), lista1);
+</script>
+<script type="text/javascript">
+  
+  $('#myInput').bind('keyup', function(e) {
+    if ( e.keyCode === 13 ) { // 13 is enter key
+      
+      $('#Pronadji').click();
+    }
+});
+
 </script>
 {% endblock %}
