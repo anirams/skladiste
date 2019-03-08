@@ -1,11 +1,13 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, IntegerField, PasswordField, BooleanField, SubmitField, HiddenField, TextAreaField
+from wtforms import StringField, IntegerField, PasswordField, BooleanField, SubmitField, HiddenField, TextAreaField, SelectField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, Length, NumberRange, Optional
 from app.models import User, Proizvod, Tvrtka, Evidencija
 from flask import request
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import current_user
 from wtforms.fields.html5 import DateField
+import re
+import string
 
 class LoginForm(FlaskForm):
 	username = StringField('Korisnicko ime', validators=[DataRequired('Ovo polje je nužno')])
@@ -21,6 +23,21 @@ class RegistrationForm(FlaskForm):
 	password2 = PasswordField(
 		'Ponovite lozinku', validators=[DataRequired('Ovo polje je nužno'), EqualTo('password', message='Lozinke moraju biti jednake')])
 	submit = SubmitField('Registriraj korisnika')
+	def validate(self):
+		errors= []
+		specialChars = set(string.punctuation)
+		lozinka= self.password.data
+		special = any(char in specialChars for char in lozinka)
+		low = re.search(r"[a-z]", lozinka)
+		num = re.search(r"[0-9]", lozinka)
+		if not all((low, special, num)):
+			errors.append('Lozinka mora sadržavati slova, brojke i posebne znakove')
+			self.password.errors= tuple(errors)
+
+			#raise ValidationError('Lozinka mora sadržavati slova, brojke i posebne znakove')
+			return False
+		else:
+			return True
 
 	def validate_username(self, username):
 		user = User.query.filter_by(username=username.data).first()
@@ -35,6 +52,9 @@ class RegistrationForm(FlaskForm):
 	def validate_admin(self, email):
 		if current_user.username is not "admin":
 			raise ValidationError('Niste admin!')
+
+	
+		
 
 
 class UnosProizvodaForm(FlaskForm):
@@ -176,9 +196,23 @@ class EditPasswordForm(FlaskForm):
 		if not check_password_hash(user1.password_hash, self.old_password.data):
 			self.old_password.errors.append('Krivi password')
 			return False
+		errors= []
+		specialChars = set(string.punctuation)
+		lozinka= self.password.data
+		special = any(char in specialChars for char in lozinka)
+		low = re.search(r"[a-z]", lozinka)
+		num = re.search(r"[0-9]", lozinka)
+		if not all((low, special, num)):
+			errors.append('Lozinka mora sadržavati slova, brojke i posebne znakove')
+			self.password.errors= tuple(errors)
+
+			#raise ValidationError('Lozinka mora sadržavati slova, brojke i posebne znakove')
+			return False
 		else:
 			return True
+
 	submit = SubmitField()
+		
 
 class ListForm(FlaskForm):
 	listaProizvoda=HiddenField(validators=[DataRequired()])
@@ -197,3 +231,15 @@ class SearchFormEvidencija(FlaskForm):
 class SearchReceiptNumber(FlaskForm):
 	number = IntegerField('Broj računa', validators=[Optional()])
 	submit = SubmitField('Pronađi')
+
+class Deactivate(FlaskForm):
+	activate = HiddenField(validators=[DataRequired()])
+	submit= SubmitField()
+
+class SetRank(FlaskForm):
+	rank = SelectField(
+		'Rang',
+		choices=[('korisnik', 'korisnik'), ('admin', 'admin')],
+		validators=[DataRequired()]
+	)
+	submit2= SubmitField()

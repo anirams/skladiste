@@ -9,7 +9,10 @@ class User(UserMixin, db.Model):
 	email = db.Column(db.String(120), index=True, unique=True)
 	password_hash = db.Column(db.String(128))
 	last_seen = db.Column(db.DateTime, default=datetime.utcnow)
+	rank = db.Column(db.String(32))
+	status = db.Column(db.String(32))
 	evidencija = db.relationship('Evidencija', backref='user', lazy='dynamic')
+	receipt = db.relationship('Receipt', backref='stornoUser', lazy='dynamic')
 
 	def __repr__(self):
 		return '<User {}>'.format(self.username)  
@@ -32,8 +35,10 @@ class Proizvod(db.Model):
 	zemlja_podrijetla = db.Column(db.String(64))
 	opis_proizvoda = db.Column(db.String(300))
 	datum_unosa = db.Column(db.DateTime, default=datetime.utcnow)
-	evidencija = db.relationship('Evidencija', backref='proizvod', lazy='dynamic')
 	bar_kod = db.Column(db.String(64))
+	evidencija = db.relationship('Evidencija', backref='proizvod', lazy='dynamic')
+	
+
 
 class Tvrtka(db.Model):
 	__searchable__ = ['name']
@@ -65,4 +70,4 @@ class Receipt(db.Model):
 	receipt_type = db.Column(db.String(64))
 	evidencija = db.relationship('Evidencija', backref='receipt', lazy='dynamic')
 	storno_date = db.Column(db.DateTime, nullable=True)
-	storno_user = db.Column(db.String(64), nullable=True)
+	storno_user = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)

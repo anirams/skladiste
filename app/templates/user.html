@@ -5,8 +5,37 @@
     <h1>Korisnik: {{ user.username }}</h1><br>
     <hr>
     {% if user.last_seen %}<p>Posljednje viđen: {{ user.last_seen.strftime('%B %d %Y - %H:%M:%S') }}</p>{% endif %}<br>
-   {%  if current_user.username == "admin"%}
-   <button class="btn btn-primary"><a href="{{ url_for('edit_password', username=user.username) }}">Promjeni lozinku</a></button>
-   {% endif%}
+
+    {%  if current_user.rank == "admin"%}
+   		<button class="btn btn-primary" onclick="window.open('{{ url_for('edit_password', username=user.username) }}')">Promjeni lozinku</button>
+    {% endif%}
+
+    {%  if current_user.rank == "admin" and user.status=="active" and user.rank!="admin" %}
+	   <form  action="" method="post" novalidate="">
+	          {{ form.csrf_token }}
+	          {{form.activate(value="deactivate")}}
+	          {{ form.submit(type="submit", class="btn btn-primary", value="Deaktiviraj korisnika") }}  
+	          {% for error in form.submit.errors %}
+	                    <span style="color: red;">[{{ error }}]</span><br>
+	          {% endfor %}<br>  
+	    </form>
+    {% elif current_user.rank == "admin" and user.status=="deactivated" and user.rank!="admin"%}
+    	<form  action="" method="post" novalidate="">
+	          {{ form.csrf_token }}
+	          {{form.activate(value="activate")}}
+	          {{ form.submit(type="submit", class="btn btn-primary", value="Reaktiviraj korisnika") }}  
+	          {% for error in form.submit.errors %}
+	                    <span style="color: red;">[{{ error }}]</span><br>
+	          {% endfor %}<br>  
+	    </form>
+    {% endif%}
+    {%  if current_user.rank == "admin" and user.username!="admin" %}
+    <form  action="" method="post" novalidate="">
+   		{{ form2.csrf_token }}
+	    {{ form2.rank}}
+	    {{ form2.submit2(type="submit", class="btn btn-primary", value="Promjeni tip korisnika") }} 
+	</form>
+    {% endif%}
+  
 </div>
 {% endblock %}

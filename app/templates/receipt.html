@@ -22,7 +22,7 @@
 			{% endif %}</span>
 			
 			<span class="float-right"><strong>Status:</strong> {{receipt.status}} <br><strong>Napravio:</strong> {{evidencija.user.username}} {% if receipt.status =='storno' %}
-				<br><strong>Stornirao:</strong> {{receipt.storno_user}}
+				<br><strong>Stornirao:</strong> {{receipt.stornoUser.username}}
 			{% endif %}</span>
 		</div>
 

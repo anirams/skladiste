@@ -20,7 +20,7 @@
             <td><a href="/receipt/{{receipt.id}}" class="dekoracija">{{ receipt.id }}</a></td>
             <td>{{ receipt.evidencija.first().user.username }}</td>
             <td>{{ receipt.date.strftime('%d %m %Y - %H:%M:%S') }}</td>
-            <td>{{ receipt.storno_user }}</td>
+            <td>{{ receipt.stornoUser.username }}</td>
             <td>{{ receipt.storno_date.strftime('%d %m %Y - %H:%M:%S') }}</td>
         </tr></a>
     {% endfor %}  

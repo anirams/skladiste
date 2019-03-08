@@ -5,6 +5,7 @@
 {% block content %}
 <script type="text/javascript">  
     var lista1 = {{ lista|safe }};
+    var lista2 = {{ lista2|safe }};
 </script>
 <div class="stanje-s">
     <h3 class="mb-4">Ulazne evidencije</h3>
@@ -40,9 +41,13 @@
                 <div class="m-2 form-group">
                     {{ form.user.label }}<br>
                     {% if user==' ' %}
-                      {{ form.user(size=32, value='', class="form-control") }}
+                    <div class="form-group autocomplete">
+                      {{ form.user(size=32, value='', class="form-control", id="userInput") }}
+                    </div>
                     {% else %}
-                      {{ form.user(size=32, class="form-control") }}
+                    <div class="form-group autocomplete">
+                      {{ form.user(size=32, class="form-control", id="userInput") }}
+                    </div>
                     {% endif %}
                     {% for error in form.user.errors %}
                     <br><span style="color: red;">[{{ error }}]</span>
@@ -263,6 +268,8 @@ document.addEventListener("click", function (e) {
 });
 }
 
+autocomplete(document.getElementById("userInput"), lista2);   
 autocomplete(document.getElementById("myInput"), lista1);
+
 </script>
 {% endblock %}
