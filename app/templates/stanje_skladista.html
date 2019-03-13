@@ -77,7 +77,7 @@
                 </div>
     </div> 
                                <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary mt-2 tipka-margin" data-toggle="modal" data-target="#exampleModalCenter" id="tvrtka-potvrda">
+<button type="button" class="btn btn-primary mt-2 tipka-margin" data-toggle="modal" data-target="#exampleModalCenter" id="proizvod-potvrda">
   Dodaj novi proizvod
 </button>
 
@@ -93,7 +93,7 @@
         </button>
       </div>
       <script>
-        var form_error = false;
+        var form2_error = false;
       </script>
       <div class="modal-body">
         <form action="" method="post" novalidate="">
@@ -104,7 +104,7 @@
             {% for error in form2.name.errors %}
             <span style="color: red;">[{{ error }}]</span>
             {% if form2.name.errors %}
-                <script> form_error = true; </script><br>
+                <script> form2_error = true; </script><br>
             {% endif %}
             {% endfor %}
 
@@ -154,16 +154,16 @@
 <a id="klikni" href="{{ url_for('tvrtke1') }}">{{ page }}</a>
 
 <script type="text/javascript">
-if (form_error) {
-    console.log("form error " + form_error);
+if (form2_error) {
+    console.log("form error " + form2_error);
     $(document).ready(function () {
-   $('#tvrtka-potvrda').click();
+   $('#proizvod-potvrda').click();
 });
    
    
 }
 else{
-    console.log("form error " + form_error)
+    console.log("form error " + form2_error)
 }
 
     function autocomplete(inp, arr) {

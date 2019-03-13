@@ -71,8 +71,8 @@ class UnosProizvodaForm(FlaskForm):
 		if proizvod is not None:
 			self.name.errors.append('Proizvod pod tim imenom već postoji')
 			return False
-		proizvod = Proizvod.query.filter_by(bar_kod=self.barkod.data).first()
-		if proizvod is not None:
+		proizvod2 = Proizvod.query.filter_by(bar_kod=self.barkod.data).first()
+		if proizvod2 is not None:
 			self.barkod.errors.append('Proizvod s tim barkodom već postoji')
 			return False
 		else:
@@ -120,6 +120,9 @@ class UlazRobeForm(FlaskForm):
 		rv = FlaskForm.validate(self)
 		if not rv:
 			return False
+		if self.promijenjena_kolicina.data < 1:
+			self.promijenjena_kolicina.errors.append('Unesite količinu')
+			return False
 		tvrtka = Tvrtka.query.filter_by(
 			name=self.name.data).first()
 		if tvrtka is None:
@@ -137,6 +140,9 @@ class IzlazRobeForm(FlaskForm):
 	def validate(self):
 		rv = FlaskForm.validate(self)
 		if not rv:
+			return False
+		if self.promijenjena_kolicina.data < 1:
+			self.promijenjena_kolicina.errors.append('Unesite količinu')
 			return False
 
 		proizvod = Proizvod.query.get(self.proizvod_id.data)
@@ -161,6 +167,9 @@ class UrediProizvodForm(FlaskForm):
 		rv = FlaskForm.validate(self)
 		if not rv:
 			return False		
+		if self.barkod.data =='':
+			self.barkod.errors.append('Unesite barkod')
+			return False
 		proizvod = Proizvod.query.filter_by(bar_kod=self.barkod.data).first()
 		if proizvod != None:
 			self.barkod.errors.append('Proizvod s tim barkodom već postoji')

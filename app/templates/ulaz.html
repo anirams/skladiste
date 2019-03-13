@@ -14,7 +14,7 @@
    <h2 class="mb-4">Ulaz Robe</h2>
    <div class="container">
      <div class="row justify-content-md-cente">
-       <form class="form-inline" action="" novalidate="" autocomplete="off">
+       <form class="form-inline" action="" novalidate="" a utocomplete="off">
                 <div class="form-group autocomplete d-flex justify-content-between">
                     <input class="form-control m-2", placeholder="Unesi ime proizvoda", type="text", id="Ime", ></input>   
                     <input class="form-control m-2", placeholder="Unesi količinu", type="text", value=1 , id="Kolicina"></input>
@@ -176,7 +176,7 @@ var counter=0;
 
     function dodaj() {
       var listaSve = [];
-      if (document.getElementById("Ime").value !== "" && document.getElementById("Kolicina").value !== "" && document.getElementById("Tvrtka").value !== "") {
+      if (document.getElementById("Ime").value !== "" && !isNaN(document.getElementById("Kolicina").value)  && document.getElementById("Tvrtka").value !== "" && document.getElementById("Kolicina").value>0 ) {
           var nameOrBarcode=document.getElementById("Ime").value;
           
             console.log(isNaN(nameOrBarcode));

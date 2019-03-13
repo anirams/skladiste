@@ -73,9 +73,9 @@ def user(username):
 	user = User.query.filter_by(username=username).first_or_404()
 	if form.submit.data:
 		if form.validate_on_submit():
-			if form.activate.data=="deactivate":
+			if form.activate.data=="deactivate" and user.status=="active":
 				user.status="deactivated"
-			elif form.activate.data=="activate":
+			elif form.activate.data=="activate" and user.status=="deactivated":
 				user.status ="active"
 			db.session.add(user)
 			db.session.commit()
