@@ -267,7 +267,7 @@ class SearchFormReceiptStorno(FlaskForm):
 	begin = DateField('Pocetak', format='%Y-%m-%d', validators=[Optional()])
 	end = DateField('Kraj', format='%Y-%m-%d', validators=[Optional()])
 	user = StringField(('Pronađi po korisniku'), validators=[Optional()])
-	rank = SelectField(
+	storno = SelectField(
 		'Storno',
 		choices=[('aktivni', 'aktivni'), ('storno', 'storno')],
 		validators=[Optional()]

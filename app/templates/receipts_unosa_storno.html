@@ -54,6 +54,13 @@
                     <br><span style="color: red;">[{{ error }}]</span>
                     {% endfor %}
                 </div>
+                <div class="m-2 form-group">
+                    {{ form.storno.label }}<br>
+                    {{ form.storno( class="form-control") }}
+                    {% for error in form.end.errors %}
+                    <br><span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </div>
                 
         </div>
 
@@ -97,48 +104,96 @@
                 {% if page %}
 
                     {% if page != receipts.page %}
-                        {% if search!=' ' %}
-                            {% if user!=' ' %}
-                                {% if begin!=' ' and end!=' '%}
-                                    <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=search, b=begin, e=end, u=user) }}">{{ page }}</a>
-                                {% elif  begin!=' '%}
-                                    <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=search, b=begin, e=' ', u=user) }}">{{ page }}</a>
-                                {% elif  end!=' '%}
-                                    <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=search, b=' ', e=end, u=user) }}">{{ page }}</a>
+                        {% if st=='aktivni' %}
+                            {% if search!=' ' %}
+                                {% if user!=' ' %}
+                                    {% if begin!=' ' and end!=' '%}
+                                        <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=search, b=begin, e=end, u=user, st='aktivni') }}">{{ page }}</a>
+                                    {% elif  begin!=' '%}
+                                        <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=search, b=begin, e=' ', u=user, st='aktivni') }}">{{ page }}</a>
+                                    {% elif  end!=' '%}
+                                        <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=search, b=' ', e=end, u=user, st='aktivni') }}">{{ page }}</a>
+                                    {% else %}
+                                        <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=search, b=' ', e=' ', u=user, st='aktivni') }}">{{ page }}</a>
+                                    {% endif %}
                                 {% else %}
-                                    <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=search, b=' ', e=' ', u=user) }}">{{ page }}</a>
+                                    {% if begin!=' ' and end!=' '%}
+                                        <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=search, b=begin, e=end, u=' ', st='aktivni') }}">{{ page }}</a>
+                                    {% elif  begin!=' '%}
+                                        <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=search, b=begin, e=' ', u=' ', st='aktivni') }}">{{ page }}</a>
+                                    {% elif  end!=' '%}
+                                        <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=search, b=' ', e=end, u=' ', st='aktivni') }}">{{ page }}</a>
+                                    {% else %}
+                                        <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=search, b=' ', e=' ', u=' ', st='aktivni') }}">{{ page }}</a>
+                                    {% endif %}
                                 {% endif %}
                             {% else %}
-                                {% if begin!=' ' and end!=' '%}
-                                    <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=search, b=begin, e=end, u=' ') }}">{{ page }}</a>
-                                {% elif  begin!=' '%}
-                                    <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=search, b=begin, e=' ', u=' ') }}">{{ page }}</a>
-                                {% elif  end!=' '%}
-                                    <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=search, b=' ', e=end, u=' ') }}">{{ page }}</a>
+                                {% if user!=' ' %}
+                                    {% if begin!=' ' and end!=' '%}
+                                        <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=' ', b=begin, e=end, u=user, st='aktivni') }}">{{ page }}</a>
+                                    {% elif  begin!=' '%}
+                                        <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=' ', b=begin, e=' ', u=user, st='aktivni') }}">{{ page }}</a>
+                                    {% elif  end!=' '%}
+                                        <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=' ', b=' ', e=end, u=user, st='aktivni') }}">{{ page }}</a>
+                                    {% else %}
+                                        <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=' ', b=' ', e=' ', u=user, st='aktivni') }}">{{ page }}</a>
+                                    {% endif %}
                                 {% else %}
-                                    <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=search, b=' ', e=' ', u=' ') }}">{{ page }}</a>
+                                    {% if begin!=' ' and end!=' '%}
+                                        <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=' ', b=begin, e=end, u=' ', st='aktivni') }}">{{ page }}</a>
+                                    {% elif  begin!=' '%}
+                                        <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=' ', b=begin, e=' ', u=' ', st='aktivni') }}">{{ page }}</a>
+                                    {% elif  end!=' '%}
+                                        <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=' ', b=' ', e=end, u=' ', st='aktivni') }}">{{ page }}</a>
+                                    {% else %}
+                                        <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=' ', b=' ', e=' ', u=' ', st='aktivni') }}">{{ page }}</a>
+                                    {% endif %}
                                 {% endif %}
                             {% endif %}
                         {% else %}
-                            {% if user!=' ' %}
-                                {% if begin!=' ' and end!=' '%}
-                                    <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=' ', b=begin, e=end, u=user) }}">{{ page }}</a>
-                                {% elif  begin!=' '%}
-                                    <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=' ', b=begin, e=' ', u=user) }}">{{ page }}</a>
-                                {% elif  end!=' '%}
-                                    <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=' ', b=' ', e=end, u=user) }}">{{ page }}</a>
+                            {% if search!=' ' %}
+                                {% if user!=' ' %}
+                                    {% if begin!=' ' and end!=' '%}
+                                        <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=search, b=begin, e=end, u=user, st='storno') }}">{{ page }}</a>
+                                    {% elif  begin!=' '%}
+                                        <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=search, b=begin, e=' ', u=user, st='storno') }}">{{ page }}</a>
+                                    {% elif  end!=' '%}
+                                        <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=search, b=' ', e=end, u=user, st='storno') }}">{{ page }}</a>
+                                    {% else %}
+                                        <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=search, b=' ', e=' ', u=user, st='storno') }}">{{ page }}</a>
+                                    {% endif %}
                                 {% else %}
-                                    <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=' ', b=' ', e=' ', u=user) }}">{{ page }}</a>
+                                    {% if begin!=' ' and end!=' '%}
+                                        <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=search, b=begin, e=end, u=' ', st='storno') }}">{{ page }}</a>
+                                    {% elif  begin!=' '%}
+                                        <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=search, b=begin, e=' ', u=' ', st='storno') }}">{{ page }}</a>
+                                    {% elif  end!=' '%}
+                                        <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=search, b=' ', e=end, u=' ', st='storno') }}">{{ page }}</a>
+                                    {% else %}
+                                        <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=search, b=' ', e=' ', u=' ', st='storno') }}">{{ page }}</a>
+                                    {% endif %}
                                 {% endif %}
                             {% else %}
-                                {% if begin!=' ' and end!=' '%}
-                                    <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=' ', b=begin, e=end, u=' ') }}">{{ page }}</a>
-                                {% elif  begin!=' '%}
-                                    <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=' ', b=begin, e=' ', u=' ') }}">{{ page }}</a>
-                                {% elif  end!=' '%}
-                                    <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=' ', b=' ', e=end, u=' ') }}">{{ page }}</a>
+                                {% if user!=' ' %}
+                                    {% if begin!=' ' and end!=' '%}
+                                        <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=' ', b=begin, e=end, u=user, st='storno') }}">{{ page }}</a>
+                                    {% elif  begin!=' '%}
+                                        <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=' ', b=begin, e=' ', u=user, st='storno') }}">{{ page }}</a>
+                                    {% elif  end!=' '%}
+                                        <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=' ', b=' ', e=end, u=user, st='storno') }}">{{ page }}</a>
+                                    {% else %}
+                                        <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=' ', b=' ', e=' ', u=user, st='storno') }}">{{ page }}</a>
+                                    {% endif %}
                                 {% else %}
-                                    <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=' ', b=' ', e=' ', u=' ') }}">{{ page }}</a>
+                                    {% if begin!=' ' and end!=' '%}
+                                        <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=' ', b=begin, e=end, u=' ', st='storno') }}">{{ page }}</a>
+                                    {% elif  begin!=' '%}
+                                        <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=' ', b=begin, e=' ', u=' ', st='storno') }}">{{ page }}</a>
+                                    {% elif  end!=' '%}
+                                        <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=' ', b=' ', e=end, u=' ', st='storno') }}">{{ page }}</a>
+                                    {% else %}
+                                        <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=' ', b=' ', e=' ', u=' ', st='storno') }}">{{ page }}</a>
+                                    {% endif %}
                                 {% endif %}
                             {% endif %}
                         {% endif %}
