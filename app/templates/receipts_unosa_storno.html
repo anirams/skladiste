@@ -4,25 +4,82 @@
 
 {% block content %}
 
+<script type="text/javascript">  
+    var lista1 = {{ lista|safe }};
+    var lista2 = {{ lista2|safe }};
+</script>
+
 <div class="unos-p">
-    <h4><strong>Stornirane Primke</strong></h4>
+    <div class="row justify-content-md-center">
+        <form class=" form" action="" method="post" novalidate="" autocomplete="off">
+            {{ form.hidden_tag() }}
+            <div class="form-inline row justify-content-md-center">
+                <div class="form-group autocomplete">
+                    {{ form.search(size=32, class="form-control", placeholder="Pronađi račun po broju ili tvrtki", id="myInput") }}    
+                </div>
+                <div class="form-group">
+                    {{ form.submit(type="submit", class="btn btn-primary ml-3") }}
+                </div>
+            </div>
+            
+            <div class="row date">
+                <div class="m-2 form-group">
+                    {{ form.begin.label }}<br>
+                    {{ form.begin(size=32, class="form-control") }}
+                    {% for error in form.begin.errors %}
+                    <br><span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </div>
+
+
+                <div class="m-2 form-group">
+                    {{ form.end.label }}<br>
+                    {{ form.end(size=32, class="form-control") }}
+                    {% for error in form.end.errors %}
+                    <br><span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </div>
+                <div class="m-2 form-group">
+                    {{ form.user.label }}<br>
+                    {% if user==' ' %}
+                    <div class="form-group autocomplete">
+                      {{ form.user(size=32, value='', class="form-control", id="userInput") }}
+                    </div>
+                    {% else %}
+                    <div class="form-group autocomplete">
+                      {{ form.user(size=32, class="form-control", id="userInput") }}
+                    </div>
+                    {% endif %}
+                    {% for error in form.user.errors %}
+                    <br><span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </div>
+                
+        </div>
+
+        </form>
+    </div>
+    <h4><strong>Ulazni računi storno</strong></h4>
     <table class="table table-striped">
         <tr>
             <th>Broj dokumenta</th>
             <th>Ime korisnika</th> 
-            <th>Datum</th> 
+            <th>Naziv tvrtke</th>
+            <th>Datum</th>
             <th>Stornirao</th>
             <th>Datum storniranja</th>
         </tr>
     {% for receipt in receipts.items %}
-    
-        <tr>
+        <tr> 
+            
             <td><a href="/receipt/{{receipt.id}}" class="dekoracija">{{ receipt.id }}</a></td>
-            <td>{{ receipt.evidencija.first().user.username }}</td>
+            <td>{{ receipt.receiptUser.username }}</td>
+            <td>{{ receipt.tvrtka.name }}</td>
             <td>{{ receipt.date.strftime('%d %m %Y - %H:%M:%S') }}</td>
             <td>{{ receipt.stornoUser.username }}</td>
             <td>{{ receipt.storno_date.strftime('%d %m %Y - %H:%M:%S') }}</td>
-        </tr></a>
+            </a>
+        </tr>
     {% endfor %}  
     </table>
     {% with messages = get_flashed_messages() %}
@@ -32,13 +89,59 @@
             {% endfor %}
         {% endif %}
     {% endwith %}
-    <h6>Primke</h6>
+    
+    <div>
+            <h6>Stronirane Primke</h6>
             {% for page in receipts.iter_pages(left_edge=3, right_edge=3, left_current=3, right_current=3) %}
-                {% if page %}
-                    {% if page != receipts.page %}
 
-                            <a href="{{ url_for('receipts_unosa_storno', page_num=page) }}">{{ page }}</a>
-      
+                {% if page %}
+
+                    {% if page != receipts.page %}
+                        {% if search!=' ' %}
+                            {% if user!=' ' %}
+                                {% if begin!=' ' and end!=' '%}
+                                    <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=search, b=begin, e=end, u=user) }}">{{ page }}</a>
+                                {% elif  begin!=' '%}
+                                    <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=search, b=begin, e=' ', u=user) }}">{{ page }}</a>
+                                {% elif  end!=' '%}
+                                    <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=search, b=' ', e=end, u=user) }}">{{ page }}</a>
+                                {% else %}
+                                    <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=search, b=' ', e=' ', u=user) }}">{{ page }}</a>
+                                {% endif %}
+                            {% else %}
+                                {% if begin!=' ' and end!=' '%}
+                                    <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=search, b=begin, e=end, u=' ') }}">{{ page }}</a>
+                                {% elif  begin!=' '%}
+                                    <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=search, b=begin, e=' ', u=' ') }}">{{ page }}</a>
+                                {% elif  end!=' '%}
+                                    <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=search, b=' ', e=end, u=' ') }}">{{ page }}</a>
+                                {% else %}
+                                    <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=search, b=' ', e=' ', u=' ') }}">{{ page }}</a>
+                                {% endif %}
+                            {% endif %}
+                        {% else %}
+                            {% if user!=' ' %}
+                                {% if begin!=' ' and end!=' '%}
+                                    <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=' ', b=begin, e=end, u=user) }}">{{ page }}</a>
+                                {% elif  begin!=' '%}
+                                    <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=' ', b=begin, e=' ', u=user) }}">{{ page }}</a>
+                                {% elif  end!=' '%}
+                                    <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=' ', b=' ', e=end, u=user) }}">{{ page }}</a>
+                                {% else %}
+                                    <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=' ', b=' ', e=' ', u=user) }}">{{ page }}</a>
+                                {% endif %}
+                            {% else %}
+                                {% if begin!=' ' and end!=' '%}
+                                    <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=' ', b=begin, e=end, u=' ') }}">{{ page }}</a>
+                                {% elif  begin!=' '%}
+                                    <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=' ', b=begin, e=' ', u=' ') }}">{{ page }}</a>
+                                {% elif  end!=' '%}
+                                    <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=' ', b=' ', e=end, u=' ') }}">{{ page }}</a>
+                                {% else %}
+                                    <a href="{{ url_for('receipts_unosa_storno', page_num=page, s=' ', b=' ', e=' ', u=' ') }}">{{ page }}</a>
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
                     {% else %}
                         <strong>{{ page }}</strong>
                     {% endif %}
@@ -46,5 +149,111 @@
                     <span class=ellipsis>…</span>
                 {% endif %}
             {% endfor %}
+        </div>
  
+
+<script type="text/javascript">
+
+    function autocomplete(inp, arr) {
+  /* text field and array of values */
+  var currentFocus;
+  /*execute a function when someone writes in the text field:*/
+  inp.addEventListener("input", function(e) {
+      var a, b, i, val = this.value;
+      /*close any already open lists of autocompleted values*/
+      closeAllLists();
+      if (!val) { return false;}
+      currentFocus = -1;
+      /*create a DIV element that will contain the items (values):*/
+      a = document.createElement("DIV");
+      a.setAttribute("id", this.id + "autocomplete-list");
+      a.setAttribute("class", "autocomplete-items");
+      /*append the DIV element as a child of the autocomplete container:*/
+      this.parentNode.appendChild(a);
+      /*for each item in the array...*/
+      for (i = 0; i < arr.length; i++) {
+        /*check if the item starts with the same letters as the text field value:*/
+        if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+          /*create a DIV element for each matching element:*/
+          b = document.createElement("DIV");
+          /*make the matching letters bold:*/
+          b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+          b.innerHTML += arr[i].substr(val.length);
+          /*insert a input field that will hold the current array item's value:*/
+          b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+          /*execute a function when someone clicks on the item value (DIV element):*/
+              b.addEventListener("click", function(e) {
+              /*insert the value for the autocomplete text field:*/
+              inp.value = this.getElementsByTagName("input")[0].value;
+              /*close the list of autocompleted values,
+              (or any other open lists of autocompleted values:*/
+              closeAllLists();
+          });
+          a.appendChild(b);
+        }
+      }
+  });
+  /*execute a function presses a key on the keyboard:*/
+  inp.addEventListener("keydown", function(e) {
+      var x = document.getElementById(this.id + "autocomplete-list");
+      if (x) x = x.getElementsByTagName("div");
+      if (e.keyCode == 40) {
+        /*If the arrow DOWN key is pressed,
+        increase the currentFocus variable:*/
+        currentFocus++;
+        /*and and make the current item more visible:*/
+        addActive(x);
+      } else if (e.keyCode == 38) { //up
+        /*If the arrow UP key is pressed,
+        decrease the currentFocus variable:*/
+        currentFocus--;
+        /*and and make the current item more visible:*/
+        addActive(x);
+      } else if (e.keyCode == 13) {
+        /*If the ENTER key is pressed, prevent the form from being submitted,*/
+        e.preventDefault();
+        if (currentFocus > -1) {
+          /*and simulate a click on the "active" item:*/
+          if (x) x[currentFocus].click();
+        }
+      }
+  });
+  function addActive(x) {
+    /*a function to classify an item as "active":*/
+    if (!x) return false;
+    /*start by removing the "active" class on all items:*/
+    removeActive(x);
+    if (currentFocus >= x.length) currentFocus = 0;
+    if (currentFocus < 0) currentFocus = (x.length - 1);
+    /*add class "autocomplete-active":*/
+    x[currentFocus].classList.add("autocomplete-active");
+  }
+  function removeActive(x) {
+    /*a function to remove the "active" class from all autocomplete items:*/
+    for (var i = 0; i < x.length; i++) {
+      x[i].classList.remove("autocomplete-active");
+    }
+  }
+  function closeAllLists(elmnt) {
+    /*close all autocomplete lists in the document,
+    except the one passed as an argument:*/
+    var x = document.getElementsByClassName("autocomplete-items");
+    for (var i = 0; i < x.length; i++) {
+      if (elmnt != x[i] && elmnt != inp) {
+      x[i].parentNode.removeChild(x[i]);
+    }
+  }
+}
+/*execute a function when someone clicks in the document:*/
+document.addEventListener("click", function (e) {
+    closeAllLists(e.target);
+});
+}
+
+autocomplete(document.getElementById("myInput"), lista1);
+autocomplete(document.getElementById("userInput"), lista2);
+</script>
+
+
+
 {% endblock %}
