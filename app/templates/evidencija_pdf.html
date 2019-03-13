@@ -28,7 +28,12 @@
 				{% endif %}</span>
 				<br>
 				<br>
+				{% if evidencija.receipt.status =='storno' %}
 				<br>
+				{% endif %}
+				<span class="float-left"><strong>Broj računa :</strong>{{evidencija.receipt.id}}</span>
+				<br>
+				
 			</div>
 			<div class="card-body" style="text-align: center;">
 				

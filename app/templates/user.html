@@ -20,7 +20,7 @@
 	          {% endfor %}<br>  
 	    </form>
     {% elif current_user.rank == "admin" and user.status=="deactivated" and user.rank!="admin"%}
-    	<form  action="" method="post" novalidate="">
+    	<form  action="" method="post" novalidate="" >
 	          {{ form.csrf_token }}
 	          {{form.activate(value="activate")}}
 	          {{ form.submit(type="submit", class="btn btn-primary", value="Reaktiviraj korisnika") }}  

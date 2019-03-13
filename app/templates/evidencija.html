@@ -20,17 +20,24 @@
 	<div class="container">
 		<div class="card">		
 			<div class="card-header">
-				<span class="float-left"><span class="float-left">Dok. broj: <strong>{{id}}</strong></span><br><span class="float-left"><strong>Datum dok.: </strong>{{ evidencija.datum_unosa.strftime('%B %d %Y - %H:%M:%S') }}</span>
+				<span class="float-left"><span class="float-left">Dok. broj <strong>:{{id}}</strong></span><br><span class="float-left"><strong>Datum dok.: </strong>{{ evidencija.datum_unosa.strftime('%B %d %Y - %H:%M:%S') }}</span>
 				{% if evidencija.receipt.status =='storno' %}
 					<br><strong>Datum storn.: </strong>{{ evidencija.receipt.storno_date.strftime('%B %d %Y - %H:%M:%S') }}
-				{% endif %}</span></span>
+				{% endif %}</span>
+
+			</span>
 
 				<span class="float-right"><strong>Status:</strong> {{evidencija.receipt.status}}<br><strong>Napravio:</strong> {{evidencija.user.username}}
 				{% if evidencija.receipt.status =='storno' %}
 					<br><strong>Stornirao:</strong> {{evidencija.receipt.storno_user}}
+
 				{% endif %}</span>
+				{% if evidencija.receipt.status =='storno' %}
+				<br>
+				{% endif %}
 				<br>
 				<br>
+				<span class="float-left"><strong>Broj računa :</strong>{{evidencija.receipt.id}}</span>
 			</div>
 			<div class="card-body">
 				<div class="row mb-4">
