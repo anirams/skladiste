@@ -106,7 +106,11 @@
         <div>
         {{ form.hidden_tag() }}
             {{ form.name.label }}<br>
+            {% if form_error %}
             {{ form.name(size=32) }}<br>
+            {% else %}
+            {{ form.name(size=32, value="") }}<br>
+            {% endif %}
             {% for error in form.name.errors %}
             <span style="color: red;">[{{ error }}]</span>
             {% if form.name.errors %}
@@ -115,7 +119,11 @@
             {% endfor %}
 
             {{ form.oib.label }}<br>
+            {% if form_error %}
             {{ form.oib(size=32) }}<br>
+            {% else %}
+            {{ form.oib(size=32, value="") }}<br>
+            {% endif %}
             {% for error in form.oib.errors %}
             <span style="color: red;">[{{ error }}]</span>
             {% if form.oib.errors %}
@@ -124,7 +132,11 @@
             {% endfor %}
 
             {{ form.adresa.label }}<br>
+            {% if form_error %}
             {{ form.adresa(size=32) }}<br>
+            {% else %}
+            {{ form.adresa(size=32, value="") }}<br>
+            {% endif %}
             {% for error in form.adresa.errors %}
             <span style="color: red;">[{{ error }}]</span>
             {% if form.adresa.errors %}
@@ -133,7 +145,11 @@
             {% endfor %}
 
             {{ form.grad.label }}<br>
+            {% if form_error %}
             {{ form.grad(size=32) }}<br>
+            {% else %}
+            {{ form.grad(size=32, value="") }}<br>
+            {% endif %}
             {% for error in form.grad.errors %}
             <span style="color: red;">[{{ error }}]</span>
             {% if form.grad.errors %}
@@ -142,7 +158,11 @@
             {% endfor %}
 
             {{ form.p_broj.label }}<br>
+            {% if form_error %}
             {{ form.p_broj(size=32) }}<br>
+            {% else %}
+            {{ form.p_broj(size=32, value="") }}<br>
+            {% endif %}
             {% for error in form.p_broj.errors %}
             <span style="color: red;">[{{ error }}]</span>
             {% if form.p_broj.errors %}
@@ -151,7 +171,11 @@
             {% endfor %}
 
             {{ form.drzava.label }}<br>
+            {% if form_error %}
             {{ form.drzava(size=32) }}<br>
+            {% else %}
+            {{ form.drzava(size=32, value="") }}<br>
+            {% endif %}
             {% for error in form.drzava.errors %}
             <span style="color: red;">[{{ error }}]</span>
             {% if form.drzava.errors %}

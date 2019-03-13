@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, url_for, request, send_file, send_from_directory, make_response
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, UlazRobeForm, IzlazRobeForm, UrediProizvodForm, UnosProizvodaForm, SearchForm, EditPasswordForm, UnosTvrtkeForm, SearchFormTvrtka, SearchFormKorisnik, ListForm, UrediTvrtkuForm, Storno, SearchFormEvidencija, SearchReceiptNumber, Deactivate, SetRank
+from app.forms import LoginForm, RegistrationForm, UlazRobeForm, IzlazRobeForm, UrediProizvodForm, UnosProizvodaForm, SearchForm, EditPasswordForm, UnosTvrtkeForm, SearchFormTvrtka, SearchFormKorisnik, ListForm, UrediTvrtkuForm, Storno, SearchFormEvidencija, SearchReceiptNumber, Deactivate, SetRank, SearchFormReceipt
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Proizvod, Tvrtka, Evidencija, Receipt
 from werkzeug.urls import url_parse
@@ -240,6 +240,9 @@ def tvrtke(page_num, s):
 			flash(f'Uspješno ste unijeli tvrtku {form.name.data}!')
 			tvrtke = Tvrtka.query.order_by(Tvrtka.name.desc()).paginate(per_page=5, page=page_num, error_out=True)
 			#return render_template('tvrtke.html', title='Dodaj tvrtku', form=form, form2=form2, tvrtke=tvrtke, search=' ')
+		else:
+			form_error=True
+			return render_template('tvrtke.html', title='Tvrtke', tvrtke=tvrtke, form=form, form2= form2, search=' ', lista=lista, form_error=form_error)
 	return render_template('tvrtke.html', title='Tvrtke', tvrtke=tvrtke, form=form, form2= form2, search=' ', lista=lista)
 
 @app.route('/tvrtka/<name>', methods=['GET', 'POST'])
@@ -951,7 +954,7 @@ def ulaz():
 							amounts.append(int(productData[1]))
 
 			if error is False and empty is False:
-				receipt = Receipt(status="active", receipt_type="unos")
+				receipt = Receipt(status="active", receipt_type="unos", receipt_user=current_user.id, receipt_tvrtka=companies[1].id)
 				db.session.add(receipt)
 				db.session.commit()
 				for i in range(0, len(products)):
@@ -1020,7 +1023,7 @@ def izlaz():
 							companies.append(tvrtka)
 							amounts.append(int(productData[1]))
 			if error is False and empty is False:
-				receipt = Receipt(status="active", receipt_type="izlaz")
+				receipt = Receipt(status="active", receipt_type="izlaz", receipt_user=current_user.id, receipt_tvrtka=companies[1].id)
 				db.session.add(receipt)
 				db.session.commit()
 				for i in range(0, len(products)):
@@ -1033,34 +1036,302 @@ def izlaz():
 
 
 
-@app.route('/receipts_unosa/<int:page_num>', methods=['GET', 'POST'])
+@app.route('/receipts_unosa/<int:page_num>+<s>+<b>+<e>+<u>', methods=['GET', 'POST'])
 @login_required
-def receipts_unosa(page_num):
-	form = SearchReceiptNumber()
+def receipts_unosa(page_num, s, b, e, u):
+	form = SearchFormReceipt()
+	lista = []
+	lista2 = []
+	sveTvrtke = Tvrtka.query.all()
+	for tvrtka in sveTvrtke:
+		lista.append(tvrtka.name)
+	sviUseri = User.query.all()
+	for user in sviUseri:
+		lista2.append(user.username)
+	if s == ' ':
+		if u==' ':
+			if b ==' ' and e==' ':
+				receipts = Receipt.query.filter( Receipt.receipt_type=='unos', Receipt.status=='active').order_by(Receipt.date.desc()).paginate(per_page=3, page=page_num, error_out=True)
+			elif b ==' ':
+				receipts = Receipt.query.filter( Receipt.receipt_type=='unos', Receipt.status=='active', Receipt.date <= e).order_by(Receipt.date.desc()).paginate(per_page=3, page=page_num, error_out=True)
+			elif e==' ':
+				receipts = Receipt.query.filter( Receipt.receipt_type=='unos', Receipt.status=='active', Receipt.date >= b).order_by(Receipt.date.desc()).paginate(per_page=3, page=page_num, error_out=True)
+			else:
+				receipts = Receipt.query.filter( Receipt.receipt_type=='unos', Receipt.status=='active', Receipt.date >= b, Receipt.date <=e).order_by(Receipt.date.desc()).paginate(per_page=3, page=page_num, error_out=True)
+		else:
+			user = User.query.filter_by(username=u).first()
+			if b ==' ' and e==' ':
+				receipts = Receipt.query.filter( Receipt.receipt_type=='unos', Receipt.status=='active', Receipt.receipt_user==user.id).order_by(Receipt.date.desc()).paginate(per_page=3, page=page_num, error_out=True)
+			elif b ==' ':
+				receipts = Receipt.query.filter( Receipt.receipt_type=='unos', Receipt.status=='active', Receipt.date <= e, Receipt.receipt_user==user.id).order_by(Receipt.date.desc()).paginate(per_page=3, page=page_num, error_out=True)
+			elif e==' ':
+				receipts = Receipt.query.filter( Receipt.receipt_type=='unos', Receipt.status=='active', Receipt.date >= b, Receipt.receipt_user==user.id).order_by(Receipt.date.desc()).paginate(per_page=3, page=page_num, error_out=True)
+			else:
+				receipts = Receipt.query.filter( Receipt.receipt_type=='unos', Receipt.status=='active', Receipt.date >= b, Receipt.date <=e, Receipt.receipt_user==user.id).order_by(Receipt.date.desc()).paginate(per_page=3, page=page_num, error_out=True)
+
+	elif not form.submit.data:
+		tvrtka = Tvrtka.query.filter(Proizvod.name.like("%" + s + "%")).first()
+		if u == ' ':
+			if b ==' ' and e==' ':
+				receipts = Receipt.query.filter( Receipt.receipt_tvrtka==tvrtka.id, Receipt.receipt_type=='unos', Receipt.status=='active').order_by(Receipt.date.desc()).paginate(per_page=3, page=page_num, error_out=True)
+			elif b ==' ':
+				receipts = Receipt.query.filter(Receipt.receipt_tvrtka==tvrtka.id, Receipt.receipt_type=='unos', Receipt.status=='active', Receipt.date <= e).order_by(Receipt.date.desc()).paginate(per_page=3, page=page_num, error_out=True)
+			elif e ==' ':
+				receipts = Receipt.query.filter(Receipt.receipt_tvrtka==tvrtka.id, Receipt.receipt_type=='unos', Receipt.status=='active', Receipt.date >= b).order_by(Receipt.date.desc()).paginate(per_page=3, page=page_num, error_out=True)
+			else:
+				receipts = Receipt.query.filter(Receipt.receipt_tvrtka==tvrtka.id, Receipt.receipt_type=='unos', Receipt.status=='active', Receipt.date >= b, Receipt.date <= e).order_by(Receipt.date.desc()).paginate(per_page=3, page=page_num, error_out=True)
+			return render_template('receipts_unosa.html', title='Primke', form=form, receipts=receipts, search=s, begin=b, end=e, user=u, lista=lista, lista2=lista2)
+		else:
+			user = User.query.filter_by(username=u).first()
+			if b ==' ' and e==' ':
+				receipts = Receipt.query.filter( Receipt.receipt_tvrtka==tvrtka.id, Receipt.receipt_type=='unos', Receipt.status=='active', Receipt.receipt_user==user.id).order_by(Receipt.date.desc()).paginate(per_page=3, page=page_num, error_out=True)
+			elif b ==' ':
+				receipts = Receipt.query.filter(Receipt.receipt_tvrtka==tvrtka.id, Receipt.receipt_type=='unos', Receipt.status=='active', Receipt.date <= e, Receipt.receipt_user==user.id).order_by(Receipt.date.desc()).paginate(per_page=3, page=page_num, error_out=True)
+			elif e ==' ':
+				receipts = Receipt.query.filter(Receipt.receipt_tvrtka==tvrtka.id, Receipt.receipt_type=='unos', Receipt.status=='active', Receipt.date >= b, Receipt.receipt_user==user.id).order_by(Receipt.date.desc()).paginate(per_page=3, page=page_num, error_out=True)
+			else:
+				receipts = Receipt.query.filter(Receipt.receipt_tvrtka==tvrtka.id, Receipt.receipt_type=='unos', Receipt.status=='active', Receipt.date >= b, Receipt.date <= e, Receipt.receipt_user==user.id).order_by(Receipt.date.desc()).paginate(per_page=3, page=page_num, error_out=True)
+			return render_template('receipts_unosa.html', title='Primke', form=form, receipts=receipts, search=s, begin=b, end=e, user=u, lista=lista, lista2=lista2)
 	if form.submit.data:
+		#import pdb; pdb.set_trace();
 		if form.validate_on_submit():
-			receipts = Receipt.query.filter_by(id=form.number.data, receipt_type="unos", status="active").order_by(Receipt.date.desc()).paginate(per_page=7, page=1, error_out=True)
-			return render_template('receipts_unosa.html', title='Racuni', receipts=receipts, form = form)
-	receipts = Receipt.query.filter_by(receipt_type="unos", status="active").order_by(Receipt.date.desc()).paginate(per_page=7, page=page_num, error_out=True)
-	return render_template('receipts_unosa.html', title='Racuni', receipts=receipts, form = form)
+			number = form.search.data
+			if number.isdigit():
+				receipts= Receipt.query.filter_by(id =number, status='active', receipt_type='unos').paginate(per_page=3, page=1, error_out=True)
+				return render_template('receipts_unosa.html', title='Primke', form=form, receipts=receipts, search=" ", begin=" ", end=" ", user=" ", lista=lista, lista2=lista2)
+			tvrtka = Tvrtka.query.filter(Tvrtka.name.like("%" + form.search.data + "%")).first()
+			if form.search.data != "" and form.search.data != " " and tvrtka is None:
+				flash(f'Tvrtka '+form.search.data+ ' ne postoji!', 'danger')
+				return redirect(url_for('receipts_unosa1'))
+				import pdb; pdb.set_trace();
+			user = User.query.filter_by(username=form.user.data).first()
+			if form.user.data != "" and form.user.data != " " and user is None:
+				flash(f'Korisnik '+form.user.data+ ' ne postoji!', 'danger')
+				return redirect(url_for('receipts_unosa1'))
+			if user is None:
+				form.user.data=" "
+				if form.begin.data is None and form.end.data is None:
+					if form.search.data == "" or form.search.data == " ":
+						receipts = Receipt.query.filter(Receipt.receipt_type=='unos').order_by(Receipt.date.desc()).paginate(per_page=3, page=1, error_out=True)
+						form.search.data= " "
+					else:
+						receipts = Receipt.query.filter(Receipt.receipt_tvrtka==tvrtka.id, Receipt.receipt_type=='unos', Receipt.status=='active').order_by(Receipt.date.desc()).paginate(per_page=3, page=1, error_out=True)
+					form.begin.data = ' '
+					form.end.data = ' '
+					form.user.data=' '
+				elif form.begin.data is None:
+					if form.search.data == "" or form.search.data == " ":
+						receipts = Receipt.query.filter(Receipt.receipt_type=='unos', Receipt.status=='active', Receipt.date <= form.end.data).order_by(Receipt.date.desc()).paginate(per_page=3, page=1, error_out=True)
+						form.search.data= " "
+					else:
+						receipts = Receipt.query.filter(Receipt.receipt_tvrtka==tvrtka.id, Receipt.receipt_type=='unos', Receipt.status=='active', Receipt.date <= form.end.data).order_by(Receipt.date.desc()).paginate(per_page=3, page=1, error_out=True)
+					form.begin.data = ' '
+					form.user.data=' '
+				elif form.end.data is None:
+					if form.search.data == "" or form.search.data == " ":
+						receipts = Receipt.query.filter(Receipt.receipt_type=='unos', Receipt.status=='active', Receipt.date >= form.begin.data).order_by(Receipt.date.desc()).paginate(per_page=3, page=1, error_out=True)
+						form.search.data= " "
+					else:
+						receipts = Receipt.query.filter(Receipt.receipt_tvrtka==tvrtka.id, Receipt.receipt_type=='unos', Receipt.status=='active', Receipt.date >= form.begin.data).order_by(Receipt.date.desc()).paginate(per_page=3, page=1, error_out=True)
+					form.end.data = ' '
+					form.user.data=' '
+				else:
+					form.user.data=' '
+					if form.search.data == "" or form.search.data == " ":
+						receipts = Receipt.query.filter(Receipt.receipt_type=='unos', Receipt.status=='active', Receipt.date >= form.begin.data, Receipt.date <= form.end.data).order_by(Receipt.date.desc()).paginate(per_page=3, page=1, error_out=True)
+						form.search.data= " "
+					else:
+						receipts = Receipt.query.filter(Receipt.receipt_tvrtka==tvrtka.id, Receipt.receipt_type=='unos', Receipt.status=='active', Receipt.date >= form.begin.data, Receipt.date <= form.end.data).order_by(Receipt.date.desc()).paginate(per_page=3, page=1, error_out=True)	
+			else:
+				#import pdb; pdb.set_trace();
+				user = User.query.filter_by(username=form.user.data).first()
+				if form.begin.data is None and form.end.data is None:
+					if form.search.data == "" or form.search.data == " ":
+						receipts = Receipt.query.filter( Receipt.receipt_type=='unos', Receipt.status=='active', Receipt.receipt_user==user.id).order_by(Receipt.date.desc()).paginate(per_page=3, page=1, error_out=True)
+						#import pdb; pdb.set_trace();
+						form.search.data= " "
+					else:
+						receipts = Receipt.query.filter(Receipt.receipt_tvrtka==tvrtka.id, Receipt.receipt_type=='unos', Receipt.status=='active', Receipt.receipt_user==user.id).order_by(Receipt.date.desc()).paginate(per_page=3, page=1, error_out=True)
+					form.begin.data = ' '
+					form.end.data = ' '
+				elif form.begin.data is None:
+					if form.search.data == "" or form.search.data == " ":
+						receipts = Receipt.query.filter(Receipt.receipt_type=='unos', Receipt.status=='active', Receipt.date <= form.end.data, Receipt.receipt_user==user.id).order_by(Receipt.date.desc()).paginate(per_page=3, page=1, error_out=True)
+						form.search.data= " "
+					else:
+						receipts = Receipt.query.filter(Receipt.receipt_tvrtka==tvrtka.id, Receipt.receipt_type=='unos', Receipt.status=='active', Receipt.date <= form.end.data, Receipt.receipt_user==user.id).order_by(Receipt.date.desc()).paginate(per_page=3, page=1, error_out=True)
+					form.begin.data = ' '
+				elif form.end.data is None:
+					if form.search.data == "" or form.search.data == " ":
+						receipts = Receipt.query.filter(Receipt.receipt_type=='unos', Receipt.status=='active', Receipt.date >= form.begin.data, Receipt.receipt_user==user.id).order_by(Receipt.date.desc()).paginate(per_page=3, page=1, error_out=True)
+						form.search.data= " "
+					else:
+						receipts = Receipt.query.filter(Receipt.receipt_tvrtka==tvrtka.id, Receipt.receipt_type=='unos', Receipt.status=='active', Receipt.date >= form.begin.data, Receipt.receipt_user==user.id).order_by(Receipt.date.desc()).paginate(per_page=3, page=1, error_out=True)
+					form.end.data = ' '
+				else:
+					if form.search.data == "" or form.search.data == " ":
+						receipts = Receipt.query.filter(Receipt.receipt_type=='unos', Receipt.status=='active', Receipt.date >= form.begin.data, Receipt.date <= form.end.data, Receipt.receipt_user==user.id).order_by(Receipt.date.desc()).paginate(per_page=3, page=1, error_out=True)
+						form.search.data= " "
+					else:
+						receipts = Receipt.query.filter(Receipt.receipt_tvrtka==tvrtka.id, Receipt.receipt_type=='unos', Receipt.status=='active', Receipt.date >= form.begin.data, Receipt.date <= form.end.data, Receipt.receipt_user==user.id).order_by(Receipt.date.desc()).paginate(per_page=3, page=1, error_out=True)
+			return render_template('receipts_unosa.html', title='Primke', form=form, receipts=receipts, search=form.search.data, begin=form.begin.data, end=form.end.data, lista=lista, lista2=lista2, user=form.user.data, page=1)
+		return redirect(url_for('receipts_unosa1'))
+	return render_template('receipts_unosa.html', title='Primke', form=form, receipts=receipts, search=s, begin=b, end=e, user=u, lista=lista, lista2=lista2)
 
 @app.route('/receipts_unosa1', methods=['GET', 'POST'])
 @login_required
 def receipts_unosa1():
-	return redirect(url_for('receipts_unosa', page_num=1))
+	return redirect(url_for('receipts_unosa', page_num=1, s=" ", b=" ", e=" ", u=" "))
 
 
-@app.route('/receipts_izlaz/<int:page_num>')
+@app.route('/receipts_izlaz/<int:page_num>+<s>+<b>+<e>+<u>', methods=['GET', 'POST'])
 @login_required
-def receipts_izlaz(page_num):
-	form = SearchReceiptNumber()
-	receipts = Receipt.query.filter_by(receipt_type="izlaz", status="active").order_by(Receipt.date.desc()).paginate(per_page=7, page=page_num, error_out=True)
-	return render_template('receipts_izlaz.html', title='Racuni', receipts=receipts, form = form)
+def receipts_izlaz(page_num, s, b, e, u):
+	form = SearchFormReceipt()
+	#receipts = Receipt.query.filter_by(receipt_type="izlaz", status="active").order_by(Receipt.date.desc()).paginate(per_page=7, page=page_num, error_out=True)
+	lista = []
+	lista2 = []
+	sveTvrtke = Tvrtka.query.all()
+	for tvrtka in sveTvrtke:
+		lista.append(tvrtka.name)
+	sviUseri = User.query.all()
+	for user in sviUseri:
+		lista2.append(user.username)
+	if s == ' ':
+		if u==' ':
+			if b ==' ' and e==' ':
+				receipts = Receipt.query.filter( Receipt.receipt_type=='izlaz', Receipt.status=='active').order_by(Receipt.date.desc()).paginate(per_page=3, page=page_num, error_out=True)
+			elif b ==' ':
+				receipts = Receipt.query.filter( Receipt.receipt_type=='izlaz', Receipt.status=='active', Receipt.date <= e).order_by(Receipt.date.desc()).paginate(per_page=3, page=page_num, error_out=True)
+			elif e==' ':
+				receipts = Receipt.query.filter( Receipt.receipt_type=='izlaz', Receipt.status=='active', Receipt.date >= b).order_by(Receipt.date.desc()).paginate(per_page=3, page=page_num, error_out=True)
+			else:
+				receipts = Receipt.query.filter( Receipt.receipt_type=='izlaz', Receipt.status=='active', Receipt.date >= b, Receipt.date <=e).order_by(Receipt.date.desc()).paginate(per_page=3, page=page_num, error_out=True)
+		else:
+			user = User.query.filter_by(username=u).first()
+			if b ==' ' and e==' ':
+				receipts = Receipt.query.filter( Receipt.receipt_type=='izlaz', Receipt.status=='active', Receipt.receipt_user==user.id).order_by(Receipt.date.desc()).paginate(per_page=3, page=page_num, error_out=True)
+			elif b ==' ':
+				receipts = Receipt.query.filter( Receipt.receipt_type=='izlaz', Receipt.status=='active', Receipt.date <= e, Receipt.receipt_user==user.id).order_by(Receipt.date.desc()).paginate(per_page=3, page=page_num, error_out=True)
+			elif e==' ':
+				receipts = Receipt.query.filter( Receipt.receipt_type=='izlaz', Receipt.status=='active', Receipt.date >= b, Receipt.receipt_user==user.id).order_by(Receipt.date.desc()).paginate(per_page=3, page=page_num, error_out=True)
+			else:
+				receipts = Receipt.query.filter( Receipt.receipt_type=='izlaz', Receipt.status=='active', Receipt.date >= b, Receipt.date <=e, Receipt.receipt_user==user.id).order_by(Receipt.date.desc()).paginate(per_page=3, page=page_num, error_out=True)
+
+	elif not form.submit.data:
+		tvrtka = Tvrtka.query.filter(Proizvod.name.like("%" + s + "%")).first()
+		if u == ' ':
+			if b ==' ' and e==' ':
+				receipts = Receipt.query.filter( Receipt.receipt_tvrtka==tvrtka.id, Receipt.receipt_type=='izlaz', Receipt.status=='active').order_by(Receipt.date.desc()).paginate(per_page=3, page=page_num, error_out=True)
+			elif b ==' ':
+				receipts = Receipt.query.filter(Receipt.receipt_tvrtka==tvrtka.id, Receipt.receipt_type=='izlaz', Receipt.status=='active', Receipt.date <= e).order_by(Receipt.date.desc()).paginate(per_page=3, page=page_num, error_out=True)
+			elif e ==' ':
+				receipts = Receipt.query.filter(Receipt.receipt_tvrtka==tvrtka.id, Receipt.receipt_type=='izlaz', Receipt.status=='active', Receipt.date >= b).order_by(Receipt.date.desc()).paginate(per_page=3, page=page_num, error_out=True)
+			else:
+				receipts = Receipt.query.filter(Receipt.receipt_tvrtka==tvrtka.id, Receipt.receipt_type=='izlaz', Receipt.status=='active', Receipt.date >= b, Receipt.date <= e).order_by(Receipt.date.desc()).paginate(per_page=3, page=page_num, error_out=True)
+			return render_template('receipts_izlaz.html', title='Otpremnice', form=form, receipts=receipts, search=s, begin=b, end=e, user=u, lista=lista, lista2=lista2)
+		else:
+			user = User.query.filter_by(username=u).first()
+			if b ==' ' and e==' ':
+				receipts = Receipt.query.filter( Receipt.receipt_tvrtka==tvrtka.id, Receipt.receipt_type=='izlaz', Receipt.status=='active', Receipt.receipt_user==user.id).order_by(Receipt.date.desc()).paginate(per_page=3, page=page_num, error_out=True)
+			elif b ==' ':
+				receipts = Receipt.query.filter(Receipt.receipt_tvrtka==tvrtka.id, Receipt.receipt_type=='izlaz', Receipt.status=='active', Receipt.date <= e, Receipt.receipt_user==user.id).order_by(Receipt.date.desc()).paginate(per_page=3, page=page_num, error_out=True)
+			elif e ==' ':
+				receipts = Receipt.query.filter(Receipt.receipt_tvrtka==tvrtka.id, Receipt.receipt_type=='izlaz', Receipt.status=='active', Receipt.date >= b, Receipt.receipt_user==user.id).order_by(Receipt.date.desc()).paginate(per_page=3, page=page_num, error_out=True)
+			else:
+				receipts = Receipt.query.filter(Receipt.receipt_tvrtka==tvrtka.id, Receipt.receipt_type=='izlaz', Receipt.status=='active', Receipt.date >= b, Receipt.date <= e, Receipt.receipt_user==user.id).order_by(Receipt.date.desc()).paginate(per_page=3, page=page_num, error_out=True)
+			return render_template('receipts_izlaz.html', title='Otpremnice', form=form, receipts=receipts, search=s, begin=b, end=e, user=u, lista=lista, lista2=lista2)
+	if form.submit.data:
+		#import pdb; pdb.set_trace();
+		if form.validate_on_submit():
+			number = form.search.data
+			if number.isdigit():
+				receipts= Receipt.query.filter_by(id =number, status='active', receipt_type='izlaz').paginate(per_page=3, page=1, error_out=True)
+				return render_template('receipts_izlaz.html', title='Otpremnice', form=form, receipts=receipts, search=" ", begin=" ", end=" ", user=" ", lista=lista, lista2=lista2)
+			tvrtka = Tvrtka.query.filter(Tvrtka.name.like("%" + form.search.data + "%")).first()
+			if form.search.data != "" and form.search.data != " " and tvrtka is None:
+				flash(f'Tvrtka '+form.search.data+ ' ne postoji!', 'danger')
+				return redirect(url_for('receipts_izlaz1'))
+				import pdb; pdb.set_trace();
+			user = User.query.filter_by(username=form.user.data).first()
+			if form.user.data != "" and form.user.data != " " and user is None:
+				flash(f'Korisnik '+form.user.data+ ' ne postoji!', 'danger')
+				return redirect(url_for('receipts_izlaz1'))
+			if user is None:
+				form.user.data=" "
+				if form.begin.data is None and form.end.data is None:
+					if form.search.data == "" or form.search.data == " ":
+						receipts = Receipt.query.filter(Receipt.receipt_type=='izlaz').order_by(Receipt.date.desc()).paginate(per_page=3, page=1, error_out=True)
+						form.search.data= " "
+					else:
+						receipts = Receipt.query.filter(Receipt.receipt_tvrtka==tvrtka.id, Receipt.receipt_type=='izlaz', Receipt.status=='active').order_by(Receipt.date.desc()).paginate(per_page=3, page=1, error_out=True)
+					form.begin.data = ' '
+					form.end.data = ' '
+					form.user.data=' '
+					#import pdb; pdb.set_trace();
+				elif form.begin.data is None:
+					if form.search.data == "" or form.search.data == " ":
+						receipts = Receipt.query.filter(Receipt.receipt_type=='izlaz', Receipt.status=='active', Receipt.date <= form.end.data).order_by(Receipt.date.desc()).paginate(per_page=3, page=1, error_out=True)
+						form.search.data= " "
+					else:
+						receipts = Receipt.query.filter(Receipt.receipt_tvrtka==tvrtka.id, Receipt.receipt_type=='izlaz', Receipt.status=='active', Receipt.date <= form.end.data).order_by(Receipt.date.desc()).paginate(per_page=3, page=1, error_out=True)
+					form.begin.data = ' '
+					form.user.data=' '
+				elif form.end.data is None:
+					if form.search.data == "" or form.search.data == " ":
+						receipts = Receipt.query.filter(Receipt.receipt_type=='izlaz', Receipt.status=='active', Receipt.date >= form.begin.data).order_by(Receipt.date.desc()).paginate(per_page=3, page=1, error_out=True)
+						form.search.data= " "
+					else:
+						receipts = Receipt.query.filter(Receipt.receipt_tvrtka==tvrtka.id, Receipt.receipt_type=='izlaz', Receipt.status=='active', Receipt.date >= form.begin.data).order_by(Receipt.date.desc()).paginate(per_page=3, page=1, error_out=True)
+					form.end.data = ' '
+					form.user.data=' '
+				else:
+					form.user.data=' '
+					if form.search.data == "" or form.search.data == " ":
+						receipts = Receipt.query.filter(Receipt.receipt_type=='izlaz', Receipt.status=='active', Receipt.date >= form.begin.data, Receipt.date <= form.end.data).order_by(Receipt.date.desc()).paginate(per_page=3, page=1, error_out=True)
+						form.search.data= " "
+					else:
+						receipts = Receipt.query.filter(Receipt.receipt_tvrtka==tvrtka.id, Receipt.receipt_type=='izlaz', Receipt.status=='active', Receipt.date >= form.begin.data, Receipt.date <= form.end.data).order_by(Receipt.date.desc()).paginate(per_page=3, page=1, error_out=True)	
+			else:
+				#import pdb; pdb.set_trace();
+				user = User.query.filter_by(username=form.user.data).first()
+				if form.begin.data is None and form.end.data is None:
+					if form.search.data == "" or form.search.data == " ":
+						receipts = Receipt.query.filter( Receipt.receipt_type=='izlaz', Receipt.status=='active', Receipt.receipt_user==user.id).order_by(Receipt.date.desc()).paginate(per_page=3, page=1, error_out=True)
+						#import pdb; pdb.set_trace();
+						form.search.data= " "
+					else:
+						receipts = Receipt.query.filter(Receipt.receipt_tvrtka==tvrtka.id, Receipt.receipt_type=='izlaz', Receipt.status=='active', Receipt.receipt_user==user.id).order_by(Receipt.date.desc()).paginate(per_page=3, page=1, error_out=True)
+					form.begin.data = ' '
+					form.end.data = ' '
+				elif form.begin.data is None:
+					if form.search.data == "" or form.search.data == " ":
+						receipts = Receipt.query.filter(Receipt.receipt_type=='izlaz', Receipt.status=='active', Receipt.date <= form.end.data, Receipt.receipt_user==user.id).order_by(Receipt.date.desc()).paginate(per_page=3, page=1, error_out=True)
+						form.search.data= " "
+					else:
+						receipts = Receipt.query.filter(Receipt.receipt_tvrtka==tvrtka.id, Receipt.receipt_type=='izlaz', Receipt.status=='active', Receipt.date <= form.end.data, Receipt.receipt_user==user.id).order_by(Receipt.date.desc()).paginate(per_page=3, page=1, error_out=True)
+					form.begin.data = ' '
+				elif form.end.data is None:
+					if form.search.data == "" or form.search.data == " ":
+						receipts = Receipt.query.filter(Receipt.receipt_type=='izlaz', Receipt.status=='active', Receipt.date >= form.begin.data, Receipt.receipt_user==user.id).order_by(Receipt.date.desc()).paginate(per_page=3, page=1, error_out=True)
+						form.search.data= " "
+					else:
+						receipts = Receipt.query.filter(Receipt.receipt_tvrtka==tvrtka.id, Receipt.receipt_type=='izlaz', Receipt.status=='active', Receipt.date >= form.begin.data, Receipt.receipt_user==user.id).order_by(Receipt.date.desc()).paginate(per_page=3, page=1, error_out=True)
+					form.end.data = ' '
+				else:
+					if form.search.data == "" or form.search.data == " ":
+						receipts = Receipt.query.filter(Receipt.receipt_type=='izlaz', Receipt.status=='active', Receipt.date >= form.begin.data, Receipt.date <= form.end.data, Receipt.receipt_user==user.id).order_by(Receipt.date.desc()).paginate(per_page=3, page=1, error_out=True)
+						form.search.data= " "
+					else:
+						receipts = Receipt.query.filter(Receipt.receipt_tvrtka==tvrtka.id, Receipt.receipt_type=='izlaz', Receipt.status=='active', Receipt.date >= form.begin.data, Receipt.date <= form.end.data, Receipt.receipt_user==user.id).order_by(Receipt.date.desc()).paginate(per_page=3, page=1, error_out=True)
+			return render_template('receipts_izlaz.html', title='Otpremnice', form=form, receipts=receipts, search=form.search.data, begin=form.begin.data, end=form.end.data, lista=lista, lista2=lista2, user=form.user.data, page=1)
+		return redirect(url_for('receipts_izlaz1'))
+	return render_template('receipts_izlaz.html', title='Otpremnice', form=form, receipts=receipts, search=s, begin=b, end=e, user=u, lista=lista, lista2=lista2)
 
 @app.route('/receipts_izlaz1', methods=['GET', 'POST'])
 @login_required
 def receipts_izlaz1():
-	return redirect(url_for('receipts_izlaz', page_num=1))
+	return redirect(url_for('receipts_izlaz', page_num=1, s=" ", b=" ", e=" ", u=" "))
 
 @app.route('/receipts_unosa_storno/<int:page_num>')
 @login_required

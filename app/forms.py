@@ -252,3 +252,11 @@ class SetRank(FlaskForm):
 		validators=[DataRequired()]
 	)
 	submit2= SubmitField()
+
+
+class SearchFormReceipt(FlaskForm):
+	search = StringField(('Pronađi račun'), validators=[Optional()])
+	submit = SubmitField('Pronađi')
+	begin = DateField('Pocetak', format='%Y-%m-%d', validators=[Optional()])
+	end = DateField('Kraj', format='%Y-%m-%d', validators=[Optional()])
+	user = StringField(('Pronađi po korisniku'), validators=[Optional()])

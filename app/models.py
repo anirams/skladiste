@@ -12,7 +12,8 @@ class User(UserMixin, db.Model):
 	rank = db.Column(db.String(32))
 	status = db.Column(db.String(32))
 	evidencija = db.relationship('Evidencija', backref='user', lazy='dynamic')
-	receipt = db.relationship('Receipt', backref='stornoUser', lazy='dynamic')
+	ReceiptUser = db.relationship('Receipt', backref = 'receiptUser', lazy = 'dynamic', foreign_keys = 'Receipt.receipt_user')
+	StornoUser = db.relationship('Receipt', backref='stornoUser', lazy='dynamic', foreign_keys = 'Receipt.storno_user')
 
 	def __repr__(self):
 		return '<User {}>'.format(self.username)  
@@ -50,6 +51,7 @@ class Tvrtka(db.Model):
 	p_broj = db.Column(db.Integer)
 	drzava = db.Column(db.String(64))
 	evidencija = db.relationship('Evidencija', backref='tvrtka', lazy='dynamic')
+	receipt = db.relationship('Receipt', backref='tvrtka', lazy='dynamic')
 
 class Evidencija(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
@@ -70,4 +72,6 @@ class Receipt(db.Model):
 	receipt_type = db.Column(db.String(64))
 	evidencija = db.relationship('Evidencija', backref='receipt', lazy='dynamic')
 	storno_date = db.Column(db.DateTime, nullable=True)
+	receipt_user = db.Column(db.Integer, db.ForeignKey('user.id'))
 	storno_user = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+	receipt_tvrtka = db.Column(db.Integer, db.ForeignKey('tvrtka.id'))
