@@ -1914,27 +1914,27 @@ def receipt(id):
 	receipt = Receipt.query.get(id)
 	if form.submit.data:
 		if form.validate_on_submit():
-			receipt.status="storno"
-			for e in evidencije:
-				proizvod= Proizvod.query.get(e.proizvod_id)
-				if e.vrsta_unosa == 'unos':
-					if proizvod.kolicina<e.promijenjena_kolicina:
-						flash(f'Nema dovoljno kolicine na stanju za stornirati proizvod '+proizvod.name+'!', 'danger')
-					else:
-						proizvod.kolicina -= e.promijenjena_kolicina
+			if receipt.status!="storno":
+				receipt.status="storno"
+				for e in evidencije:
+					proizvod= Proizvod.query.get(e.proizvod_id)
+					if e.vrsta_unosa == 'unos':
+						if proizvod.kolicina<e.promijenjena_kolicina:
+							flash(f'Nema dovoljno kolicine na stanju za stornirati proizvod '+proizvod.name+'!', 'danger')
+						else:
+							proizvod.kolicina -= e.promijenjena_kolicina
+							receipt.storno_date=datetime.utcnow()
+							receipt.storno_user=current_user.id
+							db.session.add(proizvod)
+							db.session.add(receipt)
+							db.session.commit()
+					elif e.vrsta_unosa == 'izlaz':
+						proizvod.kolicina += e.promijenjena_kolicina
 						receipt.storno_date=datetime.utcnow()
 						receipt.storno_user=current_user.id
 						db.session.add(proizvod)
 						db.session.add(receipt)
 						db.session.commit()
-				elif e.vrsta_unosa == 'izlaz':
-					proizvod.kolicina += e.promijenjena_kolicina
-					receipt.storno_date=datetime.utcnow()
-					receipt.storno_user=current_user.id
-					db.session.add(proizvod)
-					db.session.add(receipt)
-					db.session.commit()
-
 	return render_template('receipt.html', id=id, evidencije=evidencije, evidencija=evidencija, receipt=receipt, form=form)
 
 @app.route('/receipt_pdf/<id>')
