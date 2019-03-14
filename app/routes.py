@@ -871,37 +871,73 @@ def export_proizvod_izlaz_storno(s, b, e, u):
 @app.route('/export_receipt_unos/<id>')
 @login_required
 def export_receipt_unos(id):
-	sql= text('SELECT evidencija.datum_unosa AS "Datum Unosa", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id WHERE evidencija.receipt_id = "{}"'.format(id))
-	result= db.engine.execute(sql)
-	query_sets = []
-	for r in result:
-		query_sets.append(r)
-	column_names = [
-		'Datum Unosa',
-		'Promijenjena Kolicina',
-		'Proizvod',
-		'ID Proizvoda',
-		'Tvrtka',
-		'Korisnik'
-		]
+	receipt= Receipt.query.get(id)
+	if receipt.status == 'active':
+		sql= text('SELECT evidencija.datum_unosa AS "Datum Unosa", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id WHERE evidencija.receipt_id = "{}"'.format(id))
+		result= db.engine.execute(sql)
+		query_sets = []
+		for r in result:
+			query_sets.append(r)
+		column_names = [
+			'Datum Unosa',
+			'Promijenjena Kolicina',
+			'Proizvod',
+			'ID Proizvoda',
+			'Tvrtka',
+			'Korisnik'
+			]
+	else:
+		sql= text('SELECT evidencija.datum_unosa AS "Datum Unosa", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, u.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status", receipt.storno_date AS "Datum Storniranja", s.username AS "Stornirao" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user u ON evidencija.user_id=u.id INNER JOIN user s ON receipt.storno_user=s.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE evidencija.receipt_id = "{}"'.format(id))
+		result= db.engine.execute(sql)
+		query_sets = []
+		for r in result:
+			query_sets.append(r)
+		column_names = [
+			'Datum Unosa',
+			'Promijenjena Kolicina',
+			'Proizvod',
+			'ID Proizvoda',
+			'Tvrtka',
+			'Korisnik',
+			'Datum Storniranja',
+			'Stornirao'
+			]
 	return excel.make_response_from_query_sets(query_sets, column_names, 'xls', file_name="Ulazni racun "+str(id))
 
 @app.route('/export_receipt_izlaz/<id>')
 @login_required
 def export_receipt_izlaz(id):
-	sql= text('SELECT evidencija.datum_unosa AS "Datum Unosa", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id WHERE evidencija.receipt_id = "{}"'.format(id))
-	result= db.engine.execute(sql)
-	query_sets = []
-	for r in result:
-		query_sets.append(r)
-	column_names = [
-		'Datum Unosa',
-		'Promijenjena Kolicina',
-		'Proizvod',
-		'ID Proizvoda',
-		'Tvrtka',
-		'Korisnik'
-		]
+	receipt= Receipt.query.get(id)
+	if receipt.status == 'active':
+		sql= text('SELECT evidencija.datum_unosa AS "Datum Izdavanja", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, user.username AS Korisnik FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user ON evidencija.user_id=user.id WHERE evidencija.receipt_id = "{}"'.format(id))
+		result= db.engine.execute(sql)
+		query_sets = []
+		for r in result:
+			query_sets.append(r)
+		column_names = [
+			'Datum Izdavanja',
+			'Promijenjena Kolicina',
+			'Proizvod',
+			'ID Proizvoda',
+			'Tvrtka',
+			'Korisnik'
+			]
+	else:
+		sql= text('SELECT evidencija.datum_unosa AS "Datum Izdavanja", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, u.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status", receipt.storno_date AS "Datum Storniranja", s.username AS "Stornirao" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user u ON evidencija.user_id=u.id INNER JOIN user s ON receipt.storno_user=s.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE evidencija.receipt_id = "{}"'.format(id))
+		result= db.engine.execute(sql)
+		query_sets = []
+		for r in result:
+			query_sets.append(r)
+		column_names = [
+			'Datum Izdavanja',
+			'Promijenjena Kolicina',
+			'Proizvod',
+			'ID Proizvoda',
+			'Tvrtka',
+			'Korisnik',
+			'Datum Storniranja',
+			'Stornirao'
+			]
 	return excel.make_response_from_query_sets(query_sets, column_names, 'xls', file_name="Izlazni racun "+str(id))
 
 @app.route('/ulaz', methods=['GET', 'POST'])
