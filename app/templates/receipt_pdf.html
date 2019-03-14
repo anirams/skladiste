@@ -26,7 +26,7 @@
 	<div class="card">		
 
 		<div class="card-header">
-			<span class="float-left">Dok. broj: <strong>{{id}}</strong><br><strong>Datum dok.: </strong>{{ evidencija.datum_unosa.strftime('%B %d %Y - %H:%M:%S') }}
+			<span class="float-left"><strong>Dok. broj:</strong> {{id}}<br><strong>Datum dok.: </strong>{{ evidencija.datum_unosa.strftime('%B %d %Y - %H:%M:%S') }}
 			{% if receipt.status =='storno' %}
 				<br><strong>Datum storn.: </strong>{{ receipt.storno_date.strftime('%B %d %Y - %H:%M:%S') }}
 			{% endif %}</span>

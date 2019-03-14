@@ -595,7 +595,8 @@ def evidencija(id):
 @login_required
 def evidencija_pdf(id):
 	evidencija = Evidencija.query.filter_by(id=id).first_or_404()
-	html = render_template('evidencija_pdf.html', id=id, evidencija=evidencija)
+	receipt = Receipt.query.get(evidencija.receipt_id)
+	html = render_template('evidencija_pdf.html', id=id, evidencija=evidencija, receipt=receipt)
 	pdf= pdfkit.from_string(html, False, configuration=config)
 	response = make_response(pdf)
 	response.headers['Content-Type']='application/pdf'
