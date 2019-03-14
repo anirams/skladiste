@@ -1064,7 +1064,7 @@ def izlaz():
 							companies.append(tvrtka)
 							amounts.append(int(productData[1]))
 			if error is False and empty is False:
-				receipt = Receipt(status="active", receipt_type="izlaz", receipt_user=current_user.id, receipt_tvrtka=companies[1].id)
+				receipt = Receipt(status="active", receipt_type="izlaz", receipt_user=current_user.id, receipt_tvrtka=companies[0].id)
 				db.session.add(receipt)
 				db.session.commit()
 				for i in range(0, len(products)):
