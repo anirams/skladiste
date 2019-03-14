@@ -1624,7 +1624,7 @@ def receipts_unosa_storno(page_num, s, b, e, u, st):
 			else:
 				user = User.query.filter_by(username=u).first()
 				if b ==' ' and e==' ':
-					import pdb; pdb.set_trace();
+					
 					receipts = Receipt.query.filter(Receipt.receipt_tvrtka==tvrtka.id, Receipt.receipt_type=='unos', Receipt.status=='storno', Receipt.storno_user==user.id).order_by(Receipt.storno_date.desc()).paginate(per_page=3, page=page_num, error_out=True)
 				elif b ==' ':
 					receipts = Receipt.query.filter(Receipt.receipt_tvrtka==tvrtka.id, Receipt.receipt_type=='unos', Receipt.status=='storno', Receipt.storno_date <= e, Receipt.storno_user==user.id).order_by(Receipt.storno_date.desc()).paginate(per_page=3, page=page_num, error_out=True)
