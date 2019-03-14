@@ -1111,7 +1111,7 @@ def receipts_unosa(page_num, s, b, e, u):
 				receipts = Receipt.query.filter( Receipt.receipt_type=='unos', Receipt.status=='active', Receipt.date >= b, Receipt.date <=e, Receipt.receipt_user==user.id).order_by(Receipt.date.desc()).paginate(per_page=3, page=page_num, error_out=True)
 
 	elif not form.submit.data:
-		tvrtka = Tvrtka.query.filter(Proizvod.name.like("%" + s + "%")).first()
+		tvrtka=Tvrtka.query.filter(Tvrtka.name.like("%"+s+"%")).first()
 		if u == ' ':
 			if b ==' ' and e==' ':
 				receipts = Receipt.query.filter( Receipt.receipt_tvrtka==tvrtka.id, Receipt.receipt_type=='unos', Receipt.status=='active').order_by(Receipt.date.desc()).paginate(per_page=3, page=page_num, error_out=True)
@@ -1260,7 +1260,7 @@ def receipts_izlaz(page_num, s, b, e, u):
 				receipts = Receipt.query.filter( Receipt.receipt_type=='izlaz', Receipt.status=='active', Receipt.date >= b, Receipt.date <=e, Receipt.receipt_user==user.id).order_by(Receipt.date.desc()).paginate(per_page=3, page=page_num, error_out=True)
 
 	elif not form.submit.data:
-		tvrtka = Tvrtka.query.filter(Proizvod.name.like("%" + s + "%")).first()
+		tvrtka=Tvrtka.query.filter(Tvrtka.name.like("%"+s+"%")).first()
 		if u == ' ':
 			if b ==' ' and e==' ':
 				receipts = Receipt.query.filter( Receipt.receipt_tvrtka==tvrtka.id, Receipt.receipt_type=='izlaz', Receipt.status=='active').order_by(Receipt.date.desc()).paginate(per_page=3, page=page_num, error_out=True)
@@ -1565,7 +1565,7 @@ def receipts_unosa_storno(page_num, s, b, e, u, st):
 					receipts = Receipt.query.filter( Receipt.receipt_type=='unos', Receipt.status=='storno', Receipt.date >= b, Receipt.date <=e, Receipt.receipt_user==user.id).order_by(Receipt.date.desc()).paginate(per_page=3, page=page_num, error_out=True)
 
 		elif not form.submit.data:
-			tvrtka = Tvrtka.query.filter(Proizvod.name.like("%" + s + "%")).first()
+			tvrtka=Tvrtka.query.filter(Tvrtka.name.like("%"+s+"%")).first()
 			if u == ' ':
 				if b ==' ' and e==' ':
 					receipts = Receipt.query.filter( Receipt.receipt_tvrtka==tvrtka.id, Receipt.receipt_type=='unos', Receipt.status=='storno').order_by(Receipt.date.desc()).paginate(per_page=3, page=page_num, error_out=True)
@@ -1610,7 +1610,8 @@ def receipts_unosa_storno(page_num, s, b, e, u, st):
 					receipts = Receipt.query.filter( Receipt.receipt_type=='unos', Receipt.status=='storno', Receipt.storno_date >= b, Receipt.storno_date <=e, Receipt.storno_user==user.id).order_by(Receipt.storno_date.desc()).paginate(per_page=3, page=page_num, error_out=True)
 
 		elif not form.submit.data:
-			tvrtka = Tvrtka.query.filter(Proizvod.name.like("%" + s + "%")).first()
+			tvrtka=Tvrtka.query.filter(Tvrtka.name.like("%"+s+"%")).first()
+			#import pdb; pdb.set_trace()
 			if u == ' ':
 				if b ==' ' and e==' ':
 					receipts = Receipt.query.filter( Receipt.receipt_tvrtka==tvrtka.id, Receipt.receipt_type=='unos', Receipt.status=='storno').order_by(Receipt.storno_date.desc()).paginate(per_page=3, page=page_num, error_out=True)
@@ -1624,7 +1625,8 @@ def receipts_unosa_storno(page_num, s, b, e, u, st):
 			else:
 				user = User.query.filter_by(username=u).first()
 				if b ==' ' and e==' ':
-					receipts = Receipt.query.filter( Receipt.receipt_tvrtka==tvrtka.id, Receipt.receipt_type=='unos', Receipt.status=='storno', Receipt.storno_user==user.id).order_by(Receipt.storno_date.desc()).paginate(per_page=3, page=page_num, error_out=True)
+
+					receipts = Receipt.query.filter(Receipt.receipt_tvrtka==tvrtka.id, Receipt.receipt_type=='unos', Receipt.status=='storno', Receipt.storno_user==user.id).order_by(Receipt.storno_date.desc()).paginate(per_page=3, page=page_num, error_out=True)
 				elif b ==' ':
 					receipts = Receipt.query.filter(Receipt.receipt_tvrtka==tvrtka.id, Receipt.receipt_type=='unos', Receipt.status=='storno', Receipt.storno_date <= e, Receipt.storno_user==user.id).order_by(Receipt.storno_date.desc()).paginate(per_page=3, page=page_num, error_out=True)
 				elif e ==' ':
@@ -1832,7 +1834,7 @@ def receipts_izlaz_storno(page_num, s, b, e, u, st):
 					receipts = Receipt.query.filter( Receipt.receipt_type=='izlaz', Receipt.status=='storno', Receipt.date >= b, Receipt.date <=e, Receipt.receipt_user==user.id).order_by(Receipt.date.desc()).paginate(per_page=3, page=page_num, error_out=True)
 
 		elif not form.submit.data:
-			tvrtka = Tvrtka.query.filter(Proizvod.name.like("%" + s + "%")).first()
+			tvrtka=Tvrtka.query.filter(Tvrtka.name.like("%"+s+"%")).first()
 			if u == ' ':
 				if b ==' ' and e==' ':
 					receipts = Receipt.query.filter( Receipt.receipt_tvrtka==tvrtka.id, Receipt.receipt_type=='izlaz', Receipt.status=='storno').order_by(Receipt.date.desc()).paginate(per_page=3, page=page_num, error_out=True)
@@ -1877,7 +1879,7 @@ def receipts_izlaz_storno(page_num, s, b, e, u, st):
 					receipts = Receipt.query.filter( Receipt.receipt_type=='izlaz', Receipt.status=='storno', Receipt.storno_date >= b, Receipt.storno_date <=e, Receipt.storno_user==user.id).order_by(Receipt.storno_date.desc()).paginate(per_page=3, page=page_num, error_out=True)
 
 		elif not form.submit.data:
-			tvrtka = Tvrtka.query.filter(Proizvod.name.like("%" + s + "%")).first()
+			tvrtka=Tvrtka.query.filter(Tvrtka.name.like("%"+s+"%")).first()
 			if u == ' ':
 				if b ==' ' and e==' ':
 					receipts = Receipt.query.filter( Receipt.receipt_tvrtka==tvrtka.id, Receipt.receipt_type=='izlaz', Receipt.status=='storno').order_by(Receipt.storno_date.desc()).paginate(per_page=3, page=page_num, error_out=True)
