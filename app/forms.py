@@ -269,6 +269,6 @@ class SearchFormReceiptStorno(FlaskForm):
 	user = StringField(('Pronađi po korisniku'), validators=[Optional()])
 	storno = SelectField(
 		'Storno',
-		choices=[('aktivni', 'aktivni'), ('storno', 'storno')],
+		choices=[('aktivni', 'napravio'), ('storno', 'stornirao')],
 		validators=[Optional()]
 	)
