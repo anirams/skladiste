@@ -50,6 +50,7 @@ def logout():
 	return redirect(url_for('login'))
 
 @app.route('/registracija2', methods=['GET', 'POST'])
+@login_required
 def register():
 	if not current_user.is_authenticated:
 		return redirect(url_for('login'))
@@ -500,7 +501,7 @@ def evidencija_izdavanja(page_num, s, b, e, u):
 	if form.submit.data:
 		#import pdb; pdb.set_trace();
 		if form.validate_on_submit():
-			
+
 			proizvod = Proizvod.query.filter(Proizvod.name.like("%" + form.search.data + "%")).first()
 			if form.search.data != "" and form.search.data != " " and proizvod is None:
 				flash(f'Proizvod '+form.search.data+ ' ne postoji!', 'danger')
