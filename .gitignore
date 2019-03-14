@@ -35,3 +35,8 @@ app.db
 app.db
 *.db
 app.db
+app.db
+migrations/alembic.ini
+migrations/env.py
+migrations/script.py.mako
+migrations/script.py.mako
