@@ -886,6 +886,7 @@ def export_receipt_unos(id):
 			'Tvrtka',
 			'Korisnik'
 			]
+		return excel.make_response_from_query_sets(query_sets, column_names, 'xls', file_name="Ulazni racun "+str(id))
 	else:
 		sql= text('SELECT evidencija.datum_unosa AS "Datum Unosa", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, u.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status", receipt.storno_date AS "Datum Storniranja", s.username AS "Stornirao" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user u ON evidencija.user_id=u.id INNER JOIN user s ON receipt.storno_user=s.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE evidencija.receipt_id = "{}"'.format(id))
 		result= db.engine.execute(sql)
@@ -902,7 +903,7 @@ def export_receipt_unos(id):
 			'Datum Storniranja',
 			'Stornirao'
 			]
-	return excel.make_response_from_query_sets(query_sets, column_names, 'xls', file_name="Ulazni racun "+str(id))
+		return excel.make_response_from_query_sets(query_sets, column_names, 'xls', file_name="Ulazni racun storno "+str(id))
 
 @app.route('/export_receipt_izlaz/<id>')
 @login_required
@@ -922,6 +923,7 @@ def export_receipt_izlaz(id):
 			'Tvrtka',
 			'Korisnik'
 			]
+		return excel.make_response_from_query_sets(query_sets, column_names, 'xls', file_name="Izlazni racun "+str(id))
 	else:
 		sql= text('SELECT evidencija.datum_unosa AS "Datum Izdavanja", evidencija.promijenjena_kolicina AS "Promijenjena Kolicina", proizvod.name AS Proizvod, proizvod.id AS "ID Proizvoda", tvrtka.name AS Tvrtka, u.username AS Korisnik, receipt.id AS "ID Racuna", receipt.status AS "Status", receipt.storno_date AS "Datum Storniranja", s.username AS "Stornirao" FROM evidencija INNER JOIN proizvod ON evidencija.proizvod_id=proizvod.id INNER JOIN tvrtka ON evidencija.tvrtka_id=tvrtka.id INNER JOIN user u ON evidencija.user_id=u.id INNER JOIN user s ON receipt.storno_user=s.id INNER JOIN receipt ON evidencija.receipt_id=receipt.id WHERE evidencija.receipt_id = "{}"'.format(id))
 		result= db.engine.execute(sql)
@@ -938,7 +940,7 @@ def export_receipt_izlaz(id):
 			'Datum Storniranja',
 			'Stornirao'
 			]
-	return excel.make_response_from_query_sets(query_sets, column_names, 'xls', file_name="Izlazni racun "+str(id))
+		return excel.make_response_from_query_sets(query_sets, column_names, 'xls', file_name="Izlazni racun storno"+str(id))
 
 @app.route('/ulaz', methods=['GET', 'POST'])
 @login_required
