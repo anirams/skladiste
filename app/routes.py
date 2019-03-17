@@ -297,6 +297,10 @@ def svi_korisnici(page_num, s):
 def svi_korisnici1():
 	return redirect(url_for('svi_korisnici', page_num=1, s=' '))
 
+def is_query(s):
+	return s!=" "
+
+
 @app.route('/evidencija_unosa/<int:page_num>+<s>+<b>+<e>+<u>', methods=['GET', 'POST'])
 @login_required
 def evidencija_unosa(page_num, s, b, e, u):
@@ -310,7 +314,7 @@ def evidencija_unosa(page_num, s, b, e, u):
 	sviUseri = User.query.all()
 	for user in sviUseri:
 		lista2.append(user.username)
-	if s == ' ':
+	if not is_query(s):
 		if u==' ':
 			if b ==' ' and e==' ':
 				evidencija = Evidencija.query.filter_by(vrsta_unosa='unos').order_by(Evidencija.datum_unosa.desc()).paginate(per_page=3, page=page_num, error_out=True)

@@ -170,10 +170,10 @@ class UrediProizvodForm(FlaskForm):
 		if self.barkod.data =='':
 			self.barkod.errors.append('Unesite barkod')
 			return False
-		proizvod = Proizvod.query.filter_by(bar_kod=self.barkod.data).first()
-		if proizvod != None:
-			self.barkod.errors.append('Proizvod s tim barkodom već postoji')
-			return False
+		#proizvod = Proizvod.query.filter_by(bar_kod=self.barkod.data).first()
+		#if proizvod != None:
+			#self.barkod.errors.append('Proizvod s tim barkodom već postoji')
+			#return False
 		return True
 
 class SearchForm(FlaskForm):
